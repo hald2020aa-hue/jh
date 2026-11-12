@@ -134,7 +134,7 @@ class DownloadBottomSheet
                         extCount.chapter.preferredChapterName(context, extCount.manga, preferences),
                     )
                 } else {
-                    getString(R.string.downloads)
+                    resources.getString(R.string.downloads)
                 }
             binding.toolbarTitle.text = resources.getString(
                 R.string.enhanced_download_summary,

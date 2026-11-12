@@ -519,9 +519,9 @@ class MangaHeaderHolder(
         val count = presenter.chapters.size
         val readCount = presenter.chapters.count { it.chapter.read }
         val progressPercent = knownChapterProgress(readCount, count - readCount)
-        binding.v4ProgressCard.isVisible = itemView.resources.getBoolean(R.bool.v4_neon_mode) && count > 0
-        binding.v4ChapterProgress.progress = progressPercent ?: 0
-        binding.v4ProgressNumbers.text = itemView.context.getString(R.string.v4_reading_chapter_count, readCount, count)
+        binding.v4ProgressCard?.let { it.isVisible = itemView.resources.getBoolean(R.bool.v4_neon_mode) && count > 0 }
+        binding.v4ChapterProgress?.let { it.progress = progressPercent ?: 0 }
+        binding.v4ProgressNumbers?.let { it.text = itemView.context.getString(R.string.v4_reading_chapter_count, readCount, count) }
         binding.chaptersTitle.text = chaptersTitleText(count, presenter)
 
         binding.topView.updateLayoutParams<ConstraintLayout.LayoutParams> {
