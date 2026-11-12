@@ -1,0 +1,26 @@
+name: Weblate PR
+on:
+  push:
+    branches:
+      - weblate-translations
+
+permissions:
+  contents: read
+  pull-requests: write
+
+jobs:
+  open-pr:
+    runs-on: ubuntu-24.04
+    steps:
+      - name: Checkout
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+
+      - name: Open or update PR
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          if ! gh pr list --base master --head weblate-translations --state open --json number --jq '.[0]' | grep -q .; then
+            gh pr create --base master --head weblate-translations \
+              --title "Translations update from Hosted Weblate" \
+              --body "Automated translation sync from Weblate."
+          fi

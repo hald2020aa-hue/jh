@@ -1,0 +1,33 @@
+name: Quality gate (independent fork)
+
+on:
+  workflow_dispatch:
+  pull_request:
+
+permissions:
+  contents: read
+
+jobs:
+  android-debug-and-tests:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 45
+    steps:
+      - name: Check out sources
+        uses: actions/checkout@v4
+      - name: Configure JDK 21
+        uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: 21
+      - name: Configure Gradle
+        uses: gradle/actions/setup-gradle@v4
+      - name: Check XML resources and reading activity SQL
+        run: python3 qa/static_integration_checks.py
+      - name: Run unit tests and compile debug APKs
+        run: ./gradlew --no-daemon testDevDebugUnitTest assembleDevDebug --stacktrace
+      - name: Upload unsigned/development-only APKs
+        uses: actions/upload-artifact@v4
+        with:
+          name: tachiyomij2k-development-apks
+          path: app/build/outputs/apk/dev/debug/*.apk
+          if-no-files-found: error
