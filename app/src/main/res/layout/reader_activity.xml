@@ -29,7 +29,14 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="bottom|center_horizontal"
-        android:padding="4dp"
+        android:paddingStart="14dp"
+        android:paddingEnd="14dp"
+        android:paddingTop="5dp"
+        android:paddingBottom="5dp"
+        android:layout_marginBottom="8dp"
+        android:background="@drawable/enhanced_reader_nav_background"
+        android:textColor="@android:color/white"
+        android:elevation="4dp"
         android:textStyle="bold" />
 
     <eu.kanade.tachiyomi.ui.reader.ReaderColorFilterView

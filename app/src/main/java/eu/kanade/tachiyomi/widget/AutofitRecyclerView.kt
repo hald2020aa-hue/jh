@@ -9,6 +9,7 @@ import androidx.preference.PreferenceManager
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.StaggeredGridLayoutManager
+import eu.kanade.tachiyomi.R
 import eu.kanade.tachiyomi.data.preference.PreferencesHelper
 import eu.kanade.tachiyomi.ui.library.LibraryItem
 import eu.kanade.tachiyomi.util.system.dpToPx
@@ -191,7 +192,9 @@ class AutofitRecyclerView
 
             val size = 1.5f.pow(preferences.gridSize().get())
             val trueSize = MULTIPLE * ((size * 100 / MULTIPLE).roundToInt()) / 100f
-            columnWidth = trueSize
+            // Prevent unreadably narrow poster cards on phones, while the adaptive grid
+            // still expands to more columns on Fold/tablet. Standard retains user defaults.
+            columnWidth = if (resources.getBoolean(R.bool.v4_neon_mode)) max(trueSize, 1.4f) else trueSize
         }
 
         /**

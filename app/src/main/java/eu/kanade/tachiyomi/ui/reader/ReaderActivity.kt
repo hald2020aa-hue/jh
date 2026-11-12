@@ -94,6 +94,7 @@ import eu.kanade.tachiyomi.ui.base.MaterialMenuSheet
 import eu.kanade.tachiyomi.ui.base.activity.BaseActivity
 import eu.kanade.tachiyomi.ui.main.MainActivity
 import eu.kanade.tachiyomi.ui.main.SearchActivity
+import eu.kanade.tachiyomi.ui.enhanced.adaptiveReaderBarWidth
 import eu.kanade.tachiyomi.ui.reader.ReaderViewModel.SetAsCoverResult.AddToLibraryFirst
 import eu.kanade.tachiyomi.ui.reader.ReaderViewModel.SetAsCoverResult.Error
 import eu.kanade.tachiyomi.ui.reader.ReaderViewModel.SetAsCoverResult.Success
@@ -329,10 +330,13 @@ class ReaderActivity : BaseActivity<ReaderActivityBinding>() {
         wic.isAppearanceLightStatusBars = themeLightStatusBars
         wic.isAppearanceLightNavigationBars = themeLightStatusBars
         binding.appBar.setBackgroundColor(contextCompatColor(R.color.surface_alpha))
-        ViewCompat.setBackgroundTintList(
-            binding.readerNav.root,
-            ColorStateList.valueOf(contextCompatColor(R.color.surface_alpha)),
-        )
+        // Preserve the enhanced reader panel's high-contrast surface in the development fork.
+        if (BuildConfig.FLAVOR != "dev") {
+            ViewCompat.setBackgroundTintList(
+                binding.readerNav.root,
+                ColorStateList.valueOf(contextCompatColor(R.color.surface_alpha)),
+            )
+        }
 
         backPressedCallback =
             object : OnBackPressedCallback(enabled = true) {
@@ -518,9 +522,9 @@ class ReaderActivity : BaseActivity<ReaderActivityBinding>() {
                                 width = if (verticalSeekbar) {
                                     ViewGroup.LayoutParams.WRAP_CONTENT
                                 } else {
-                                    ViewGroup.LayoutParams.MATCH_PARENT
+                                    if (resources.getBoolean(R.bool.v4_neon_mode)) adaptiveReaderBarWidth(binding.root.width, false, 600.dpToPx, 720.dpToPx, 16.dpToPx) else ViewGroup.LayoutParams.MATCH_PARENT
                                 }
-                                gravity = Gravity.TOP
+                                gravity = if (verticalSeekbar) Gravity.TOP else Gravity.TOP or Gravity.CENTER_HORIZONTAL
                                 anchorGravity =
                                     if (verticalSeekbar) {
                                         Gravity.TOP or if (preferences.readerVerticalSeekbarDockLeft().get()) {
@@ -641,6 +645,9 @@ class ReaderActivity : BaseActivity<ReaderActivityBinding>() {
                     else -> R.drawable.ic_single_page_24dp
                 },
             )
+        binding.readerNav.toggleSpread.isVisible = viewer is PagerViewer && !binding.readerNav.pageSeekbar.isVertical
+        binding.readerNav.toggleSpread.isSelected = isDoublePage
+        binding.readerNav.toggleSpread.alpha = if (isDoublePage) 1f else 0.65f
         with(binding.readerNav) {
             listOf(leftPageText, rightPageText).forEach {
                 it.updateLayoutParams<ViewGroup.MarginLayoutParams> {
@@ -733,8 +740,9 @@ class ReaderActivity : BaseActivity<ReaderActivityBinding>() {
                 height = ViewGroup.LayoutParams.WRAP_CONTENT
                 anchorGravity = Gravity.TOP or if (dockLeft) Gravity.LEFT else Gravity.RIGHT
             } else {
-                width = ViewGroup.LayoutParams.MATCH_PARENT
+                width = if (resources.getBoolean(R.bool.v4_neon_mode)) adaptiveReaderBarWidth(binding.root.width, false, 600.dpToPx, 720.dpToPx, 16.dpToPx) else ViewGroup.LayoutParams.MATCH_PARENT
                 height = ViewGroup.LayoutParams.WRAP_CONTENT
+                gravity = Gravity.TOP or Gravity.CENTER_HORIZONTAL
                 anchorGravity = Gravity.TOP
             }
         }
@@ -747,6 +755,7 @@ class ReaderActivity : BaseActivity<ReaderActivityBinding>() {
             width = if (vertical) FrameLayout.LayoutParams.WRAP_CONTENT else FrameLayout.LayoutParams.MATCH_PARENT
             if (!vertical) height = FrameLayout.LayoutParams.WRAP_CONTENT
         }
+        binding.readerNav.toggleSpread.isVisible = !vertical && viewer is PagerViewer
         if (vertical) updateVerticalSeekbarHeight()
 
         if (flipChanged) {
@@ -1209,6 +1218,19 @@ class ReaderActivity : BaseActivity<ReaderActivityBinding>() {
 
         binding.readerNav.leftChapter.setOnClickListener { loadAdjacentChapter(false) }
         binding.readerNav.rightChapter.setOnClickListener { loadAdjacentChapter(true) }
+        // Make the existing two-page option accessible without opening a nested settings sheet.
+        binding.readerNav.toggleSpread.setOnClickListener {
+            val config = (viewer as? PagerViewer)?.config ?: return@setOnClickListener
+            if (preferences.pageLayout().get() == PageLayout.AUTOMATIC.value) {
+                config.doublePages = !config.doublePages
+                reloadChapters(config.doublePages, true)
+                setBottomNavButtons(PageLayout.AUTOMATIC.value)
+            } else {
+                preferences.pageLayout().set(
+                    if (config.doublePages) PageLayout.SINGLE_PAGE.value else PageLayout.DOUBLE_PAGES.value,
+                )
+            }
+        }
 
         binding.touchView.setOnTouchListener { _, event ->
             if (event.action == MotionEvent.ACTION_DOWN) {

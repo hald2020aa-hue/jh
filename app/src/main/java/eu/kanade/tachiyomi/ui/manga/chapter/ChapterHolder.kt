@@ -194,6 +194,7 @@ class ChapterHolder(
         top: Boolean,
         bottom: Boolean,
     ) {
+        if (itemView.resources.getBoolean(R.bool.v4_neon_mode)) return
         val shapeModel = binding.chapterCard.makeContainerShape(top, bottom, clipContentTo = binding.frontView)
         binding.chapterCard.shapeAppearanceModel = shapeModel
         binding.startView.shapeAppearanceModel = shapeModel

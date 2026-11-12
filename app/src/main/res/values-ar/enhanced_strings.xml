@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="enhanced_header_tagline">مطوّر • قراءة ذكية</string>
+    <string name="enhanced_source_health">مركز فحص المصادر</string>
+    <string name="enhanced_scan_all">فحص جميع المصادر</string>
+    <string name="enhanced_scan_again">إعادة الفحص</string>
+    <string name="enhanced_not_checked">لم يُفحص</string>
+    <string name="enhanced_checking">جارٍ الفحص…</string>
+    <string name="enhanced_online">يستجيب</string>
+    <string name="enhanced_blocked">الوصول مقيّد</string>
+    <string name="enhanced_unavailable">غير متاح</string>
+    <string name="enhanced_source_health_help">يفحص العنوان الأساسي لكل مصدر مثبت. نجاح الاتصال لا يضمن عمل الفصول والصور، وقد تتطلب بعض المواقع تسجيل دخول.</string>
+    <string name="enhanced_no_sources">لا توجد مصادر إنترنت مثبتة. ثبّت إضافة ثم حدّث القائمة.</string>
+    <string name="enhanced_sources_count">%1$d مصادر · تم فحص %2$d</string>
+    <string name="enhanced_request_status">HTTP %1$d · %2$d مللي ثانية</string>
+    <string name="enhanced_duration">%1$d مللي ثانية</string>
+    <string name="enhanced_network_error">فشل الاتصال</string>
+    <string name="enhanced_smart_filters">فلاتر المكتبة الذكية</string>
+    <string name="enhanced_quick_duplicates">عناوين مكررة بين المصادر</string>
+    <string name="enhanced_quick_unread">فصول غير مقروءة</string>
+    <string name="enhanced_quick_all">عرض جميع العناوين</string>
+    <string name="enhanced_toggle_spread">التبديل إلى عرض صفحتين</string>
+    <string name="enhanced_download_summary">%1$d فصل في قائمة التحميل · %2$d صفحة محمّلة</string>
+    <string name="enhanced_library_insights">لوحة المكتبة الذكية</string>
+    <string name="enhanced_metrics_description">ملخص حي للمكتبة مع استبعاد تكرار الصفوف بين التصنيفات. العناوين المتشابهة لا تُدمج أو تُحذف تلقائيًا.</string>
+    <string name="enhanced_metric_titles">عناوين المكتبة</string>
+    <string name="enhanced_metric_unread">فصول غير مقروءة</string>
+    <string name="enhanced_metric_read">فصول مقروءة</string>
+    <string name="enhanced_metric_sources">مصادر مختلفة</string>
+    <string name="enhanced_metric_duplicates">عناوين مشتبه بتكرارها</string>
+    <string name="enhanced_metric_completed">سلاسل مكتملة</string>
+    <string name="enhanced_refresh">تحديث</string>
+    <string name="enhanced_metrics_error">تعذّر قراءة بيانات المكتبة (%1$s). أعد المحاولة.</string>
+</resources>

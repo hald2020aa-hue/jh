@@ -7,6 +7,7 @@ import androidx.core.view.isVisible
 import androidx.core.view.updateLayoutParams
 import coil.dispose
 import eu.kanade.tachiyomi.R
+import eu.kanade.tachiyomi.ui.enhanced.knownChapterProgress
 import eu.kanade.tachiyomi.data.image.coil.loadManga
 import eu.kanade.tachiyomi.databinding.MangaListItemBinding
 import eu.kanade.tachiyomi.util.lang.highlightText
@@ -73,10 +74,11 @@ class LibraryListHolder(
             binding.padding.isVisible = false
             binding.subtitle.isVisible = false
             binding.playLayout.isVisible = false
+            binding.readingProgress.isVisible = false
             return
         }
         binding.constraintLayout.updateLayoutParams<ViewGroup.MarginLayoutParams> {
-            height = 52.dpToPx
+            height = (if (itemView.resources.getBoolean(R.bool.v4_neon_mode)) 88 else 52).dpToPx
         }
         binding.padding.isVisible = true
         binding.card.isVisible = true
@@ -91,6 +93,9 @@ class LibraryListHolder(
         // Update the binding.title of the manga.
         binding.title.text = item.manga.title.highlightText(item.filter, color)
         setUnreadBadge(binding.unreadDownloadBadge.badgeView, item)
+        val chapterPercent = knownChapterProgress(item.manga.read, item.manga.unread)
+        binding.readingProgress.isVisible = view.resources.getBoolean(R.bool.v4_neon_mode) && chapterPercent != null
+        binding.readingProgress.progress = chapterPercent ?: 0
         binding.playLayout.isVisible = item.manga.unread > 0 && !LibraryItem.hideReadingButton
 
         val authorArtist =
@@ -132,7 +137,12 @@ class LibraryListHolder(
             marginEnd = margin
         }
         if (isListMode) {
-            binding.listCard.setCardBackgroundColor(itemView.context.getResourceColor(R.attr.colorSurfaceContainerLowest))
+            val color = if (itemView.resources.getBoolean(R.bool.v4_neon_mode)) R.color.v4_card else null
+            if (color == null) {
+                binding.listCard.setCardBackgroundColor(itemView.context.getResourceColor(R.attr.colorSurfaceContainerLowest))
+            } else {
+                binding.listCard.setCardBackgroundColor(itemView.context.getColor(color))
+            }
         } else {
             binding.listCard.setCardBackgroundColor(Color.TRANSPARENT)
             binding.listCard.cardElevation = 0f

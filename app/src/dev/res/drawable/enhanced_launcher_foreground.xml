@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="108dp" android:height="108dp"
+    android:viewportWidth="108" android:viewportHeight="108">
+    <!-- Independent J2K neon icon: abstract stacks of pages, not a borrowed manga cover. -->
+    <path android:fillColor="#10192D" android:pathData="M54,15C75.5,15 93,32.5 93,54S75.5,93 54,93S15,75.5 15,54S32.5,15 54,15Z"/>
+    <path android:fillColor="#00000000" android:strokeColor="#F21C82" android:strokeWidth="2.2"
+        android:pathData="M54,18C73.9,18 90,34.1 90,54S73.9,90 54,90S18,73.9 18,54S34.1,18 54,18Z"/>
+    <path android:fillColor="#F21C82" android:pathData="M31,40L54,27L77,40L54,53Z"/>
+    <path android:fillColor="#39CFDB" android:pathData="M31,50L38,46L54,55L70,46L77,50L54,64Z"/>
+    <path android:fillColor="#FF9ACC" android:pathData="M31,61L38,57L54,66L70,57L77,61L54,75Z"/>
+    <path android:fillColor="#FFFFFF" android:pathData="M72,25L73.7,29.3L78,31L73.7,32.7L72,37L70.3,32.7L66,31L70.3,29.3Z"/>
+</vector>

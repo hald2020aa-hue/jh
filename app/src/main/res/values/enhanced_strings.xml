@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="enhanced_header_tagline">ENHANCED • SMART READING</string>
+    <string name="enhanced_source_health">Source health center</string>
+    <string name="enhanced_scan_all">Test all sources</string>
+    <string name="enhanced_scan_again">Retest</string>
+    <string name="enhanced_not_checked">Not tested</string>
+    <string name="enhanced_checking">Checking…</string>
+    <string name="enhanced_online">Available</string>
+    <string name="enhanced_blocked">Access limited</string>
+    <string name="enhanced_unavailable">Unavailable</string>
+    <string name="enhanced_source_health_help">Tests the base address of each installed online source. A successful response does not guarantee that chapters and images work.</string>
+    <string name="enhanced_no_sources">No installed online sources. Install an extension and refresh the list.</string>
+    <string name="enhanced_sources_count">%1$d sources · %2$d tested</string>
+    <string name="enhanced_request_status">HTTP %1$d · %2$d ms</string>
+    <string name="enhanced_duration">%1$d ms</string>
+    <string name="enhanced_network_error">Connection failed</string>
+    <string name="enhanced_smart_filters">Smart library filters</string>
+    <string name="enhanced_quick_duplicates">Duplicate titles (different sources)</string>
+    <string name="enhanced_quick_unread">Unread chapters</string>
+    <string name="enhanced_quick_all">Show all titles</string>
+    <string name="enhanced_toggle_spread">Toggle two-page reading</string>
+    <string name="enhanced_download_summary">%1$d chapters in queue · %2$d pages downloaded</string>
+    <string name="enhanced_library_insights">Library insights</string>
+    <string name="enhanced_metrics_description">Live library summary, excluding repeated category rows. Suspected duplicates are not merged or deleted.</string>
+    <string name="enhanced_metric_titles">Library titles</string>
+    <string name="enhanced_metric_unread">Unread chapters</string>
+    <string name="enhanced_metric_read">Read chapters</string>
+    <string name="enhanced_metric_sources">Distinct sources</string>
+    <string name="enhanced_metric_duplicates">Likely duplicates</string>
+    <string name="enhanced_metric_completed">Completed series</string>
+    <string name="enhanced_refresh">Refresh</string>
+    <string name="enhanced_metrics_error">Unable to read library data (%1$s). Try again.</string>
+</resources>

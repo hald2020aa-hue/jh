@@ -1164,4 +1164,25 @@
     <string name="search_cross_source_duplicates">العناوين المكررة بين المصادر</string>
     <string name="stats_recent_chapters">الفصول المفتوحة خلال ٧ أيام</string>
     <string name="stats_recent_days">أيام النشاط خلال ٧ أيام</string>
+    <string name="enhanced_deep_test">فحص الفصول</string>
+    <string name="enhanced_deep_not_checked">لم يتم فحص الفصول والصفحات</string>
+    <string name="enhanced_deep_checking">جارٍ اختبار العناوين والفصول والصفحات…</string>
+    <string name="enhanced_deep_failed">فشل فحص المحتوى: %1$s</string>
+    <string name="enhanced_deep_results">العناوين: %1$d  الفصول: %2$d  الصفحات: %3$d</string>
+    <string name="enhanced_retry_failed">إعادة محاولة التحميلات الفاشلة</string>
+    <string name="enhanced_download_center">مركز التنزيلات</string>
+    <string name="enhanced_download_center_info">تقدم التنزيل والأولوية والتحكم في الطابور</string>
+    <string name="enhanced_download_overview">في الطابور: %1$d · صفحات جاهزة: %2$d · أخطاء: %3$d</string>
+    <string name="enhanced_filter_all">الكل</string>
+    <string name="enhanced_filter_pending">قيد الانتظار</string>
+    <string name="enhanced_filter_failed">فاشلة</string>
+    <string name="enhanced_downloads_empty">لا توجد تنزيلات في هذا التصنيف</string>
+    <string name="enhanced_download_pages">الصفحات: %1$d/%2$d · %3$d%%</string>
+    <string name="enhanced_priority_first">الأول</string>
+    <string name="enhanced_remove_queue">إزالة</string>
+    <string name="enhanced_dl_queued">في الطابور</string>
+    <string name="enhanced_dl_downloading">جارٍ التنزيل</string>
+    <string name="enhanced_dl_downloaded">مكتمل</string>
+    <string name="enhanced_dl_error">فشل التنزيل</string>
+    <string name="enhanced_dl_waiting">انتظار</string>
 </resources>

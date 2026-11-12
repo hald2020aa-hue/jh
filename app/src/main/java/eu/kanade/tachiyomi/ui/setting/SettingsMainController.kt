@@ -1,6 +1,7 @@
 package eu.kanade.tachiyomi.ui.setting
 
 import android.app.ActivityManager
+import android.content.Intent
 import android.view.Menu
 import android.view.MenuInflater
 import android.view.MenuItem
@@ -13,6 +14,9 @@ import eu.kanade.tachiyomi.R
 import eu.kanade.tachiyomi.ui.main.FloatingSearchInterface
 import eu.kanade.tachiyomi.ui.more.AboutController
 import eu.kanade.tachiyomi.ui.setting.search.SettingsSearchController
+import eu.kanade.tachiyomi.ui.source.health.SourceHealthActivity
+import eu.kanade.tachiyomi.ui.library.insights.LibraryInsightsActivity
+import eu.kanade.tachiyomi.ui.download.center.DownloadCenterActivity
 import eu.kanade.tachiyomi.util.system.getResourceColor
 import eu.kanade.tachiyomi.util.view.activityBinding
 import eu.kanade.tachiyomi.util.view.fadeTransactionHandler
@@ -63,10 +67,31 @@ class SettingsMainController :
                 onClick { navigateTo(SettingsDownloadController()) }
             }
             preference {
+                iconRes = R.drawable.ic_file_download_24dp
+                iconTint = tintColor
+                titleRes = R.string.enhanced_download_center
+                summaryRes = R.string.enhanced_download_center_info
+                onClick { startActivity(Intent(context, DownloadCenterActivity::class.java)) }
+            }
+            preference {
                 iconRes = R.drawable.ic_browse_outline_24dp
                 iconTint = tintColor
                 titleRes = R.string.browse
                 onClick { navigateTo(SettingsBrowseController()) }
+            }
+            preference {
+                iconRes = R.drawable.ic_insights_24dp
+                iconTint = tintColor
+                titleRes = R.string.enhanced_library_insights
+                summaryRes = R.string.enhanced_metrics_description
+                onClick { startActivity(Intent(context, LibraryInsightsActivity::class.java)) }
+            }
+            preference {
+                iconRes = R.drawable.ic_wifi_tethering_24dp
+                iconTint = tintColor
+                titleRes = R.string.enhanced_source_health
+                summaryRes = R.string.enhanced_source_health_help
+                onClick { startActivity(Intent(context, SourceHealthActivity::class.java)) }
             }
             preference {
                 iconRes = R.drawable.ic_sync_24dp

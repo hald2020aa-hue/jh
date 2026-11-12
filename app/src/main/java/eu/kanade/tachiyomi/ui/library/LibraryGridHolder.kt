@@ -16,6 +16,7 @@ import coil.dispose
 import coil.size.Precision
 import coil.size.Scale
 import eu.kanade.tachiyomi.R
+import eu.kanade.tachiyomi.ui.enhanced.knownChapterProgress
 import eu.kanade.tachiyomi.data.database.models.Manga
 import eu.kanade.tachiyomi.data.image.coil.loadManga
 import eu.kanade.tachiyomi.databinding.MangaGridItemBinding
@@ -183,6 +184,10 @@ class LibraryGridHolder(
             binding.title.post(updateSubtitle)
         }
 
+        // A real chapter progress bar (only shown when the library knows chapter counts).
+        val chapterPercent = knownChapterProgress(item.manga.read, item.manga.unread)
+        binding.readingProgress.isVisible = view.resources.getBoolean(R.bool.v4_neon_mode) && chapterPercent != null
+        binding.readingProgress.progress = chapterPercent ?: 0
         setUnreadBadge(binding.unreadDownloadBadge.badgeView, item)
         setReadingButton(item)
 

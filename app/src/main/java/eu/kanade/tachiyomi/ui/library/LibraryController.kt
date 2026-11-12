@@ -92,6 +92,7 @@ import eu.kanade.tachiyomi.ui.library.LibraryGroup.UNGROUPED
 import eu.kanade.tachiyomi.ui.library.display.TabbedLibraryDisplaySheet
 import eu.kanade.tachiyomi.ui.library.filter.FilterBottomSheet
 import eu.kanade.tachiyomi.ui.library.search.compose.LibrarySearchFieldOption
+import eu.kanade.tachiyomi.ui.library.insights.LibraryInsightsActivity
 import eu.kanade.tachiyomi.ui.library.search.compose.LibrarySearchFilterSheetContent
 import eu.kanade.tachiyomi.ui.library.search.compose.SearchCombinator
 import eu.kanade.tachiyomi.ui.main.BottomSheetController
@@ -2368,9 +2369,24 @@ open class LibraryController(
         return null
     }
 
+    private fun applyEnhancedQuickFilter(filter: String) {
+        val toolbar = activityBinding?.searchToolbar ?: return
+        if (toolbar.searchItem?.isActionViewExpanded != true) {
+            toolbar.searchItem?.expandActionView()
+        }
+        toolbar.searchView?.setQuery(filter, true)
+        toolbar.searchView?.clearFocus()
+    }
+
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         when (item.itemId) {
+            R.id.action_library_insights -> {
+                activity?.let { host -> host.startActivity(Intent(host, LibraryInsightsActivity::class.java)) }
+            }
             R.id.action_search -> expandActionViewFromInteraction = true
+            R.id.action_only_duplicates -> applyEnhancedQuickFilter("dup:yes")
+            R.id.action_only_unread -> applyEnhancedQuickFilter("unread>0")
+            R.id.action_clear_smart_filters -> applyEnhancedQuickFilter("")
             R.id.action_filter -> {
                 hasExpanded = true
                 val sheetBehavior = binding.filterBottomSheet.filterBottomSheet.sheetBehavior

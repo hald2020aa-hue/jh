@@ -56,3 +56,13 @@ Apache-2.0 license are retained. All modified source files carry modification no
 - **R3:** `dup:yes|no` library search field with one-time conservative cross-source duplicate index; normalized Arabic/Latin title search; seven-day chapter last-read counts and distinct reading days in Statistics.
 - **QA:** 64 pure Kotlin logic checks, 5 search matcher integration checks, 10 XML/SQLite checks. Added Android JUnit tests and CI structural step (not run on Android).
 - **Blocker:** Android build could not start because Gradle 9.6.1 and Android SDK are missing; no APK, runtime verification, security release audit or signed production output.
+
+## Enhanced UI v2 (2026-11-12) — visual/functional iteration
+
+- Distinct development icon, brand palette, modernized main navigation, covers, rows, downloads and reader navigation.
+- Dedicated Compose source health screen with explicit tests, HTTP status/latency, bounded concurrency and private-address rejection.
+- Dedicated library metrics dashboard backed by the user's actual database, category-safe counting and cross-source duplicate detection.
+- Direct library smart filter actions and a reader two-page action linked to existing reading mode settings.
+- Download queue summary; existing queue actions and resume/reorder support retained.
+- JUnit, pure Kotlin, Android XML and CI regression hooks.
+- GitHub Actions is required for the first Android compilation of these new UI additions; local Gradle is network-blocked.

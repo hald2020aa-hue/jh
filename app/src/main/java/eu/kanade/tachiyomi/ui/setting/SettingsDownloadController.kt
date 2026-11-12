@@ -10,6 +10,7 @@ import androidx.preference.PreferenceScreen
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.hippo.unifile.UniFile
 import eu.kanade.tachiyomi.R
+import eu.kanade.tachiyomi.ui.download.center.DownloadCenterActivity
 import eu.kanade.tachiyomi.data.database.DatabaseHelper
 import eu.kanade.tachiyomi.data.database.models.Category
 import eu.kanade.tachiyomi.data.preference.PreferencesHelper
@@ -27,6 +28,12 @@ class SettingsDownloadController : SettingsController() {
     override fun setupPreferenceScreen(screen: PreferenceScreen) =
         screen.apply {
             titleRes = R.string.downloads
+
+            preference {
+                titleRes = R.string.enhanced_download_center
+                summaryRes = R.string.enhanced_download_center_info
+                onClick { startActivity(Intent(context, DownloadCenterActivity::class.java)) }
+            }
 
             preference {
                 key = Keys.downloadsDirectory
