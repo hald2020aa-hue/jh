@@ -14,6 +14,24 @@
 
 
     <item
+        android:id="@+id/action_library_insights"
+        android:icon="@drawable/ic_insights_24dp"
+        android:title="@string/enhanced_library_insights"
+        app:showAsAction="ifRoom" />
+
+    <item
+        android:id="@+id/action_smart_filters"
+        android:icon="@drawable/ic_filter_alt_24dp"
+        android:title="@string/enhanced_smart_filters"
+        app:showAsAction="ifRoom">
+        <menu>
+            <item android:id="@+id/action_only_duplicates" android:title="@string/enhanced_quick_duplicates"/>
+            <item android:id="@+id/action_only_unread" android:title="@string/enhanced_quick_unread"/>
+            <item android:id="@+id/action_clear_smart_filters" android:title="@string/enhanced_quick_all"/>
+        </menu>
+    </item>
+
+    <item
         android:id="@+id/action_filter"
         android:icon="@drawable/ic_filter_list_24dp"
         android:title="@string/filter"

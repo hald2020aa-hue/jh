@@ -1277,4 +1277,25 @@
     <string name="search_cross_source_duplicates">Duplicate titles across sources</string>
     <string name="stats_recent_chapters">Chapters last read in 7 days</string>
     <string name="stats_recent_days">Active days in 7 days</string>
+    <string name="enhanced_deep_test">Test chapters</string>
+    <string name="enhanced_deep_not_checked">Chapter and page checks not run</string>
+    <string name="enhanced_deep_checking">Testing browse, chapters and pages…</string>
+    <string name="enhanced_deep_failed">Content check failed: %1$s</string>
+    <string name="enhanced_deep_results">Titles: %1$d  Chapters: %2$d  Pages: %3$d</string>
+    <string name="enhanced_retry_failed">Retry failed downloads</string>
+    <string name="enhanced_download_center">Download center</string>
+    <string name="enhanced_download_center_info">Queue progress, priority and retry controls</string>
+    <string name="enhanced_download_overview">Queued: %1$d · Ready pages: %2$d · Errors: %3$d</string>
+    <string name="enhanced_filter_all">All</string>
+    <string name="enhanced_filter_pending">Pending</string>
+    <string name="enhanced_filter_failed">Failed</string>
+    <string name="enhanced_downloads_empty">No downloads in this filter</string>
+    <string name="enhanced_download_pages">Pages: %1$d/%2$d · %3$d%%</string>
+    <string name="enhanced_priority_first">First</string>
+    <string name="enhanced_remove_queue">Remove</string>
+    <string name="enhanced_dl_queued">Queued</string>
+    <string name="enhanced_dl_downloading">Downloading</string>
+    <string name="enhanced_dl_downloaded">Downloaded</string>
+    <string name="enhanced_dl_error">Failed</string>
+    <string name="enhanced_dl_waiting">Waiting</string>
 </resources>

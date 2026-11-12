@@ -37,6 +37,7 @@ import com.google.android.material.button.MaterialButton
 import com.google.android.material.button.MaterialButtonGroup
 import com.google.android.material.chip.Chip
 import eu.kanade.tachiyomi.R
+import eu.kanade.tachiyomi.ui.enhanced.knownChapterProgress
 import eu.kanade.tachiyomi.data.database.models.Manga
 import eu.kanade.tachiyomi.data.image.coil.LibraryMangaImageTarget
 import eu.kanade.tachiyomi.data.image.coil.loadManga
@@ -516,6 +517,11 @@ class MangaHeaderHolder(
         }
 
         val count = presenter.chapters.size
+        val readCount = presenter.chapters.count { it.chapter.read }
+        val progressPercent = knownChapterProgress(readCount, count - readCount)
+        binding.v4ProgressCard?.let { it.isVisible = itemView.resources.getBoolean(R.bool.v4_neon_mode) && count > 0 }
+        binding.v4ChapterProgress?.let { it.progress = progressPercent ?: 0 }
+        binding.v4ProgressNumbers?.let { it.text = itemView.context.getString(R.string.v4_reading_chapter_count, readCount, count) }
         binding.chaptersTitle.text = chaptersTitleText(count, presenter)
 
         binding.topView.updateLayoutParams<ConstraintLayout.LayoutParams> {

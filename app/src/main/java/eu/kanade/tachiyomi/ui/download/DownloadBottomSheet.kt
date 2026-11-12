@@ -134,8 +134,13 @@ class DownloadBottomSheet
                         extCount.chapter.preferredChapterName(context, extCount.manga, preferences),
                     )
                 } else {
-                    ""
+                    resources.getString(R.string.downloads)
                 }
+            binding.toolbarTitle.text = resources.getString(
+                R.string.enhanced_download_summary,
+                presenter.downloadQueue.size,
+                presenter.downloadQueue.sumOf { it.downloadedImages },
+            )
         }
 
         /**
@@ -211,6 +216,7 @@ class DownloadBottomSheet
          */
         fun onUpdateDownloadedPages(download: Download) {
             getHolder(download)?.notifyDownloadedPages()
+            updateDLTitle()
         }
 
         /**
@@ -246,6 +252,9 @@ class DownloadBottomSheet
 
             // Set reorder button visibility.
             menu.findItem(R.id.reorder)?.isVisible = !presenter.downloadQueue.isEmpty()
+            menu.findItem(R.id.enhanced_retry_failed)?.isVisible = presenter.downloadQueue.any {
+                it.status == Download.State.ERROR
+            } && presenter.downloadManager.isPaused()
         }
 
         private fun updateFab() {
@@ -255,6 +264,14 @@ class DownloadBottomSheet
 
         fun onOptionsItemSelected(item: MenuItem): Boolean {
             when (item.itemId) {
+                R.id.enhanced_retry_failed -> {
+                    // Downloader.start() requeues pending/failed entries; no duplicate queue entries.
+                    if (presenter.downloadQueue.any { it.status == Download.State.ERROR }) {
+                        // This action is available while paused; starting the existing worker
+                        // automatically requeues errored entries without duplicating them.
+                        DownloadJob.start(context)
+                    }
+                }
                 R.id.clear_queue -> {
                     presenter.stopDownloads()
                 }

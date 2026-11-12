@@ -1,6 +1,7 @@
 package eu.kanade.tachiyomi.ui.source
 
 import android.app.Activity
+import android.content.Intent
 import android.os.Build
 import android.os.Parcelable
 import android.view.LayoutInflater
@@ -45,6 +46,7 @@ import eu.kanade.tachiyomi.ui.setting.SettingsSourcesController
 import eu.kanade.tachiyomi.ui.source.browse.BrowseSourceController
 import eu.kanade.tachiyomi.ui.source.browse.repos.RepoController
 import eu.kanade.tachiyomi.ui.source.globalsearch.GlobalSearchController
+import eu.kanade.tachiyomi.ui.source.health.SourceHealthActivity
 import eu.kanade.tachiyomi.ui.source.searchhistory.FilterApplyResult
 import eu.kanade.tachiyomi.ui.source.searchhistory.SearchHistoryDelegate
 import eu.kanade.tachiyomi.ui.source.searchhistory.SearchHistoryEntry
@@ -833,6 +835,9 @@ class BrowseController :
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         when (item.itemId) {
             // Initialize option to open catalogue settings.
+            R.id.action_source_health -> {
+                activity?.let { host -> host.startActivity(Intent(host, SourceHealthActivity::class.java)) }
+            }
             R.id.action_filter -> {
                 router.pushController(SettingsSourcesController().withFadeTransaction())
             }

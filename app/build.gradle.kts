@@ -21,7 +21,9 @@ if (gradle.startParameter.taskRequests.toString().contains("Standard")) {
     apply<com.google.gms.googleservices.GoogleServicesPlugin>()
 }
 
-val supportedAbis = setOf("armeabi-v7a", "arm64-v8a", "x86", "x86_64")
+// For the user-requested single APK build. Other variants retain their original ABI options.
+val arm64Only = providers.gradleProperty("jh.arm64Only").map { it.toBoolean() }.getOrElse(false)
+val supportedAbis = if (arm64Only) setOf("arm64-v8a") else setOf("armeabi-v7a", "arm64-v8a", "x86", "x86_64")
 
 android {
     compileSdk = AndroidVersions.compileSdk
@@ -43,9 +45,6 @@ android {
         buildConfigField("Boolean", "INCLUDE_UPDATER", "false")
         buildConfigField("boolean", "BETA", "false")
 
-        ndk {
-            abiFilters += supportedAbis
-        }
         externalNativeBuild {
             cmake {
                 this.arguments("-DHAVE_LIBJXL=FALSE")
@@ -58,7 +57,7 @@ android {
             isEnable = true
             reset()
             include(*supportedAbis.toTypedArray())
-            isUniversalApk = true
+            isUniversalApk = !arm64Only
         }
     }
 
@@ -100,7 +99,7 @@ android {
         create("dev") {
             // Keep all translations (including Arabic) in the co-installable fork.
             applicationIdSuffix = ".enhanced"
-            versionNameSuffix = "-enhanced-dev"
+            versionNameSuffix = "-enhanced-ui3-dev"
         }
     }
 
@@ -260,8 +259,8 @@ dependencies {
     val fastAdapterVersion = "5.7.0"
     implementation("com.mikepenz:fastadapter:$fastAdapterVersion")
     implementation("com.mikepenz:fastadapter-extensions-binding:$fastAdapterVersion")
-    implementation("com.github.arkon.FlexibleAdapter:flexible-adapter:c8013533")
-    implementation("com.github.arkon.FlexibleAdapter:flexible-adapter-ui:c8013533")
+    implementation("eu.davidea:flexible-adapter:5.1.0")
+    implementation("eu.davidea:flexible-adapter-ui:1.0.0")
     implementation("com.nightlynexus.viewstatepageradapter:viewstatepageradapter:1.1.0")
     implementation("com.github.mthli:Slice:v1.2")
     implementation("io.noties.markwon:core:4.6.2")
@@ -349,5 +348,20 @@ tasks {
 
     preBuild {
         dependsOn(formatKotlin, copyHebrewStrings)
+    }
+}
+
+/** Refuse to publish a multi-APK build or an incorrectly named APK. */
+tasks.register("verifySingleArm64DevApk") {
+    dependsOn("assembleDevDebug")
+    doLast {
+        check(arm64Only) { "Use -Pjh.arm64Only=true for the requested single APK" }
+        val directory = layout.buildDirectory.dir("outputs/apk/dev/debug").get().asFile
+        val apks = directory.listFiles()?.filter { it.isFile && it.extension == "apk" } ?: emptyList()
+        check(apks.size == 1 && apks.single().name == "app-dev-arm64-v8a-debug.apk") {
+            "Expected only app-dev-arm64-v8a-debug.apk, found: ${apks.map { it.name }}"
+        }
+        check(apks.single().length() > 1024 * 1024) { "APK is unusually small" }
+        println("SINGLE_APK_OK: ${apks.single().absolutePath} (${apks.single().length()} bytes)")
     }
 }

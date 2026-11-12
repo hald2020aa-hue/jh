@@ -23,11 +23,26 @@ jobs:
         uses: gradle/actions/setup-gradle@v4
       - name: Check XML resources and reading activity SQL
         run: python3 qa/static_integration_checks.py
+      - name: Verify enhanced UI resources and screen wiring
+        run: python3 qa/enhanced/validate_ui.py
+      - name: Validate J2K Enhanced visual resources and bindings
+        run: python3 qa/neon/validate_neon.py
       - name: Run unit tests and compile debug APKs
-        run: ./gradlew --no-daemon testDevDebugUnitTest assembleDevDebug --stacktrace
+        run: ./gradlew -Pjh.arm64Only=true --no-daemon testDevDebugUnitTest verifySingleArm64DevApk --stacktrace
+      - name: Verify single APK integrity and debug signature
+        run: |
+          set -euo pipefail
+          APK="app/build/outputs/apk/dev/debug/app-dev-arm64-v8a-debug.apk"
+          test -s "$APK"
+          unzip -tqq "$APK"
+          SDK="${ANDROID_SDK_ROOT:-${ANDROID_HOME:-}}"
+          test -d "$SDK/build-tools"
+          BUILD_TOOLS="$(find "$SDK/build-tools" -mindepth 1 -maxdepth 1 -type d | sort -V | tail -1)"
+          "$BUILD_TOOLS/apksigner" verify --verbose "$APK"
+          sha256sum "$APK"
       - name: Upload unsigned/development-only APKs
         uses: actions/upload-artifact@v4
         with:
-          name: tachiyomij2k-development-apks
-          path: app/build/outputs/apk/dev/debug/*.apk
+          name: app-dev-arm64-v8a-debug.apk
+          path: app/build/outputs/apk/dev/debug/app-dev-arm64-v8a-debug.apk
           if-no-files-found: error

@@ -10,6 +10,12 @@
         app:showAsAction="collapseActionView|ifRoom"
         app:actionViewClass="eu.kanade.tachiyomi.ui.base.MiniSearchView"/>
 
+    <item
+        android:id="@+id/action_source_health"
+        android:title="@string/enhanced_source_health"
+        android:icon="@drawable/ic_wifi_tethering_24dp"
+        app:showAsAction="ifRoom"/>
+
     <item android:id="@+id/action_filter"
         android:title="@string/filter"
         android:icon="@drawable/ic_rule_24dp"

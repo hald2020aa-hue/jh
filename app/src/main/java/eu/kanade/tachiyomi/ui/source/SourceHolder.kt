@@ -82,6 +82,8 @@ class SourceHolder(
         top: Boolean,
         bottom: Boolean,
     ) {
+        // Modern dev UI uses separated cards; retain grouped corners for the stable flavor.
+        if (itemView.resources.getBoolean(R.bool.v4_neon_mode)) return
         val shapeModel = binding.sourceCard.makeContainerShape(top, bottom, clipContentTo = binding.card)
         binding.sourceCard.shapeAppearanceModel = shapeModel
         binding.startView.shapeAppearanceModel = shapeModel

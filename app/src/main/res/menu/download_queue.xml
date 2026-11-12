@@ -38,6 +38,12 @@
     </item>
 
 
+    <item
+        android:id="@+id/enhanced_retry_failed"
+        android:title="@string/enhanced_retry_failed"
+        android:visible="false"
+        app:showAsAction="never" />
+
     <item android:title="@string/cancel_all"
         android:id="@+id/clear_queue"
         android:visible="false"
