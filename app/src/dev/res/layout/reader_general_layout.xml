@@ -5,13 +5,13 @@
 
         <com.google.android.material.textview.MaterialTextView style="?textAppearanceTitleSmall" android:textSize="15sp" android:layout_width="match_parent" android:textColor="@color/v4_primary" android:layout_height="wrap_content" android:layout_marginTop="@dimen/reader_title_settings_spacing" android:text="@string/series"/>
 
-        <eu.kanade.tachiyomi.widget.MaterialSpinnerView android:id="@+id/viewer_series" android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_marginTop="9dp" app:title="@string/reading_mode" android:entries="@array/viewers_selector" android:background="@drawable/v4_neon_surface" android:paddingStart="10dp" android:paddingEnd="10dp" android:minimumHeight="54dp"/>
+        <eu.kanade.tachiyomi.widget.MaterialSpinnerView android:id="@+id/viewer_series" android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_marginTop="9dp" app:title="@string/reading_mode" android:entries="@array/viewers_selector" android:background="@drawable/v4_neon_surface" android:paddingStart="10dp" android:paddingEnd="10dp" android:minHeight="54dp"/>
 
-        <eu.kanade.tachiyomi.widget.MaterialSpinnerView android:id="@+id/rotation_mode" android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_marginTop="9dp" app:title="@string/orientation" android:entries="@array/rotation_type" android:background="@drawable/v4_neon_surface" android:paddingStart="10dp" android:paddingEnd="10dp" android:minimumHeight="54dp"/>
+        <eu.kanade.tachiyomi.widget.MaterialSpinnerView android:id="@+id/rotation_mode" android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_marginTop="9dp" app:title="@string/orientation" android:entries="@array/rotation_type" android:background="@drawable/v4_neon_surface" android:paddingStart="10dp" android:paddingEnd="10dp" android:minHeight="54dp"/>
 
         <com.google.android.material.textview.MaterialTextView style="?textAppearanceTitleSmall" android:textSize="15sp" android:layout_width="match_parent" android:textColor="@color/v4_primary" android:layout_height="wrap_content" android:layout_marginTop="@dimen/reader_title_settings_spacing" android:text="@string/general"/>
 
-        <eu.kanade.tachiyomi.widget.MaterialSpinnerView android:id="@+id/background_color" android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_marginTop="9dp" app:title="@string/background_color" android:background="@drawable/v4_neon_surface" android:paddingStart="10dp" android:paddingEnd="10dp" android:minimumHeight="54dp"/>
+        <eu.kanade.tachiyomi.widget.MaterialSpinnerView android:id="@+id/background_color" android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_marginTop="9dp" app:title="@string/background_color" android:background="@drawable/v4_neon_surface" android:paddingStart="10dp" android:paddingEnd="10dp" android:minHeight="54dp"/>
 
         <com.google.android.material.materialswitch.MaterialSwitch android:id="@+id/show_page_number" android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_marginTop="9dp" android:text="@string/show_page_number" android:textColor="@color/v4_text" android:background="@drawable/v4_neon_surface" android:paddingStart="14dp" android:paddingEnd="14dp" android:paddingTop="13dp" android:paddingBottom="13dp"/>
 
@@ -41,7 +41,7 @@
 
             </LinearLayout>
 
-            <eu.kanade.tachiyomi.widget.MaterialSpinnerView android:id="@+id/flash_color" android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_marginTop="9dp" app:title="@string/flash_with" android:background="@drawable/v4_neon_surface" android:paddingStart="10dp" android:paddingEnd="10dp" android:minimumHeight="54dp"/>
+            <eu.kanade.tachiyomi.widget.MaterialSpinnerView android:id="@+id/flash_color" android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_marginTop="9dp" app:title="@string/flash_with" android:background="@drawable/v4_neon_surface" android:paddingStart="10dp" android:paddingEnd="10dp" android:minHeight="54dp"/>
         </LinearLayout>
 
         <com.google.android.material.textview.MaterialTextView style="?textAppearanceTitleSmall" android:textSize="15sp" android:layout_width="match_parent" android:textColor="@color/v4_primary" android:layout_height="wrap_content" android:layout_marginTop="@dimen/reader_title_settings_spacing" android:text="@string/vertical_seekbar"/>
