@@ -45,9 +45,6 @@ android {
         buildConfigField("Boolean", "INCLUDE_UPDATER", "false")
         buildConfigField("boolean", "BETA", "false")
 
-        ndk {
-            abiFilters += supportedAbis
-        }
         externalNativeBuild {
             cmake {
                 this.arguments("-DHAVE_LIBJXL=FALSE")
