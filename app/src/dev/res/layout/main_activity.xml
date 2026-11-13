@@ -27,7 +27,7 @@
 
         <LinearLayout android:id="@+id/card_frame" android:layout_width="match_parent" android:layout_height="?mainActionBarSize" android:paddingStart="10dp" android:paddingEnd="10dp" android:clipToPadding="false" android:orientation="horizontal">
 
-            <com.google.android.material.card.MaterialCardView android:id="@+id/card_view" android:layout_width="0dp" android:layout_weight="1" android:layout_marginTop="4dp" app:cardBackgroundColor="?colorSurfaceContainer" android:layout_marginBottom="4dp" app:strokeWidth="0dp" app:cardCornerRadius="26dp" app:cardElevation="0dp" android:layout_height="match_parent">
+            <com.google.android.material.card.MaterialCardView android:id="@+id/card_view" android:layout_width="0dp" android:layout_weight="1" android:layout_marginTop="4dp" app:cardBackgroundColor="?colorSurfaceContainer" android:layout_marginBottom="4dp" app:strokeWidth="1dp" app:cardCornerRadius="26dp" app:cardElevation="0dp" android:layout_height="match_parent" app:strokeColor="@color/v10_neon_border_soft">
 
                 <eu.kanade.tachiyomi.ui.base.FloatingToolbar android:id="@+id/search_toolbar" tools:title="Search Library..." app:contentInsetStartWithNavigation="0dp" app:contentInsetEndWithActions="0dp" app:contentInsetStart="0dp" app:contentInsetEnd="0dp" android:background="@drawable/rect_ripple" app:navigationIconTint="@color/text_color_secondary" app:navigationIcon="@drawable/ic_search_24dp" app:titleTextAppearance="@style/TextAppearance.FloatingTitle" app:subtitleTextAppearance="?textAppearanceBodySmall" app:collapseIcon="@drawable/ic_arrow_back_24dp" android:layout_width="match_parent" android:layout_height="match_parent">
 

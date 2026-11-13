@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <style name="ThemeOverlay.J2K.NeonReaderPopup" parent="ThemeOverlay.AppCompat.Dark">
+        <item name="android:colorBackground">@color/v4_card</item>
+        <item name="android:textColorPrimary">@color/v4_text</item>
+        <item name="colorAccent">@color/v10_neon_pink</item>
+        <item name="popupMenuStyle">@style/Widget.J2K.NeonReaderPopup</item>
+    </style>
+    <style name="Widget.J2K.NeonReaderPopup" parent="Widget.AppCompat.PopupMenu">
+        <item name="android:popupBackground">@drawable/v4_neon_surface</item>
+    </style>
+</resources>
