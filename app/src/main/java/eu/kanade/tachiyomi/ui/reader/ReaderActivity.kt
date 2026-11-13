@@ -204,7 +204,7 @@ class ReaderActivity : BaseActivity<ReaderActivityBinding>() {
     private var menuTemporarilyVisible = false
 
     // V6 is deliberately opt-in. Only text is cached in memory; original images stay untouched.
-    private val chapterTranslator = OnDeviceChapterTranslator()
+    private val chapterTranslator by lazy { OnDeviceChapterTranslator(applicationContext) }
     private var translationJob: Job? = null
     private var translatedPage: ReaderPage? = null
     private var translationBanner: TextView? = null
@@ -914,6 +914,15 @@ class ReaderActivity : BaseActivity<ReaderActivityBinding>() {
                 manuallyShiftedPages = true
             }
             R.id.action_translate_chapter -> askChapterTranslationLanguage()
+            R.id.action_translation_auto -> {
+                val enable = !translationUiPrefs.getBoolean("auto_translate", false)
+                translationUiPrefs.edit().putBoolean("auto_translate", enable).apply()
+                translationShown = enable || translationShown
+                if (enable) translatedPage?.let { startAutoTranslationIfConfigured(it) }
+                toast(if (enable) "الترجمة التلقائية مفعلة للفصول القادمة" else "الترجمة التلقائية متوقفة")
+            }
+            R.id.action_translation_edit -> editCurrentPageArabic()
+            R.id.action_translation_diagnostics -> showTranslationDiagnostics()
             R.id.action_translation_page -> showCurrentPageTranslation()
             R.id.action_translation_toggle -> {
                 translationShown = !translationShown
@@ -944,12 +953,14 @@ class ReaderActivity : BaseActivity<ReaderActivityBinding>() {
         androidx.appcompat.app.AlertDialog.Builder(this)
             .setTitle(R.string.v6_translate_chapter)
             .setItems(languages.map { it.arabicName }.toTypedArray()) { _, selected ->
-                translationJob?.cancel()
+                val previous = translationJob
+                previous?.cancel()
                 translationShown = true
                 lastTranslationLanguage = languages[selected]
                 translationBanner?.isVisible = false
                 refreshTranslationOverlays()
                 translationJob = scope.launch {
+                    previous?.join()
                     try {
                         chapterTranslator.translateChapter(chapter!!, languages[selected], translatedPage?.index ?: 0)
                     } catch (e: kotlinx.coroutines.CancellationException) {
@@ -959,20 +970,103 @@ class ReaderActivity : BaseActivity<ReaderActivityBinding>() {
                     }
                     refreshTranslationBanner()
                 }
-                // Collect in a separate reader-scoped job that is canceled at destruction.
-                translationUpdatesJob?.cancel()
-                translationUpdatesJob = scope.launch {
-                    chapterTranslator.progress.collect {
-                        refreshTranslationBanner()
-                        refreshTranslationOverlays()
-                    }
-                }
+                ensureTranslationUpdates()
             }
             .setNegativeButton(android.R.string.cancel, null)
             .show()
     }
 
     private var translationUpdatesJob: Job? = null
+
+    private fun ensureTranslationUpdates() {
+        if (translationUpdatesJob?.isActive == true) return
+        translationUpdatesJob = scope.launch {
+            chapterTranslator.progress.collect {
+                refreshTranslationBanner()
+                refreshTranslationOverlays()
+            }
+        }
+    }
+
+    /** User-controlled opt-in: first visible page + next seven, then the chapter. */
+    private fun startAutoTranslationIfConfigured(page: ReaderPage) {
+        if (!translationUiPrefs.getBoolean("auto_translate", false)) return
+        val chapter = viewModel.state.value.viewerChapters?.currChapter ?: return
+        if (chapter.pages.isNullOrEmpty()) return
+        if (chapterTranslator.progress.value.chapterId == chapter.chapter.id) return
+        val previous = translationJob
+        if (previous?.isActive == true) previous.cancel()
+        translationShown = true
+        lastTranslationLanguage = SourceTextLanguage.AUTO
+        ensureTranslationUpdates()
+        translationJob = scope.launch {
+            previous?.join()
+            chapterTranslator.translateChapter(chapter, SourceTextLanguage.AUTO, page.index)
+            refreshTranslationBanner()
+            refreshTranslationOverlays()
+        }
+    }
+
+    private fun showTranslationDiagnostics() {
+        val state = chapterTranslator.progress.value
+        val page = translatedPage
+        val failure = page?.let { state.translated[it.index]?.error }
+        val diagnostic = buildString {
+            append("الحالة: ").append(state.message.ifBlank { "لم تبدأ الترجمة" })
+            append("\nالصفحات: ").append(state.processedPages).append(" / ").append(state.totalPages)
+            append("\nالأخطاء: ").append(state.failedPages)
+            append("\nالاكتشاف التلقائي: ")
+            append(if (translationUiPrefs.getBoolean("auto_translate", false)) "مفعّل" else "متوقف")
+            if (failure != null) append("\nسبب فشل الصفحة: ").append(failure)
+            append("\nالنماذج: يُطلب تنزيلها على الجهاز عند أول ترجمة")
+            append("\nالكاش: النصوص والإحداثيات فقط؛ الصور الأصلية لا تُعدّل")
+        }
+        androidx.appcompat.app.AlertDialog.Builder(this)
+            .setTitle("تشخيص الترجمة V9")
+            .setMessage(diagnostic)
+            .setPositiveButton(android.R.string.ok, null)
+            .show()
+    }
+
+    private fun editCurrentPageArabic() {
+        val page = translatedPage ?: return
+        val chapter = viewModel.state.value.viewerChapters?.currChapter ?: return
+        val state = chapterTranslator.progress.value
+        val blocks = state.takeIf { it.chapterId == chapter.chapter.id }
+            ?.translated?.get(page.index)?.blocks.orEmpty()
+        if (blocks.isEmpty()) { toast("لا توجد فقاعات مترجمة في الصفحة الحالية"); return }
+        androidx.appcompat.app.AlertDialog.Builder(this)
+            .setTitle("اختر الفقاعة لتعديل العربية")
+            .setItems(blocks.mapIndexed { i, b -> "${i + 1}. ${b.arabic.take(65)}" }.toTypedArray()) { _, index ->
+                val input = android.widget.EditText(this).apply {
+                    setText(blocks[index].arabic)
+                    setSingleLine(false)
+                    minLines = 2
+                    maxLines = 8
+                    inputType = android.text.InputType.TYPE_CLASS_TEXT or
+                        android.text.InputType.TYPE_TEXT_FLAG_MULTI_LINE
+                    textDirection = View.TEXT_DIRECTION_RTL
+                }
+                androidx.appcompat.app.AlertDialog.Builder(this)
+                    .setTitle("تصحيح الترجمة العربية")
+                    .setView(input)
+                    .setPositiveButton("حفظ") { _, _ ->
+                        scope.launch {
+                            try {
+                                chapterTranslator.editTranslatedBlock(chapter, page.index, index, input.text.toString())
+                                refreshTranslationOverlays()
+                                toast("تم حفظ تصحيح الفقاعة")
+                            } catch (e: Throwable) {
+                                toast(e.message ?: "تعذر حفظ التصحيح")
+                            }
+                        }
+                    }
+                    .setNegativeButton(android.R.string.cancel, null)
+                    .show()
+            }
+            .setNegativeButton(android.R.string.cancel, null)
+            .show()
+    }
 
     /** Compact progress/errors only. Arabic itself is drawn ON the page, never in a bottom bar. */
     private fun refreshTranslationBanner() {
@@ -1036,36 +1130,52 @@ class ReaderActivity : BaseActivity<ReaderActivityBinding>() {
         chip.isVisible = true
     }
 
-    /** Attach the OCR text to the correct image, never to chapter artwork on disk. */
-    fun decorateTranslationImage(image: ReaderPageImageView, page: ReaderPage, mergedSpread: Boolean = false) {
-        image.setTranslationIdentity(page.chapter.chapter.id, page.index, mergedSpread)
-        // Merged spreads are composite bitmaps; do not overlay misaligned OCR from one half.
-        val result = chapterTranslator.progress.value.takeIf { it.chapterId == page.chapter.chapter.id }
-            ?.translated?.get(page.index)
+    /** Attach OCR overlays to the exact page, including a geometrically verified two-page spread. */
+    fun decorateTranslationImage(
+        image: ReaderPageImageView,
+        page: ReaderPage,
+        mergedSpread: Boolean = false,
+        spreadGeometry: eu.kanade.tachiyomi.ui.reader.translation.V9SpreadGeometry? = null,
+        extraPageIndex: Int = -1,
+    ) {
+        image.setTranslationIdentity(
+            page.chapter.chapter.id, page.index, mergedSpread, spreadGeometry, extraPageIndex,
+        )
+        renderTranslationOnImage(image)
+    }
+
+    private fun renderTranslationOnImage(image: ReaderPageImageView) {
+        val progress = chapterTranslator.progress.value
+        if (image.translationChapterId == null || progress.chapterId != image.translationChapterId) {
+            image.showTranslation(null, false, .83f, 1f)
+            return
+        }
+        val first = progress.translated[image.translationPageIndex]
+        val spread = image.translationSpreadGeometry
+        val blocks = when {
+            spread != null -> {
+                val second = progress.translated[image.translationExtraPageIndex]
+                buildList {
+                    first?.takeIf { it.error == null }?.blocks?.forEach { add(spread.primary.project(it)) }
+                    second?.takeIf { it.error == null }?.blocks?.forEach { add(spread.secondary.project(it)) }
+                }
+            }
+            image.translationMergedSpread -> emptyList()
+            first != null && first.error == null -> first.blocks
+            else -> emptyList()
+        }
         image.showTranslation(
-            if (mergedSpread) null else result?.blocks,
-            translationShown && !mergedSpread && result?.error == null,
-            translationUiPrefs.getFloat("opacity", 0.83f),
+            blocks,
+            translationShown && blocks.isNotEmpty(),
+            translationUiPrefs.getFloat("opacity", .83f),
             translationUiPrefs.getFloat("font_scale", 1f),
         )
     }
 
-    /** Refresh only currently attached page views, including webtoon holders. */
+    /** Refresh all visible holders when an OCR page completes or the reader changes orientation. */
     private fun refreshTranslationOverlays() {
         fun visit(view: View) {
-            if (view is ReaderPageImageView) {
-                val chapterId = view.translationChapterId
-                val index = view.translationPageIndex
-                val state = chapterTranslator.progress.value
-                val result = state.takeIf { chapterId != null && it.chapterId == chapterId }
-                    ?.translated?.get(index)
-                view.showTranslation(
-                    result?.blocks,
-                    translationShown && !view.translationMergedSpread && result?.error == null,
-                    translationUiPrefs.getFloat("opacity", 0.83f),
-                    translationUiPrefs.getFloat("font_scale", 1f),
-                )
-            }
+            if (view is ReaderPageImageView) renderTranslationOnImage(view)
             if (view is ViewGroup) {
                 for (i in 0 until view.childCount) visit(view.getChildAt(i))
             }
@@ -1111,8 +1221,10 @@ class ReaderActivity : BaseActivity<ReaderActivityBinding>() {
     private fun retryFailedTranslations() {
         val chapter = viewModel.state.value.viewerChapters?.currChapter ?: return
         val language = lastTranslationLanguage ?: run { askChapterTranslationLanguage(); return }
-        translationJob?.cancel()
+        val previous = translationJob
+        previous?.cancel()
         translationJob = scope.launch {
+            previous?.join()
             try {
                 chapterTranslator.translateChapter(chapter, language, translatedPage?.index ?: 0, retryFailedOnly = true)
             } catch (e: kotlinx.coroutines.CancellationException) {
@@ -2246,6 +2358,7 @@ class ReaderActivity : BaseActivity<ReaderActivityBinding>() {
         (page.chapter.pageLoader as? eu.kanade.tachiyomi.ui.reader.loader.HttpPageLoader)
             ?.focusOnPage(page.index)
         translatedPage = page
+        startAutoTranslationIfConfigured(page)
         refreshTranslationBanner()
         refreshTranslationOverlays()
         flashPage()

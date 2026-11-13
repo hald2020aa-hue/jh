@@ -57,9 +57,9 @@ for label,marker in [
     ('target Arabic', 'TranslateLanguage.ARABIC'),
     ('model timeout', 'withTimeoutOrNull(180_000L)'),
     ('per page timeout', 'withTimeoutOrNull(120_000L)'),
-    ('error status', 'تعذرت تهيئة الترجمة'),
+    ('classified error status', 'classifyTranslationError(e)'),
     ('per page OCR blocks', 'recognized.textBlocks'),
-    ('rectangle normalization', 'bounds.left.toFloat() / bitmap.width'),
+    ('rectangle normalization', 'rect.left.toFloat() / bitmap.width'),
     ('cancellable job', 'coroutineContext.ensureActive()')]:
     test(label,marker in engine)
 for label,marker in [('page bounds','expandedOcrTextRegion('),('neighbor protection','safeOcrPlateRegion('),('safe opacity','safeArabicOverlayOpacity'),('safe font','safeArabicOverlayFontScale')]:

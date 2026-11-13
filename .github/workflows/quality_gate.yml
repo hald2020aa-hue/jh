@@ -33,6 +33,8 @@ jobs:
         run: python3 qa/v7/validate_v7.py
       - name: Validate V8 Arabic in-page OCR overlay and four-language wiring
         run: python3 qa/v8/validate_v8.py
+      - name: Validate V9 auto OCR, translation routing, bubble geometry and update identity
+        run: python3 qa/v9/validate_v9.py
       - name: Run unit tests and compile debug APKs
         run: ./gradlew -Pjh.arm64Only=true --no-daemon testDevDebugUnitTest verifySingleArm64DevApk --stacktrace
       - name: Verify single APK integrity and debug signature
@@ -44,7 +46,9 @@ jobs:
           SDK="${ANDROID_SDK_ROOT:-${ANDROID_HOME:-}}"
           test -d "$SDK/build-tools"
           BUILD_TOOLS="$(find "$SDK/build-tools" -mindepth 1 -maxdepth 1 -type d | sort -V | tail -1)"
-          "$BUILD_TOOLS/apksigner" verify --verbose "$APK"
+          "$BUILD_TOOLS/apksigner" verify --verbose --print-certs "$APK"
+          echo "NOTE: CI debug certificates are ephemeral unless an identical persistent signing key is provided."
+          echo "Do not install this as an in-place update over a differently signed APK."
           sha256sum "$APK"
       - name: Upload unsigned/development-only APKs
         uses: actions/upload-artifact@v4

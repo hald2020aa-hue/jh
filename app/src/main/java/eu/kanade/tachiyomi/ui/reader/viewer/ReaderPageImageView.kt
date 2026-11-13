@@ -20,6 +20,7 @@ import android.view.WindowInsets
 import android.widget.FrameLayout
 import eu.kanade.tachiyomi.ui.reader.translation.ReaderBubbleOverlayView
 import eu.kanade.tachiyomi.ui.reader.translation.TranslatedTextBlock
+import eu.kanade.tachiyomi.ui.reader.translation.V9SpreadGeometry
 import androidx.annotation.AttrRes
 import androidx.annotation.CallSuper
 import androidx.annotation.StyleRes
@@ -79,9 +80,18 @@ open class ReaderPageImageView
             private set
         var translationMergedSpread: Boolean = false
             private set
+        var translationSpreadGeometry: V9SpreadGeometry? = null
+            private set
+        var translationExtraPageIndex: Int = -1
+            private set
         private var translationOverlay: ReaderBubbleOverlayView? = null
 
-        fun setTranslationIdentity(chapterId: Long?, pageIndex: Int, mergedSpread: Boolean = false) {
+        fun setTranslationIdentity(
+            chapterId: Long?, pageIndex: Int, mergedSpread: Boolean = false,
+            spreadGeometry: V9SpreadGeometry? = null, extraPageIndex: Int = -1,
+        ) {
+            translationSpreadGeometry = spreadGeometry
+            translationExtraPageIndex = extraPageIndex
             translationMergedSpread = mergedSpread
             translationChapterId = chapterId
             translationPageIndex = pageIndex
