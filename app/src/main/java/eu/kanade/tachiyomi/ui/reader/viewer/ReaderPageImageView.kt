@@ -425,6 +425,9 @@ open class ReaderPageImageView
                         setOnScaleChangeListener { _, _, _ ->
                             this@ReaderPageImageView.onScaleChanged(scale)
                         }
+                        // The imageMatrix changes when the user drags without changing scale.
+                        // Follow PhotoView panning so Arabic never floats over the wrong balloon.
+                        setOnViewDragListener { _, _ -> translationOverlay?.invalidate() }
                     }
                 }
             addView(pageView, MATCH_PARENT, MATCH_PARENT)

@@ -918,6 +918,7 @@ class ReaderActivity : BaseActivity<ReaderActivityBinding>() {
             R.id.action_translation_toggle -> {
                 translationShown = !translationShown
                 refreshTranslationOverlays()
+                refreshTranslationBanner()
                 toast(if (translationShown) "عرض الترجمة العربية" else "عرض الصفحات الأصلية")
             }
             R.id.action_translation_appearance -> showTranslationAppearance()
@@ -973,41 +974,66 @@ class ReaderActivity : BaseActivity<ReaderActivityBinding>() {
 
     private var translationUpdatesJob: Job? = null
 
+    /** Compact progress/errors only. Arabic itself is drawn ON the page, never in a bottom bar. */
     private fun refreshTranslationBanner() {
         val page = translatedPage ?: return
         val progress = chapterTranslator.progress.value
-        if (progress.chapterId != page.chapter.chapter.id) {
+        if (!translationShown || progress.chapterId != page.chapter.chapter.id) {
             translationBanner?.isVisible = false
             return
         }
-        val translation = progress.translated[page.index]
+        val translated = progress.translated[page.index]
+        // A successfully translated page no longer needs a banner covering the manga.
+        if (translated != null && translated.error == null && translated.blocks.isNotEmpty()) {
+            translationBanner?.isVisible = false
+            return
+        }
         val message = when {
-            translation?.error != null -> "تعذرت ترجمة الصفحة؛ يمكنك إعادة المحاولة"
-            translation != null && translation.blocks.isNotEmpty() -> "الترجمة العربية ظاهرة داخل الصفحة · اضغط لقراءة النص"
-            translation != null -> "لا يوجد نص قابل للقراءة في الصفحة"
-            progress.running -> getString(R.string.v6_translation_processing, progress.processedPages, progress.totalPages)
+            translated?.error != null -> "فشلت ترجمة الصفحة؛ اضغط لإعادة المحاولة"
+            translated != null -> "لم يُعثر على نص في الصفحة الحالية"
+            progress.running -> progress.message.ifBlank {
+                getString(R.string.v6_translation_processing, progress.processedPages, progress.totalPages)
+            }
             else -> progress.message
         }
-        if (message.isBlank()) return
-        val banner = translationBanner ?: TextView(this).also { view ->
+        if (message.isBlank() || message == "اكتملت ترجمة الفصل") {
+            translationBanner?.isVisible = false
+            return
+        }
+        val chip = translationBanner ?: TextView(this).also { view ->
             view.setTextColor(Color.WHITE)
-            view.setBackgroundColor(Color.argb(225, 10, 20, 39))
-            view.textSize = 14f
-            view.maxLines = 3
+            view.background = android.graphics.drawable.GradientDrawable().apply {
+                setColor(Color.argb(233, 10, 20, 39))
+                cornerRadius = 18.dpToPx.toFloat()
+                setStroke(1.dpToPx, Color.rgb(34, 174, 227))
+            }
+            view.textSize = 12f
+            view.maxLines = 2
             view.ellipsize = TextUtils.TruncateAt.END
-            val padding = 12.dpToPx
-            view.setPadding(padding, padding, padding, padding)
-            view.setOnClickListener { showCurrentPageTranslation() }
+            view.maxWidth = (resources.displayMetrics.widthPixels * 0.76f).toInt()
+            val pad = 10.dpToPx
+            view.setPadding(pad, pad / 2, pad, pad / 2)
+            view.setOnClickListener {
+                val current = chapterTranslator.progress.value
+                if (current.translated[translatedPage?.index]?.error != null) {
+                    retryFailedTranslations()
+                } else if (!current.running && current.processedPages == 0) {
+                    // The ML Kit model itself may have failed to download; let the user restart.
+                    askChapterTranslationLanguage()
+                } else {
+                    showCurrentPageTranslation()
+                }
+            }
             val root = findViewById<FrameLayout>(android.R.id.content)
             root.addView(view, FrameLayout.LayoutParams(
-                ViewGroup.LayoutParams.MATCH_PARENT,
                 ViewGroup.LayoutParams.WRAP_CONTENT,
-                Gravity.BOTTOM,
-            ).apply { bottomMargin = 72.dpToPx })
+                ViewGroup.LayoutParams.WRAP_CONTENT,
+                Gravity.TOP or Gravity.END,
+            ).apply { topMargin = 65.dpToPx; marginEnd = 12.dpToPx })
             translationBanner = view
         }
-        banner.text = message
-        banner.isVisible = true
+        chip.text = message
+        chip.isVisible = true
     }
 
     /** Attach the OCR text to the correct image, never to chapter artwork on disk. */
@@ -1047,24 +1073,38 @@ class ReaderActivity : BaseActivity<ReaderActivityBinding>() {
         visit(binding.viewerContainer)
     }
 
+    /** Fine-grained appearance controls, saved separately from reader and source settings. */
     private fun showTranslationAppearance() {
-        val choices = arrayOf(
-            "حجم خط صغير (85%)", "حجم خط عادي (100%)", "حجم خط كبير (125%)",
-            "خلفية خفيفة (60%)", "خلفية متوسطة (83%)", "خلفية معتمة (100%)",
-        )
+        val fontBar = android.widget.SeekBar(this).apply {
+            max = 85 // 75..160 percent, including 100
+            progress = (100 * translationUiPrefs.getFloat("font_scale", 1f)).toInt().coerceIn(75, 160) - 75
+            contentDescription = "حجم خط الترجمة"
+        }
+        val opacityBar = android.widget.SeekBar(this).apply {
+            max = 55 // 45..100 percent
+            progress = (100 * translationUiPrefs.getFloat("opacity", 0.83f)).toInt().coerceIn(45, 100) - 45
+            contentDescription = "شفافية خلفية الترجمة"
+        }
+        val fields = android.widget.LinearLayout(this).apply {
+            orientation = android.widget.LinearLayout.VERTICAL
+            val pad = 16.dpToPx
+            setPadding(pad, pad, pad, pad)
+            addView(TextView(this@ReaderActivity).apply { text = "حجم الخط: من 75% إلى 160%" })
+            addView(fontBar)
+            addView(TextView(this@ReaderActivity).apply { text = "تعتيم الخلفية: من 45% إلى 100%" })
+            addView(opacityBar)
+        }
         androidx.appcompat.app.AlertDialog.Builder(this)
             .setTitle(R.string.v7_translation_appearance)
-            .setItems(choices) { _, choice ->
-                when (choice) {
-                    0 -> translationUiPrefs.edit().putFloat("font_scale", 0.85f).apply()
-                    1 -> translationUiPrefs.edit().putFloat("font_scale", 1f).apply()
-                    2 -> translationUiPrefs.edit().putFloat("font_scale", 1.25f).apply()
-                    3 -> translationUiPrefs.edit().putFloat("opacity", 0.60f).apply()
-                    4 -> translationUiPrefs.edit().putFloat("opacity", 0.83f).apply()
-                    5 -> translationUiPrefs.edit().putFloat("opacity", 1f).apply()
-                }
+            .setView(fields)
+            .setPositiveButton("تطبيق") { _, _ ->
+                translationUiPrefs.edit()
+                    .putFloat("font_scale", (75 + fontBar.progress) / 100f)
+                    .putFloat("opacity", (45 + opacityBar.progress) / 100f)
+                    .apply()
                 refreshTranslationOverlays()
             }
+            .setNegativeButton(android.R.string.cancel, null)
             .show()
     }
 
