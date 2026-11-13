@@ -31,6 +31,7 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.suspendCancellableCoroutine
 import kotlinx.coroutines.withContext
 import kotlinx.coroutines.withTimeout
+import kotlinx.coroutines.withTimeoutOrNull
 import kotlin.coroutines.coroutineContext
 import kotlin.coroutines.resume
 import kotlin.coroutines.resumeWithException
@@ -124,13 +125,21 @@ class OnDeviceChapterTranslator {
         try {
             // The user explicitly requested translation. Model downloads may require a connection.
             // We do not call translate() until ML Kit confirms the model is ready.
-            translator.downloadModelIfNeeded(DownloadConditions.Builder().build()).awaitTask()
-            _progress.value = _progress.value.copy(message = "جارٍ ترجمة صفحات الفصل…")
+            // A stalled/blocked model download must not leave the reader showing 0/N forever.
+            withTimeoutOrNull(180_000L) {
+                translator.downloadModelIfNeeded(DownloadConditions.Builder().build()).awaitTask()
+                true
+            } ?: error("انتهت مهلة تنزيل نموذج اللغة. تحقق من الإنترنت ثم أعد المحاولة")
+            _progress.value = _progress.value.copy(message = "نموذج اللغة جاهز؛ جارٍ قراءة صفحات الفصل…")
             for (pageIndex in pending) {
                 val page = pages[pageIndex]
                 coroutineContext.ensureActive()
+                _progress.value = _progress.value.copy(
+                    message = "التعرف على نص الصفحة ${pageIndex + 1} من ${pages.size}…",
+                )
                 val result = try {
-                    translatePage(page, recognizer, translator)
+                    withTimeoutOrNull(120_000L) { translatePage(page, recognizer, translator) }
+                        ?: TranslatedReaderPage(page.index, emptyList(), "انتهت مهلة ترجمة الصفحة")
                 } catch (e: CancellationException) {
                     throw e
                 } catch (e: Throwable) {
@@ -141,6 +150,11 @@ class OnDeviceChapterTranslator {
                     processedPages = current.processedPages + 1,
                     failedPages = current.failedPages + if (result.error != null) 1 else 0,
                     translated = current.translated + (page.index to result),
+                    message = if (result.error == null) {
+                        "تمت معالجة ${current.processedPages + 1} من ${pages.size} صفحة"
+                    } else {
+                        "تعذرت ترجمة الصفحة ${pageIndex + 1}: ${result.error}"
+                    },
                 )
             }
             val failures = _progress.value.failedPages
@@ -152,7 +166,10 @@ class OnDeviceChapterTranslator {
             _progress.value = _progress.value.copy(running = false, message = "توقفت الترجمة")
             throw e
         } catch (e: Throwable) {
-            _progress.value = _progress.value.copy(running = false, message = e.message ?: "تعذرت الترجمة")
+            _progress.value = _progress.value.copy(
+                running = false,
+                message = "تعذرت تهيئة الترجمة: ${e.message ?: "تأكد من اتصال الإنترنت ونموذج اللغة"}",
+            )
             throw e
         } finally {
             recognizer.close()
