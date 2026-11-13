@@ -3,6 +3,13 @@ package eu.kanade.tachiyomi.ui.download
 import android.app.Activity
 import android.content.Context
 import android.util.AttributeSet
+import android.view.View
+import android.view.ViewGroup
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.setValue
+import androidx.compose.ui.platform.ComposeView
+import androidx.compose.ui.platform.ViewCompositionStrategy
 import android.view.MenuItem
 import android.widget.LinearLayout
 import androidx.core.view.WindowInsetsCompat.Type.systemBars
@@ -59,6 +66,11 @@ class DownloadBottomSheet
         private var isRunning: Boolean = false
         private var activity: Activity? = null
 
+        /** Compose replaces only the dev build's download presentation; queue logic remains shared. */
+        private var neonComposeView: ComposeView? = null
+        private var neonRows by mutableStateOf<List<NeonDownloadRow>>(emptyList())
+        private var neonActive by mutableStateOf(false)
+
         lateinit var binding: DownloadBottomSheetBinding
 
         override fun onFinishInflate() {
@@ -83,6 +95,7 @@ class DownloadBottomSheet
             binding.dlRecycler.setHasFixedSize(true)
             binding.dlRecycler.addItemDecoration(ExtensionDividerItemDecoration(context))
             this.controller = controller
+            if (resources.getBoolean(R.bool.v4_neon_mode)) setupNeonCompose()
             updateDLTitle()
 
             val headerHeight = (activity as? MainActivity)?.toolbarHeight ?: 0
@@ -116,8 +129,79 @@ class DownloadBottomSheet
             }
         }
 
+        private fun setupNeonCompose() {
+            if (neonComposeView != null) return
+            neonComposeView = ComposeView(context).apply {
+                setViewCompositionStrategy(ViewCompositionStrategy.DisposeOnDetachedFromWindow)
+                setContent {
+                    NeonDownloadPanel(
+                        rows = neonRows,
+                        isRunning = neonActive,
+                        onToggleAll = {
+                            if (presenter.downloadManager.isPaused()) DownloadJob.start(context)
+                            else presenter.pauseDownloads()
+                            neonActive = !presenter.downloadManager.isPaused()
+                            refreshNeonRows()
+                        },
+                        onDeleteAll = { presenter.stopDownloads(); refreshNeonRows() },
+                        onPause = { download ->
+                            download.chapter.id?.let(presenter.downloadManager::pauseChapter)
+                            refreshNeonRows()
+                        },
+                        onResume = { download ->
+                            download.chapter.id?.let(presenter.downloadManager::resumeChapter)
+                            refreshNeonRows()
+                        },
+                        onDelete = { download ->
+                            presenter.cancelDownload(download)
+                            controller?.updateChapterDownload(download, false)
+                            presenter.getItems()
+                            refreshNeonRows()
+                        },
+                        onPrioritize = { selected ->
+                            presenter.reorder(listOf(selected) + presenter.downloadQueue.filter { it !== selected })
+                            refreshNeonRows()
+                        },
+                        onConcurrentSources = { number ->
+                            preferences.numberOfConcurrentSourceDownloads().set(number)
+                        },
+                    )
+                }
+            }
+            // Keep the existing adapter and callbacks alive to preserve queue persistence.
+            // Hide only the legacy layout; Compose is the visible dev download interface.
+            binding.dlRecycler.visibility = View.GONE
+            binding.fastScroller.visibility = View.GONE
+            binding.downloadFab.visibility = View.GONE
+            binding.recyclerLayout.addView(
+                neonComposeView,
+                ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT),
+            )
+            refreshNeonRows()
+        }
+
+        private fun refreshNeonRows() {
+            if (neonComposeView == null) return
+            neonRows = presenter.downloadQueue.map { download ->
+                val id = download.chapter.id
+                NeonDownloadRow(
+                    download = download,
+                    name = download.manga.title,
+                    chapterName = download.chapter.preferredChapterName(context, download.manga, preferences),
+                    percentage = download.progress.coerceIn(0, 100),
+                    downloadedPages = download.downloadedImages,
+                    totalPages = download.pages?.size,
+                    paused = id != null && presenter.downloadManager.isChapterPaused(id),
+                    status = download.status,
+                    completedInCache = presenter.downloadManager.getDownloadCount(download.manga),
+                )
+            }
+        }
+
         fun update(isRunning: Boolean) {
+            neonActive = isRunning
             presenter.getItems()
+            refreshNeonRows()
             onQueueStatusChange(isRunning)
             if (binding.downloadFab.isInvisible != presenter.downloadQueue.isEmpty()) {
                 binding.downloadFab.isInvisible = presenter.downloadQueue.isEmpty()
@@ -185,6 +269,7 @@ class DownloadBottomSheet
             prepareMenu()
             setInformationView()
             adapter?.updateDataSet(downloads)
+            refreshNeonRows()
             if (!preferences.shownDownloadSwipeTutorial().get() && downloads.isNotEmpty()) {
                 adapter?.addItem(DownloadSwipeTutorialItem())
             }
@@ -207,6 +292,7 @@ class DownloadBottomSheet
          */
         fun onUpdateProgress(download: Download) {
             getHolder(download)?.notifyProgress()
+            refreshNeonRows()
         }
 
         /**
@@ -217,6 +303,7 @@ class DownloadBottomSheet
         fun onUpdateDownloadedPages(download: Download) {
             getHolder(download)?.notifyDownloadedPages()
             updateDLTitle()
+            refreshNeonRows()
         }
 
         /**
@@ -234,7 +321,7 @@ class DownloadBottomSheet
         private fun setInformationView() {
             updateDLTitle()
             setBottomSheet()
-            if (presenter.downloadQueue.isEmpty()) {
+            if (presenter.downloadQueue.isEmpty() && neonComposeView == null) {
                 binding.emptyView.show(
                     R.drawable.ic_download_off_24dp,
                     R.string.nothing_is_downloading,
@@ -260,6 +347,7 @@ class DownloadBottomSheet
         private fun updateFab() {
             binding.downloadFab.text = context.getString(if (isRunning) R.string.pause else R.string.resume)
             binding.downloadFab.setIconResource(if (isRunning) R.drawable.ic_pause_24dp else R.drawable.ic_play_arrow_24dp)
+            if (neonComposeView != null) binding.downloadFab.visibility = View.GONE
         }
 
         fun onOptionsItemSelected(item: MenuItem): Boolean {
@@ -420,6 +508,8 @@ class DownloadBottomSheet
         }
 
         fun onDestroy() {
+            neonComposeView?.disposeComposition()
+            neonComposeView = null
             presenter.onDestroy()
             binding.fastScroller.controller = null
         }

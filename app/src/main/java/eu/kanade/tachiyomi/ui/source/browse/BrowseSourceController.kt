@@ -10,6 +10,8 @@ import android.view.MenuItem
 import android.view.View
 import android.view.ViewGroup
 import androidx.appcompat.widget.PopupMenu
+import com.google.android.material.dialog.MaterialAlertDialogBuilder
+import eu.kanade.tachiyomi.ui.enhanced.NeonGridMode
 import androidx.core.view.WindowInsetsCompat.Type.systemBars
 import androidx.core.view.isVisible
 import androidx.core.view.updateLayoutParams
@@ -415,7 +417,13 @@ open class BrowseSourceController(
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         when (item.itemId) {
             R.id.action_search -> expandActionViewFromInteraction = true
-            R.id.action_display_mode -> swapDisplayMode()
+            R.id.action_display_mode -> {
+                if (view?.resources?.getBoolean(R.bool.v4_neon_mode) == true) {
+                    showNeonDisplayModes()
+                } else {
+                    swapDisplayMode()
+                }
+            }
             R.id.action_open_in_web_view -> openInWebView()
             R.id.action_local_source_help -> openLocalSourceHelpGuide()
             R.id.action_source_settings -> openSourceSettings()
@@ -818,6 +826,35 @@ open class BrowseSourceController(
      */
     fun onMangaInitialized(manga: Manga) {
         getHolder(manga)?.setImage(manga)
+    }
+
+    /** Real four-mode layout selector; list mode uses existing list holders. */
+    private fun showNeonDisplayModes() {
+        val v = view ?: return
+        val modes = arrayOf("قائمة", "كبير — عمودان", "متوسط — 3 أعمدة", "صغير — 5 أعمدة")
+        val selected = if (presenter.prefs.browseAsList().get()) 0 else when (NeonGridMode.getColumns(v.context)) {
+            NeonGridMode.LARGE -> 1
+            NeonGridMode.SMALL -> 3
+            else -> 2
+        }
+        MaterialAlertDialogBuilder(v.context)
+            .setTitle("طريقة عرض المانجا")
+            .setSingleChoiceItems(modes, selected) { dialog, selectedIndex ->
+                if (selectedIndex == 0) {
+                    presenter.prefs.browseAsList().set(true)
+                } else {
+                    presenter.prefs.browseAsList().set(false)
+                    NeonGridMode.setColumns(v.context, when (selectedIndex) {
+                        1 -> NeonGridMode.LARGE
+                        3 -> NeonGridMode.SMALL
+                        else -> NeonGridMode.MEDIUM
+                    })
+                }
+                setupRecycler(v)
+                updateDisplayMenuItem(activityBinding?.toolbar?.menu)
+                updateDisplayMenuItem(activityBinding?.searchToolbar?.menu)
+                dialog.dismiss()
+            }.setNegativeButton(android.R.string.cancel, null).show()
     }
 
     /**

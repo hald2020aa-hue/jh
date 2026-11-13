@@ -16,6 +16,8 @@ import eu.kanade.tachiyomi.R
 import eu.kanade.tachiyomi.data.database.models.Manga
 import eu.kanade.tachiyomi.databinding.MangaGridItemBinding
 import eu.kanade.tachiyomi.ui.library.LibraryItem
+import eu.kanade.tachiyomi.ui.enhanced.NeonGridMode
+import eu.kanade.tachiyomi.util.system.dpToPx
 import eu.kanade.tachiyomi.ui.library.setBGAndFG
 import eu.kanade.tachiyomi.util.view.groupEdges
 import eu.kanade.tachiyomi.widget.AutofitRecyclerView
@@ -43,6 +45,15 @@ class BrowseSourceItem(
             val listType = catalogueListType.get()
             view.apply {
                 val binding = MangaGridItemBinding.bind(this)
+                if (resources.getBoolean(R.bool.v4_neon_mode) && NeonGridMode.getColumns(context) == NeonGridMode.SMALL) {
+                    binding.card.updateLayoutParams<ConstraintLayout.LayoutParams> {
+                        marginStart = 3.dpToPx
+                        marginEnd = 3.dpToPx
+                        topMargin = 4.dpToPx
+                    }
+                    binding.title.textSize = 11f
+                    binding.title.maxLines = 2
+                }
                 if (listType != LibraryItem.LAYOUT_COMPACT_GRID) {
                     binding.card.setCardForegroundColor(
                         ContextCompat.getColorStateList(

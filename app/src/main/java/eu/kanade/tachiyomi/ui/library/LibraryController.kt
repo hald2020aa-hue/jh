@@ -1080,6 +1080,13 @@ open class LibraryController(
             }
     }
 
+    /** Apply the 2/3/5-column quick selection without changing the user's legacy grid slider. */
+    fun applyNeonGridMode() {
+        if (!isBindingInitialized) return
+        binding.libraryGridRecycler.recycler.setGridSize(preferences)
+        binding.libraryGridRecycler.recycler.requestSpanUpdate()
+    }
+
     /** The grid sizes its columns to the available width, so it has to recount when that changes. */
     fun onSideNavWidthChanged() {
         if (!isBindingInitialized) return

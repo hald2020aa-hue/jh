@@ -99,6 +99,13 @@
                     android:text="@string/reset" />
             </androidx.constraintlayout.widget.ConstraintLayout>
 
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/v5_display_modes"
+                style="@style/Widget.Material3Expressive.Button.TextButton"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="عرض المانجا: قائمة / عمودان / 3 أعمدة / 5 أعمدة" />
+
             <com.google.android.material.checkbox.MaterialCheckBox
                 android:id="@+id/uniform_grid"
                 android:layout_width="match_parent"

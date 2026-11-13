@@ -39,6 +39,7 @@ import java.io.BufferedOutputStream
 import java.io.ByteArrayInputStream
 import java.io.File
 import java.io.IOException
+import kotlinx.coroutines.flow.MutableStateFlow
 import java.io.StringWriter
 import java.util.zip.ZipOutputStream
 import kotlin.time.Duration.Companion.seconds
@@ -115,6 +116,50 @@ class Downloader(
      */
     private var downloaderJob: Job? = null
 
+    /** Individual chapter pauses persist independently from the existing download queue store. */
+    private val pausedPrefs = context.getSharedPreferences("v5_paused_download_chapters", Context.MODE_PRIVATE)
+    private val pausedChapterIds = MutableStateFlow(
+        pausedPrefs.getStringSet("ids", emptySet()).orEmpty().mapNotNull(String::toLongOrNull).toSet(),
+    )
+    /** Forces the scheduler to reconsider status/priority changes without modifying queue order. */
+    private val schedulerVersion = MutableStateFlow(0L)
+
+    fun isChapterPaused(id: Long): Boolean = id in pausedChapterIds.value
+
+    fun forgetPausedChapter(id: Long) {
+        if (id !in pausedChapterIds.value) return
+        pausedChapterIds.value = pausedChapterIds.value - id
+        pausedPrefs.edit().putStringSet("ids", pausedChapterIds.value.map(Long::toString).toSet()).apply()
+    }
+
+    fun pauseChapter(id: Long) {
+        if (queue.none { it.chapter.id == id }) return
+        pausedChapterIds.value = pausedChapterIds.value + id
+        pausedPrefs.edit().putStringSet("ids", pausedChapterIds.value.map(Long::toString).toSet()).apply()
+        queue.firstOrNull { it.chapter.id == id }?.apply {
+            stopTransferRate()
+            if (status == Download.State.DOWNLOADING) status = Download.State.QUEUE
+        }
+        schedulerVersion.value++
+        queue.updateListeners()
+        if (queue.none { it.status != Download.State.DOWNLOADED && it.chapter.id !in pausedChapterIds.value }) {
+            cancelDownloaderJob()
+            isPaused = true
+            DownloadJob.callListeners(false)
+        }
+    }
+
+    fun resumeChapter(id: Long) {
+        queue.firstOrNull { it.chapter.id == id }?.let { download ->
+            if (download.status == Download.State.ERROR) download.status = Download.State.QUEUE
+        }
+        pausedChapterIds.value = pausedChapterIds.value - id
+        pausedPrefs.edit().putStringSet("ids", pausedChapterIds.value.map(Long::toString).toSet()).apply()
+        schedulerVersion.value++
+        queue.updateListeners()
+    }
+
+
     /**
      * Whether the downloader is running.
      */
@@ -146,7 +191,11 @@ class Downloader(
             return false
         }
 
-        val pending = queue.filter { it.status != Download.State.DOWNLOADED }
+        val pending = queue.filter { it.status != Download.State.DOWNLOADED && it.chapter.id !in pausedChapterIds.value }
+        if (pending.isEmpty()) {
+            isPaused = true
+            return false
+        }
         pending.forEach { if (it.status != Download.State.QUEUE) it.status = Download.State.QUEUE }
 
         isPaused = false
@@ -187,7 +236,10 @@ class Downloader(
         cancelDownloaderJob()
         queue
             .filter { it.status == Download.State.DOWNLOADING }
-            .forEach { it.status = Download.State.QUEUE }
+            .forEach {
+                it.stopTransferRate()
+                it.status = Download.State.QUEUE
+            }
         isPaused = true
     }
 
@@ -206,6 +258,8 @@ class Downloader(
                 .forEach { it.status = Download.State.NOT_DOWNLOADED }
         }
         queue.clear()
+        pausedChapterIds.value = emptySet()
+        pausedPrefs.edit().remove("ids").apply()
         notifier.dismiss()
     }
 
@@ -247,13 +301,15 @@ class Downloader(
                     combine(
                         queue.state,
                         preferences.numberOfConcurrentSourceDownloads().asFlow(),
-                    ) { queued, parallelCount -> queued to parallelCount }
-                        .transformLatest { (queued, parallelCount) ->
+                        pausedChapterIds,
+                        schedulerVersion,
+                    ) { queued, parallelCount, paused, _ -> Triple(queued, parallelCount, paused) }
+                        .transformLatest { (queued, parallelCount, paused) ->
                             while (true) {
                                 val activeDownloads =
                                     queued
                                         .asSequence()
-                                        .filter { it.status <= Download.State.DOWNLOADING }
+                                        .filter { it.status <= Download.State.DOWNLOADING && it.chapter.id !in paused }
                                         .groupBy { it.source }
                                         .toList()
                                         .take(parallelCount)
@@ -277,6 +333,7 @@ class Downloader(
                         val toStop = downloadJobs.filterKeys { it !in activeDownloads }
                         toStop.forEach { (download, job) ->
                             job.cancel()
+                            download.stopTransferRate()
                             downloadJobs.remove(download)
                         }
 
@@ -472,9 +529,19 @@ class Downloader(
                     notifier.onProgressChange(download)
                 }
 
+            // Only measure a chapter's total size from complete local image files.
+            // Never infer a whole chapter's size from an individual HTTP image header.
+            if (download.downloadedImages == pageList.size && pageList.isNotEmpty()) {
+                val finishedFiles = tmpDir.listFiles()?.filter { it.name?.endsWith(".tmp") != true }.orEmpty()
+                if (finishedFiles.isNotEmpty()) {
+                    download.setKnownChapterBytes(finishedFiles.sumOf { it.length().coerceAtLeast(0L) })
+                }
+            }
             // Do after download completes
             ensureSuccessfulDownload(download, mangaDir, tmpDir, chapterDirname)
+            download.stopTransferRate()
         } catch (error: Throwable) {
+            download.stopTransferRate()
             if (error is CancellationException) throw error
             // If the page list threw, it will resume here
             Timber.e(error)
@@ -525,7 +592,7 @@ class Downloader(
                             tmpDir,
                             filename,
                         )
-                    else -> downloadImage(page, download.source, tmpDir, filename)
+                    else -> downloadImage(page, download, tmpDir, filename)
                 }
 
             // A previously cached file or extension response may contain HTML or
@@ -566,18 +633,31 @@ class Downloader(
      */
     private suspend fun downloadImage(
         page: Page,
-        source: HttpSource,
+        download: Download,
         tmpDir: UniFile,
         filename: String,
     ): UniFile {
         page.status = Page.State.DOWNLOAD_IMAGE
         page.progress = 0
         return flow {
-            val response = source.getImage(page)
+            val response = download.source.getImage(page)
             val file = tmpDir.createFile("$filename.tmp")
             try {
                 response.use {
-                    it.body.source().saveTo(file.openOutputStream())
+                    // Track bytes from the actual HTTP response as each chunk arrives.
+                    // Do not infer a total chapter size from a single image's Content-Length.
+                    val sourceStream = it.body.byteStream()
+                    file.openOutputStream().use { output ->
+                        val buffer = ByteArray(32 * 1024)
+                        while (true) {
+                            val read = sourceStream.read(buffer)
+                            if (read < 0) break
+                            output.write(buffer, 0, read)
+                            download.addReceivedBytes(read.toLong())
+                        }
+                        output.flush()
+                    }
+                    download.addReceivedBytes(0, force = true)
                     val extension = getImageExtension(file)
                     if (!file.renameTo("$filename.$extension")) {
                         throw IOException("Failed to rename downloaded image")

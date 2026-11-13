@@ -16,6 +16,41 @@ class Download(
 ) {
     var pages: List<Page>? = null
 
+    /** Network bytes actually received for this transfer session, never an estimated chapter size. */
+    @Transient private val _transferStats = MutableStateFlow(DownloadTransferStats())
+    @Transient val transferStats: StateFlow<DownloadTransferStats> = _transferStats.asStateFlow()
+    private var sampleBytes = 0L
+    private var totalReceivedBytes = 0L
+    private var sampleTime = System.nanoTime() / 1_000_000
+
+    @Synchronized
+    fun addReceivedBytes(count: Long, force: Boolean = false) {
+        if (count < 0) return
+        val now = System.nanoTime() / 1_000_000
+        totalReceivedBytes += count
+        val newBytes = totalReceivedBytes
+        val elapsed = (now - sampleTime).coerceAtLeast(1L)
+        if (force || elapsed >= 300L) {
+            val speed = if (elapsed >= 300L) (newBytes - sampleBytes) * 1000L / elapsed else _transferStats.value.speedBytesPerSecond
+            _transferStats.value = _transferStats.value.copy(receivedBytes = newBytes, speedBytesPerSecond = speed)
+            sampleBytes = newBytes
+            sampleTime = now
+        }
+    }
+
+    @Synchronized
+    fun stopTransferRate() {
+        _transferStats.value = _transferStats.value.copy(receivedBytes = totalReceivedBytes, speedBytesPerSecond = 0)
+        sampleBytes = totalReceivedBytes
+        sampleTime = System.nanoTime() / 1_000_000
+    }
+
+    @Synchronized
+    fun setKnownChapterBytes(total: Long) {
+        if (total >= 0) _transferStats.value = _transferStats.value.copy(knownChapterBytes = total)
+    }
+
+
     val totalProgress: Int
         get() = pages?.sumOf(Page::progress) ?: 0
 
@@ -73,3 +108,10 @@ class Download(
         }
     }
 }
+
+/** A nullable total means the source does not disclose the full chapter size yet. */
+data class DownloadTransferStats(
+    val receivedBytes: Long = 0L,
+    val knownChapterBytes: Long? = null,
+    val speedBytesPerSecond: Long = 0L,
+)

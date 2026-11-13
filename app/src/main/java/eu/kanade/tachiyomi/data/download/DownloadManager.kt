@@ -142,6 +142,17 @@ class DownloadManager(
         }
     }
 
+    /** Pauses a single chapter, keeping its queue and any completed page files intact. */
+    fun pauseChapter(id: Long) = downloader.pauseChapter(id)
+
+    /** Resumes a specific queued chapter; starts the worker if the global downloader is idle. */
+    fun resumeChapter(id: Long) {
+        downloader.resumeChapter(id)
+        if (!downloader.isRunning) DownloadJob.start(context)
+    }
+
+    fun isChapterPaused(id: Long): Boolean = downloader.isChapterPaused(id)
+
     fun isPaused() = !downloader.isRunning
 
     fun hasQueue() = downloader.queue.isNotEmpty()
@@ -245,6 +256,8 @@ class DownloadManager(
      *  @param downloads list of downloads to cancel
      */
     fun deletePendingDownloads(vararg downloads: Download) {
+        // A cancelled chapter must not inherit a stale pause flag if queued again later.
+        downloads.forEach { it.chapter.id?.let(downloader::forgetPausedChapter) }
         val downloadsByManga = downloads.groupBy { it.manga.id }
         downloadsByManga.map { entry ->
             val manga = entry.value.first().manga
