@@ -30,7 +30,7 @@ for marker in ['action_translation_toggle', 'action_translation_retry', 'action_
     check('Reader UI wiring: '+marker, marker in reader)
 for marker in ['setTranslationIdentity', 'showTranslation', 'translationOverlay?.invalidate()', 'translationOverlay?.bringToFront()']:
     check('Image wrapper: '+marker, marker in image)
-for marker in ['retryFailedOnly: Boolean = false', 'failedPageRetryOrder', 'val retained', 'translator.close()', 'recognizer.close()']:
+for marker in ['retryFailedOnly: Boolean = false', 'failedPageRetryOrder', 'val retained', 'toArabic?.close()', 'intermediate?.close()', 'recognizer.close()']:
     check('OCR lifecycle/retry: '+marker, marker in ocr)
 for marker in ['queuedByPage', 'focusOnPage', 'offerPage(', 'outsideReadAheadWindow', 'suspendCancellableCoroutine']:
     check('Seven-page prefetch: '+marker, marker in loader)

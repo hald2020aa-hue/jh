@@ -122,7 +122,7 @@ class ReaderBubbleOverlayView(
         val neighbors = blocks.asSequence().filter { it !== block }.mapNotNull {
             normalizedBubbleRect(it.left, it.top, it.right, it.bottom)
         }.toList()
-        val region = safeOcrPlateRegion(normalized, neighbors)
+        val region = if (block.bubbleDetected) normalized else safeOcrPlateRegion(normalized, neighbors)
         val result = when (image) {
             is SubsamplingScaleImageView -> {
                 if (!image.isReady || image.sWidth <= 0 || image.sHeight <= 0) return null

@@ -25,6 +25,15 @@ if (gradle.startParameter.taskRequests.toString().contains("Standard")) {
 val arm64Only = providers.gradleProperty("jh.arm64Only").map { it.toBoolean() }.getOrElse(false)
 val supportedAbis = if (arm64Only) setOf("arm64-v8a") else setOf("armeabi-v7a", "arm64-v8a", "x86", "x86_64")
 
+// A user-owned, persistent signing key is REQUIRED for in-place updates across CI runs.
+// Never store private keys, passwords, or a development signing key in Git.
+val updateStorePath = providers.environmentVariable("JH_UPDATE_STORE_FILE").orNull
+val updateStorePassword = providers.environmentVariable("JH_UPDATE_STORE_PASSWORD").orNull
+val updateAlias = providers.environmentVariable("JH_UPDATE_KEY_ALIAS").orNull
+val updateKeyPassword = providers.environmentVariable("JH_UPDATE_KEY_PASSWORD").orNull
+val stableUpdateSigning = listOf(updateStorePath, updateStorePassword, updateAlias, updateKeyPassword)
+    .all { !it.isNullOrBlank() }
+
 android {
     compileSdk = AndroidVersions.compileSdk
     ndkVersion = AndroidVersions.ndk
@@ -61,8 +70,22 @@ android {
         }
     }
 
+    signingConfigs {
+        if (stableUpdateSigning) {
+            create("jhStableUpdate") {
+                storeFile = file(requireNotNull(updateStorePath))
+                storePassword = requireNotNull(updateStorePassword)
+                keyAlias = requireNotNull(updateAlias)
+                keyPassword = requireNotNull(updateKeyPassword)
+            }
+        }
+    }
+
     buildTypes {
         getByName("debug") {
+            if (stableUpdateSigning) {
+                signingConfig = signingConfigs.getByName("jhStableUpdate")
+            }
             applicationIdSuffix = ".debugJ2K"
             versionNameSuffix = "-d${getCommitCount()}"
         }
@@ -97,9 +120,12 @@ android {
             buildConfigField("Boolean", "INCLUDE_UPDATER", "true")
         }
         create("dev") {
-            // Keep all translations (including Arabic) in the co-installable fork.
+            // Preserves the exact V8 debug app package:
+            // eu.kanade.tachiyomi.enhanced.debugJ2K (do not change this identity).
             applicationIdSuffix = ".enhanced"
-            versionNameSuffix = "-enhanced-ui3-dev"
+            // Higher than V8's 113 so Android accepts a newer V9 when signing matches.
+            versionCode = AndroidVersions.versionCode + 1
+            versionNameSuffix = "-enhanced-v9-dev"
         }
     }
 

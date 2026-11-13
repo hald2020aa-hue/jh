@@ -25,6 +25,7 @@ import eu.kanade.tachiyomi.ui.reader.model.ReaderPage
 import eu.kanade.tachiyomi.ui.reader.settings.ReaderBackgroundColor
 import eu.kanade.tachiyomi.ui.reader.viewer.ReaderErrorView
 import eu.kanade.tachiyomi.ui.reader.viewer.ReaderPageImageView
+import eu.kanade.tachiyomi.ui.reader.translation.V9SpreadGeometry
 import eu.kanade.tachiyomi.ui.reader.viewer.pager.PagerConfig.ZoomType
 import eu.kanade.tachiyomi.util.system.ImageUtil
 import eu.kanade.tachiyomi.util.system.ImageUtil.isPagePadded
@@ -121,6 +122,7 @@ class PagerPageHolder(
     private var extraProgress: Int = 0
 
     private var scope = MainScope()
+    private var pendingSpreadGeometry: V9SpreadGeometry? = null
 
     init {
         addView(progressBar)
@@ -585,6 +587,13 @@ class PagerPageHolder(
 
                     val stream2 = streamFn2?.invoke()?.buffered(16)
                     openStream = this@PagerPageHolder.mergeOrSplitPages(stream, stream2)
+                    withUIContext {
+                        viewer.activity.decorateTranslationImage(
+                            this@PagerPageHolder, page, mergedSpread = extraPage != null,
+                            spreadGeometry = pendingSpreadGeometry,
+                            extraPageIndex = extraPage?.index ?: -1,
+                        )
+                    }
                     val isAnimated =
                         ImageUtil.isAnimatedAndSupported(stream) ||
                             (stream2?.let { ImageUtil.isAnimatedAndSupported(stream2) } ?: false)
@@ -743,6 +752,7 @@ class PagerPageHolder(
         imageStream: InputStream,
         imageStream2: InputStream?,
     ): InputStream {
+        pendingSpreadGeometry = null
         if (ImageUtil.isAnimatedAndSupported(imageStream)) {
             withContext(Dispatchers.IO) { imageStream.reset() }
             if (page.longPage == null) {
@@ -955,6 +965,17 @@ class PagerPageHolder(
         if (extraPage == null) {
             return supportHingeIfThere(imageBytes.inputStream())
         }
+        // Only attach two-page overlays after the merge is actually chosen.
+        // Match ImageUtil.mergeBitmaps' hinge pixel formula and page order exactly.
+        val maxHeight = maxOf(imageBitmap.height, imageBitmap2.height)
+        val fullHeight = (viewer.activity.window.decorView.height)
+            .takeIf { it > 0 } ?: context.resources.displayMetrics.heightPixels
+        val mergedHinge = (maxHeight.toFloat() / fullHeight * viewer.config.hingeGapSize).toInt()
+        pendingSpreadGeometry = V9SpreadGeometry.create(
+            imageBitmap.width, imageBitmap.height,
+            imageBitmap2.width, imageBitmap2.height,
+            isLTR, mergedHinge,
+        )
         return ImageUtil.mergeBitmaps(imageBitmap, imageBitmap2, isLTR, bg, viewer.config.hingeGapSize, context) {
             scope.launchUI {
                 if (it == 100) {

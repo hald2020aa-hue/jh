@@ -11,6 +11,15 @@
         android:id="@+id/action_translate_chapter"
         android:title="@string/v6_translate_chapter"
         app:showAsAction="never" />
+    <item android:id="@+id/action_translation_auto"
+        android:title="ترجمة تلقائية عند فتح الفصل: تشغيل أو إيقاف"
+        app:showAsAction="never" />
+    <item android:id="@+id/action_translation_edit"
+        android:title="تصحيح العربية داخل الفقاعة"
+        app:showAsAction="never" />
+    <item android:id="@+id/action_translation_diagnostics"
+        android:title="تشخيص أخطاء الترجمة"
+        app:showAsAction="never" />
     <item
         android:id="@+id/action_translation_page"
         android:title="@string/v6_translation_page"

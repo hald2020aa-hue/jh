@@ -28,7 +28,7 @@ check('UI action wired to engine', 'chapterTranslator.translateChapter(' in act)
 check('translation keeps visible page priority', 'translatedPage?.index ?: 0' in act)
 check('scope cancels with Activity', 'translationJob = scope.launch' in act)
 trans = read('app/src/main/java/eu/kanade/tachiyomi/ui/reader/translation/OnDeviceChapterTranslator.kt')
-for x in ['TextRecognition.getClient', 'Translation.getClient', 'InputImage.fromBitmap', 'downloadModelIfNeeded', 'recognizer.close()', 'translator.close()', 'ensureActive()', 'cancelAndJoin()', 'translationPageOrder']:
+for x in ['TextRecognition.getClient', 'Translation.getClient', 'InputImage.fromBitmap', 'downloadModelIfNeeded', 'recognizer.close()', 'toArabic?.close()', 'intermediate?.close()', 'ensureActive()', 'cancelAndJoin()', 'translationPageOrder']:
     check('engine '+x, x in trans)
 for x in ['createFile(', 'writeBytes(', 'deleteChapter', 'deleteManga']:
     check('never mutates manga files: '+x, x not in trans)

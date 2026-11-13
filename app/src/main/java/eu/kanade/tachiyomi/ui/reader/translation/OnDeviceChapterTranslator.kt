@@ -1,5 +1,6 @@
 package eu.kanade.tachiyomi.ui.reader.translation
 
+import android.content.Context
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import com.google.android.gms.tasks.Task
@@ -36,9 +37,11 @@ import kotlin.coroutines.coroutineContext
 import kotlin.coroutines.resume
 import kotlin.coroutines.resumeWithException
 import kotlin.math.max
+import kotlin.math.min
 
 /** Unlike the reader's bitmap cache, this stores only text and normalized OCR rectangles. */
 enum class SourceTextLanguage(val tag: String, val arabicName: String) {
+    AUTO("auto", "تلقائي — اكتشاف لغة النص"),
     ENGLISH(TranslateLanguage.ENGLISH, "الإنجليزية"),
     JAPANESE(TranslateLanguage.JAPANESE, "اليابانية"),
     KOREAN(TranslateLanguage.KOREAN, "الكورية"),
@@ -46,6 +49,7 @@ enum class SourceTextLanguage(val tag: String, val arabicName: String) {
     ;
 
     fun recognizer(): TextRecognizer = when (this) {
+        AUTO -> TextRecognition.getClient(TextRecognizerOptions.DEFAULT_OPTIONS)
         ENGLISH -> TextRecognition.getClient(TextRecognizerOptions.DEFAULT_OPTIONS)
         JAPANESE -> TextRecognition.getClient(JapaneseTextRecognizerOptions.Builder().build())
         KOREAN -> TextRecognition.getClient(KoreanTextRecognizerOptions.Builder().build())
@@ -60,6 +64,7 @@ data class TranslatedTextBlock(
     val top: Float,
     val right: Float,
     val bottom: Float,
+    val bubbleDetected: Boolean = false,
 )
 
 data class TranslatedReaderPage(
@@ -85,7 +90,9 @@ data class ChapterTranslationProgress(
  * Existing chapter files and page bitmaps are NEVER written back or replaced. Text only in RAM.
  * Translation is opt-in because the first use may download a language model and consume data.
  */
-class OnDeviceChapterTranslator {
+class OnDeviceChapterTranslator(context: Context) {
+    private val cache = V9ChapterTranslationCache(context.applicationContext)
+    private var activeLanguage: SourceTextLanguage = SourceTextLanguage.ENGLISH
     private val _progress = MutableStateFlow(ChapterTranslationProgress())
     val progress: StateFlow<ChapterTranslationProgress> = _progress.asStateFlow()
 
@@ -97,115 +104,225 @@ class OnDeviceChapterTranslator {
     ) {
         val pages = chapter.pages ?: error("صفحات الفصل غير جاهزة")
         check(pages.isNotEmpty()) { "لا توجد صفحات للترجمة" }
-        // A retry preserves successful OCR and translates only previously failed pages.
         val previous = _progress.value.takeIf { retryFailedOnly && it.chapterId == chapter.chapter.id }
         val retryIndices = previous?.translated?.filterValues { it.error != null }?.keys.orEmpty()
         if (retryFailedOnly && retryIndices.isEmpty()) return
-        val pending = if (retryFailedOnly) {
-            failedPageRetryOrder(pages.size, currentPageIndex, retryIndices)
-        } else {
-            translationPageOrder(pages.size, currentPageIndex)
-        }
-        val retained = previous?.translated?.filterValues { it.error == null }.orEmpty()
-        _progress.value = ChapterTranslationProgress(
-            chapterId = chapter.chapter.id,
-            totalPages = pages.size,
-            processedPages = retained.size,
-            translated = retained,
-            running = true,
-            message = "تجهيز نموذج الترجمة العربية…",
+        _progress.value = (previous ?: ChapterTranslationProgress()).copy(
+            chapterId = chapter.chapter.id, totalPages = pages.size, running = true,
+            message = "جارٍ تحديد اللغة وتجهيز الترجمة…",
         )
-        val recognizer = language.recognizer()
-        val translator = Translation.getClient(
-            TranslatorOptions.Builder()
-                .setSourceLanguage(language.tag)
-                .setTargetLanguage(TranslateLanguage.ARABIC)
-                .build(),
-        )
+        var recognizer: TextRecognizer? = null
+        var intermediate: Translator? = null
+        var toArabic: Translator? = null
         try {
-            // The user explicitly requested translation. Model downloads may require a connection.
-            // We do not call translate() until ML Kit confirms the model is ready.
-            // A stalled/blocked model download must not leave the reader showing 0/N forever.
+            val source = if (language == SourceTextLanguage.AUTO) {
+                detectLanguage(pages[currentPageIndex.coerceIn(0, pages.lastIndex)])
+            } else language
+            activeLanguage = source
+            val disk = cache.read(chapter, source)
+            val retained = previous?.translated?.filterValues { it.error == null }.orEmpty() + disk
+            val ordered = if (retryFailedOnly) {
+                failedPageRetryOrder(pages.size, currentPageIndex, retryIndices)
+            } else {
+                translationPageOrder(pages.size, currentPageIndex).filterNot { it in retained }
+            }
+            _progress.value = _progress.value.copy(
+                translated = retained,
+                processedPages = retained.size,
+                failedPages = 0,
+                message = "اللغة المكتشفة: ${source.arabicName}؛ استُعيدت ${retained.size} صفحة محفوظة",
+            )
+            if (ordered.isEmpty()) {
+                _progress.value = _progress.value.copy(running = false, message = "الترجمة المحفوظة جاهزة")
+                return
+            }
+            recognizer = source.recognizer()
+            // Explicit two-hop translation requested by the user: ja/ko/zh -> en -> ar.
+            if (requiresEnglishPivot(source)) {
+                intermediate = makeTranslator(source.tag, TranslateLanguage.ENGLISH)
+            }
+            val translator = makeTranslator(TranslateLanguage.ENGLISH, TranslateLanguage.ARABIC)
+            toArabic = translator
+            val conditions = DownloadConditions.Builder().build()
+            _progress.value = _progress.value.copy(message = "تنزيل نماذج اللغة عند الحاجة؛ قد يتطلب الاتصال بالإنترنت…")
             withTimeoutOrNull(180_000L) {
-                translator.downloadModelIfNeeded(DownloadConditions.Builder().build()).awaitTask()
+                intermediate?.downloadModelIfNeeded(conditions)?.awaitTask()
+                translator.downloadModelIfNeeded(conditions).awaitTask()
                 true
-            } ?: error("انتهت مهلة تنزيل نموذج اللغة. تحقق من الإنترنت ثم أعد المحاولة")
-            _progress.value = _progress.value.copy(message = "نموذج اللغة جاهز؛ جارٍ قراءة صفحات الفصل…")
-            for (pageIndex in pending) {
-                val page = pages[pageIndex]
+            } ?: error("انتهت مهلة تنزيل نموذج اللغة؛ تحقق من الإنترنت وأعد المحاولة")
+            val reader = requireNotNull(recognizer)
+            val arabicTranslator = translator
+            val englishTranslator = intermediate
+            for (pageIndex in ordered) {
                 coroutineContext.ensureActive()
+                val page = pages[pageIndex]
                 _progress.value = _progress.value.copy(
-                    message = "التعرف على نص الصفحة ${pageIndex + 1} من ${pages.size}…",
+                    message = "OCR ثم الترجمة العربية: الصفحة ${pageIndex + 1} من ${pages.size}",
                 )
-                val result = try {
-                    withTimeoutOrNull(120_000L) { translatePage(page, recognizer, translator) }
-                        ?: TranslatedReaderPage(page.index, emptyList(), "انتهت مهلة ترجمة الصفحة")
+                val translated = try {
+                    withTimeoutOrNull(120_000L) { translatePage(page, reader, englishTranslator, arabicTranslator) }
+                        ?: TranslatedReaderPage(page.index, emptyList(), "انتهت مهلة OCR أو الترجمة للصفحة")
                 } catch (e: CancellationException) {
                     throw e
                 } catch (e: Throwable) {
-                    TranslatedReaderPage(page.index, emptyList(), e.message ?: "تعذرت ترجمة الصفحة")
+                    TranslatedReaderPage(page.index, emptyList(), classifyTranslationError(e))
                 }
                 val current = _progress.value
+                val results = current.translated + (page.index to translated)
                 _progress.value = current.copy(
-                    processedPages = current.processedPages + 1,
-                    failedPages = current.failedPages + if (result.error != null) 1 else 0,
-                    translated = current.translated + (page.index to result),
-                    message = if (result.error == null) {
-                        "تمت معالجة ${current.processedPages + 1} من ${pages.size} صفحة"
-                    } else {
-                        "تعذرت ترجمة الصفحة ${pageIndex + 1}: ${result.error}"
-                    },
+                    translated = results,
+                    processedPages = results.size,
+                    failedPages = results.values.count { it.error != null },
+                    message = translated.error ?: "تمت ترجمة ${results.size} من ${pages.size} صفحة",
                 )
+                if (translated.error == null) {
+                    // Cache errors must not stop reading or translation.
+                    try { cache.write(chapter, source, results) } catch (_: Exception) { }
+                }
             }
             val failures = _progress.value.failedPages
             _progress.value = _progress.value.copy(
                 running = false,
-                message = if (failures == 0) "اكتملت ترجمة الفصل" else "اكتملت المعالجة مع $failures صفحات غير مترجمة",
+                message = if (failures == 0) "اكتملت ترجمة الفصل" else "انتهت المعالجة؛ فشل $failures صفحات ويمكن إعادة المحاولة",
             )
         } catch (e: CancellationException) {
             _progress.value = _progress.value.copy(running = false, message = "توقفت الترجمة")
             throw e
         } catch (e: Throwable) {
-            _progress.value = _progress.value.copy(
-                running = false,
-                message = "تعذرت تهيئة الترجمة: ${e.message ?: "تأكد من اتصال الإنترنت ونموذج اللغة"}",
-            )
-            throw e
+            _progress.value = _progress.value.copy(running = false, message = classifyTranslationError(e))
         } finally {
-            recognizer.close()
-            translator.close()
+            recognizer?.close()
+            intermediate?.close()
+            toArabic?.close()
+        }
+    }
+
+    /** An explicit correction is saved into the bounded page-text cache. */
+    suspend fun editTranslatedBlock(chapter: ReaderChapter, pageIndex: Int, blockIndex: Int, arabic: String) {
+        val value = arabic.trim()
+        require(value.isNotEmpty() && value.length <= 8_000) { "نص الترجمة غير صالح" }
+        val current = _progress.value
+        check(current.chapterId == chapter.chapter.id) { "انتقل القارئ إلى فصل آخر" }
+        val page = current.translated[pageIndex] ?: error("الصفحة لم تُترجم بعد")
+        check(blockIndex in page.blocks.indices) { "موضع الفقاعة غير صحيح" }
+        val blocks = page.blocks.toMutableList()
+        blocks[blockIndex] = blocks[blockIndex].copy(arabic = value)
+        val updated = current.translated + (pageIndex to page.copy(blocks = blocks))
+        _progress.value = current.copy(translated = updated)
+        cache.write(chapter, activeLanguage, updated)
+    }
+
+    private fun makeTranslator(from: String, to: String): Translator = Translation.getClient(
+        TranslatorOptions.Builder().setSourceLanguage(from).setTargetLanguage(to).build(),
+    )
+
+    /** Try each bundled OCR script once on a 2048px-bounded visible page; never scan the entire chapter. */
+    private suspend fun detectLanguage(page: ReaderPage): SourceTextLanguage {
+        awaitPage(page)
+        val bitmap = withContext(Dispatchers.IO) { decodeForOcr(page) }
+        try {
+            var best: SourceTextLanguage? = null
+            var bestScore = 0
+            val input = InputImage.fromBitmap(bitmap, 0)
+            for (candidate in SourceTextLanguage.entries.filter { it != SourceTextLanguage.AUTO }) {
+                coroutineContext.ensureActive()
+                val recognizer = candidate.recognizer()
+                try {
+                    val output = withTimeout(20_000L) { recognizer.process(input).awaitTask() }
+                    val detected = recognizeTextScript(output.text)
+                    val score = if (detected == candidate) {
+                        output.text.length.coerceAtMost(1_000) + 100
+                    } else 0
+                    if (score > bestScore) { best = candidate; bestScore = score }
+                } catch (e: CancellationException) {
+                    throw e
+                } catch (_: Exception) {
+                    // If an OCR language fails, continue trying the other bundled models.
+                } finally {
+                    recognizer.close()
+                }
+            }
+            return best ?: error("تعذر تحديد لغة الفقاعات تلقائيًا؛ اختر اللغة يدويًا من القائمة")
+        } finally {
+            bitmap.recycle()
         }
     }
 
     private suspend fun translatePage(
         page: ReaderPage,
         recognizer: TextRecognizer,
-        translator: Translator,
+        toEnglish: Translator?,
+        toArabic: Translator,
     ): TranslatedReaderPage {
         awaitPage(page)
         val bitmap = withContext(Dispatchers.IO) { decodeForOcr(page) }
         try {
             val recognized = recognizer.process(InputImage.fromBitmap(bitmap, 0)).awaitTask()
+            val valid = recognized.textBlocks.mapNotNull { b ->
+                val bounds = b.boundingBox ?: return@mapNotNull null
+                val verticalCjk = (activeLanguage == SourceTextLanguage.JAPANESE ||
+                    activeLanguage == SourceTextLanguage.CHINESE) &&
+                    bounds.height() >= bounds.width() * 1.45f && b.lines.size > 1
+                // Column order matters for Japanese vertical writing: right column first.
+                val raw = if (verticalCjk) {
+                    b.lines.sortedWith(compareByDescending<com.google.mlkit.vision.text.Text.Line> {
+                        it.boundingBox?.centerX() ?: Int.MIN_VALUE
+                    }.thenBy { it.boundingBox?.top ?: 0 }).joinToString("") { it.text.trim() }
+                } else b.text.trim()
+                if (raw.isEmpty()) return@mapNotNull null
+                Triple(b, bounds, raw)
+            }
+            // A 640px thumbnail bounds the segmentation work, independent of huge Webtoon originals.
+            val (sw, sh, pixels) = withContext(Dispatchers.Default) {
+                val longest = max(bitmap.width, bitmap.height)
+                val scale = min(1f, 640f / longest)
+                val w = max(1, (bitmap.width * scale).toInt())
+                val h = max(1, (bitmap.height * scale).toInt())
+                val sample = if (w == bitmap.width && h == bitmap.height) bitmap
+                    else Bitmap.createScaledBitmap(bitmap, w, h, true)
+                val pixels = IntArray(w * h)
+                try { sample.getPixels(pixels, 0, w, 0, 0, w, h) }
+                finally { if (sample !== bitmap) sample.recycle() }
+                Triple(w, h, pixels)
+            }
+            val glyphBoxes = valid.map { (_, rect, _) ->
+                NormalizedBubbleRect(rect.left.toFloat() / bitmap.width, rect.top.toFloat() / bitmap.height,
+                    rect.right.toFloat() / bitmap.width, rect.bottom.toFloat() / bitmap.height)
+            }
             val blocks = mutableListOf<TranslatedTextBlock>()
-            // Translate each OCR block to keep its geometry; do not cap text or omit later pages.
-            for (block in recognized.textBlocks) {
+            for ((index, data) in valid.withIndex()) {
                 coroutineContext.ensureActive()
-                val raw = block.text.trim()
-                if (raw.isEmpty()) continue
-                val bounds = block.boundingBox ?: continue
-                val arabic = translator.translate(raw).awaitTask()
-                blocks += TranslatedTextBlock(
-                    original = raw,
-                    arabic = arabic,
-                    left = bounds.left.toFloat() / bitmap.width,
-                    top = bounds.top.toFloat() / bitmap.height,
-                    right = bounds.right.toFloat() / bitmap.width,
-                    bottom = bounds.bottom.toFloat() / bitmap.height,
-                )
+                val raw = data.third
+                val english = if (toEnglish != null && recognizeTextScript(raw) != SourceTextLanguage.ENGLISH) {
+                    toEnglish.translate(raw).awaitTask()
+                } else raw
+                val arabic = toArabic.translate(english).awaitTask()
+                val box = glyphBoxes[index]
+                val detected = withContext(Dispatchers.Default) {
+                    detectSpeechBalloonRegion(pixels, sw, sh, box,
+                        glyphBoxes.filterIndexed { i, _ -> i != index })
+                }
+                val bounds = detected ?: box
+                blocks += TranslatedTextBlock(raw, arabic,
+                    bounds.left, bounds.top, bounds.right, bounds.bottom,
+                    bubbleDetected = detected != null)
             }
             return TranslatedReaderPage(page.index, blocks)
         } finally {
             bitmap.recycle()
+        }
+    }
+
+    private fun classifyTranslationError(e: Throwable): String {
+        val message = e.message.orEmpty()
+        return when {
+            e is kotlinx.coroutines.TimeoutCancellationException -> "انتهت المهلة: تحقق من الإنترنت أو أعد محاولة الصفحة"
+            message.contains("model", ignoreCase = true) || message.contains("download", ignoreCase = true) ->
+                "نموذج اللغة غير متاح أو تعذر تنزيله؛ تحقق من الإنترنت"
+            message.contains("page", ignoreCase = true) || message.contains("صورة") ->
+                "تعذر قراءة صورة الصفحة؛ حاول إعادة تنزيلها"
+            message.isNotBlank() -> "خطأ محرك الترجمة: ${message.take(180)}"
+            else -> "تعذرت الترجمة؛ جرّب إعادة المحاولة أو اختيار اللغة يدويًا"
         }
     }
 
