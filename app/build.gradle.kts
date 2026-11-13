@@ -186,6 +186,14 @@ dependencies {
     // Coroutines
     implementation("com.fredporciuncula:flow-preferences:1.9.1")
 
+    // V6: On-device OCR for four scripts and offline Arabic translation.
+    // OCR models are bundled; translation models download once on user request.
+    implementation("com.google.mlkit:text-recognition:16.0.1")
+    implementation("com.google.mlkit:text-recognition-japanese:16.0.1")
+    implementation("com.google.mlkit:text-recognition-korean:16.0.1")
+    implementation("com.google.mlkit:text-recognition-chinese:16.0.1")
+    implementation("com.google.mlkit:translate:17.0.3")
+
     // Network client
     val okhttpVersion = "5.4.0"
     implementation("com.squareup.okhttp3:okhttp:$okhttpVersion")

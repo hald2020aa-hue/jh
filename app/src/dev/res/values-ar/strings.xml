@@ -12,4 +12,11 @@
     <string name="couldnt_download_low_space">لا توجد مساحة كافية لتنزيل الفصول</string>
     <string name="auto_download_while_reading">التنزيل تلقائيًا أثناء القراءة</string>
     <string name="enhanced_retry_failed">إعادة محاولة التنزيلات الفاشلة</string>
+    <string name="v6_translate_chapter">ترجمة الفصل كاملًا إلى العربية</string>
+    <string name="v6_translation_page">عرض ترجمة الصفحة</string>
+    <string name="v6_translation_stop">إيقاف ترجمة الفصل</string>
+    <string name="v6_translation_processing">جارٍ ترجمة الفصل: %1$d من %2$d صفحة</string>
+    <string name="v6_translation_off">لم تبدأ ترجمة هذه الصفحة</string>
+    <string name="v6_translation_original">النص الأصلي</string>
+    <string name="v6_translation_attribution">ترجمة آلية بواسطة Google Translate</string>
 </resources>

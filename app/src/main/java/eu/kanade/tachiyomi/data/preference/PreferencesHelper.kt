@@ -241,7 +241,7 @@ class PreferencesHelper(
 
     fun showNavigationOverlayNewUserWebtoon() = flowPrefs.getBoolean(Keys.showNavigationOverlayNewUserWebtoon, true)
 
-    fun preloadSize() = flowPrefs.getInt(Keys.preloadSize, 6)
+    fun preloadSize() = flowPrefs.getInt(Keys.preloadSize, 7)
 
     fun autoUpdateTrack() = prefs.getBoolean(Keys.autoUpdateTrack, true)
 

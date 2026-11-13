@@ -1298,4 +1298,11 @@
     <string name="enhanced_dl_downloaded">Downloaded</string>
     <string name="enhanced_dl_error">Failed</string>
     <string name="enhanced_dl_waiting">Waiting</string>
+    <string name="v6_translate_chapter">Translate entire chapter to Arabic</string>
+    <string name="v6_translation_page">Show translated page</string>
+    <string name="v6_translation_stop">Stop chapter translation</string>
+    <string name="v6_translation_processing">Translating: %1$d of %2$d pages</string>
+    <string name="v6_translation_off">This page has not been translated yet</string>
+    <string name="v6_translation_original">Original text</string>
+    <string name="v6_translation_attribution">Powered by Google Translate · Machine translation</string>
 </resources>

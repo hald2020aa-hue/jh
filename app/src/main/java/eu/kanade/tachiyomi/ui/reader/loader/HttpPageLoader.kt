@@ -20,8 +20,8 @@ import kotlinx.coroutines.suspendCancellableCoroutine
 import uy.kohesive.injekt.Injekt
 import uy.kohesive.injekt.api.get
 import java.util.concurrent.PriorityBlockingQueue
+import eu.kanade.tachiyomi.ui.reader.translation.pagesAhead
 import java.util.concurrent.atomic.AtomicInteger
-import kotlin.math.min
 
 /**
  * Loader used to load chapters from an online source.
@@ -39,7 +39,15 @@ class HttpPageLoader(
      */
     private val queue = PriorityBlockingQueue<PriorityPage>()
 
-    private val preloadSize = preferences.preloadSize().get()
+    private val preloadSize = run {
+        val stored = preferences.preloadSize().get()
+        val migration = androidx.preference.PreferenceManager.getDefaultSharedPreferences(preferences.context)
+        if (!migration.getBoolean("v6_preload_7_initialized", false)) {
+            if (stored == 6) preferences.preloadSize().set(7)
+            migration.edit().putBoolean("v6_preload_7_initialized", true).apply()
+        }
+        preferences.preloadSize().get().coerceIn(0, 20)
+    }
 
     init {
         scope.launchIO {
@@ -144,15 +152,10 @@ class HttpPageLoader(
     ): List<PriorityPage> {
         val pageIndex = currentPage.index
         val pages = currentPage.chapter.pages ?: return emptyList()
-        if (pageIndex == pages.lastIndex) return emptyList()
-
-        return pages
-            .subList(pageIndex + 1, min(pageIndex + 1 + amount, pages.size))
-            .mapNotNull {
-                if (it.status == Page.State.QUEUE) {
+        return pagesAhead(pageIndex, pages.size, amount)
+            .mapNotNull { index ->
+                pages[index].takeIf { it.status == Page.State.QUEUE }?.let {
                     PriorityPage(it, 0).apply { queue.offer(this) }
-                } else {
-                    null
                 }
             }
     }
