@@ -238,7 +238,7 @@ class AutofitRecyclerView
             ) {
                 val dpWidth = (width.pxToDp / 100f).roundToInt()
                 val count = if (v5ModeColumns > 0) {
-                    neonColumnCount(v5ModeColumns, width.pxToDp)
+                    neonColumnCount(v5ModeColumns, width.pxToDp.toFloat())
                 } else {
                     max(1, (dpWidth / columnWidth).roundToInt())
                 }
