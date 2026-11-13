@@ -88,12 +88,29 @@ class OnDeviceChapterTranslator {
     private val _progress = MutableStateFlow(ChapterTranslationProgress())
     val progress: StateFlow<ChapterTranslationProgress> = _progress.asStateFlow()
 
-    suspend fun translateChapter(chapter: ReaderChapter, language: SourceTextLanguage, currentPageIndex: Int = 0) {
+    suspend fun translateChapter(
+        chapter: ReaderChapter,
+        language: SourceTextLanguage,
+        currentPageIndex: Int = 0,
+        retryFailedOnly: Boolean = false,
+    ) {
         val pages = chapter.pages ?: error("صفحات الفصل غير جاهزة")
         check(pages.isNotEmpty()) { "لا توجد صفحات للترجمة" }
+        // A retry preserves successful OCR and translates only previously failed pages.
+        val previous = _progress.value.takeIf { retryFailedOnly && it.chapterId == chapter.chapter.id }
+        val retryIndices = previous?.translated?.filterValues { it.error != null }?.keys.orEmpty()
+        if (retryFailedOnly && retryIndices.isEmpty()) return
+        val pending = if (retryFailedOnly) {
+            failedPageRetryOrder(pages.size, currentPageIndex, retryIndices)
+        } else {
+            translationPageOrder(pages.size, currentPageIndex)
+        }
+        val retained = previous?.translated?.filterValues { it.error == null }.orEmpty()
         _progress.value = ChapterTranslationProgress(
             chapterId = chapter.chapter.id,
             totalPages = pages.size,
+            processedPages = retained.size,
+            translated = retained,
             running = true,
             message = "تجهيز نموذج الترجمة العربية…",
         )
@@ -109,7 +126,7 @@ class OnDeviceChapterTranslator {
             // We do not call translate() until ML Kit confirms the model is ready.
             translator.downloadModelIfNeeded(DownloadConditions.Builder().build()).awaitTask()
             _progress.value = _progress.value.copy(message = "جارٍ ترجمة صفحات الفصل…")
-            for (pageIndex in translationPageOrder(pages.size, currentPageIndex)) {
+            for (pageIndex in pending) {
                 val page = pages[pageIndex]
                 coroutineContext.ensureActive()
                 val result = try {

@@ -19,4 +19,7 @@
     <string name="v6_translation_off">لم تبدأ ترجمة هذه الصفحة</string>
     <string name="v6_translation_original">النص الأصلي</string>
     <string name="v6_translation_attribution">ترجمة آلية بواسطة Google Translate</string>
+    <string name="v7_translation_toggle">التبديل بين الأصل والترجمة</string>
+    <string name="v7_translation_appearance">مظهر الترجمة العربية</string>
+    <string name="v7_translation_retry">إعادة محاولة الصفحات التي فشلت ترجمتها</string>
 </resources>

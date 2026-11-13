@@ -124,6 +124,7 @@ class PagerPageHolder(
 
     init {
         addView(progressBar)
+        viewer.activity.decorateTranslationImage(this, page, mergedSpread = extraPage != null)
         if (viewer.config.hingeGapSize > 0) {
             progressBar.updateLayoutParams<MarginLayoutParams> {
                 marginStart = ((context.resources.displayMetrics.widthPixels) / 2 + viewer.config.hingeGapSize) / 2

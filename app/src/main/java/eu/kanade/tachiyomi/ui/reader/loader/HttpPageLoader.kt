@@ -21,6 +21,7 @@ import uy.kohesive.injekt.Injekt
 import uy.kohesive.injekt.api.get
 import java.util.concurrent.PriorityBlockingQueue
 import eu.kanade.tachiyomi.ui.reader.translation.pagesAhead
+import eu.kanade.tachiyomi.ui.reader.translation.outsideReadAheadWindow
 import java.util.concurrent.atomic.AtomicInteger
 
 /**
@@ -38,6 +39,34 @@ class HttpPageLoader(
      * A queue used to manage requests one by one while allowing priorities.
      */
     private val queue = PriorityBlockingQueue<PriorityPage>()
+    /** At most one scheduled entry per page, even if pager and OCR request it together. */
+    private val queuedByPage = mutableMapOf<ReaderPage, PriorityPage>()
+    private var focusedPage = -1
+
+    fun focusOnPage(index: Int) {
+        synchronized(queue) {
+            focusedPage = index
+            // Cancel stale speculative queue entries, not pages already cached or being read.
+            val pending = queuedByPage.filter { (page, entry) ->
+                entry.priority == 0 && outsideReadAheadWindow(page.index, index, chapter.pages?.size ?: 0, preloadSize)
+            }
+            pending.forEach { (page, entry) ->
+                queue.remove(entry)
+                queuedByPage.remove(page)
+            }
+        }
+    }
+
+    private fun offerPage(page: ReaderPage, priority: Int): PriorityPage? = synchronized(queue) {
+        if (page.status != Page.State.QUEUE) return@synchronized null
+        val old = queuedByPage[page]
+        if (old != null && old.priority >= priority) return@synchronized null
+        if (old != null) queue.remove(old)
+        val request = PriorityPage(page, priority)
+        queuedByPage[page] = request
+        queue.offer(request)
+        request
+    }
 
     private val preloadSize = run {
         val stored = preferences.preloadSize().get()
@@ -53,7 +82,11 @@ class HttpPageLoader(
         scope.launchIO {
             flow {
                 while (true) {
-                    emit(runInterruptible { queue.take() }.page)
+                    val request = runInterruptible { queue.take() }
+                    synchronized(queue) {
+                        if (queuedByPage[request.page] === request) queuedByPage.remove(request.page)
+                    }
+                    emit(request.page)
                 }
             }.filter { it.status == Page.State.QUEUE }
                 .collect {
@@ -68,7 +101,10 @@ class HttpPageLoader(
     override fun recycle() {
         super.recycle()
         scope.cancel()
-        queue.clear()
+        synchronized(queue) {
+            queue.clear()
+            queuedByPage.clear()
+        }
 
         // Cache current page list progress for online chapters to allow a faster reopen
         val pages = chapter.pages
@@ -124,20 +160,14 @@ class HttpPageLoader(
                 page.status = Page.State.QUEUE
             }
 
-            val queuedPages = mutableListOf<PriorityPage>()
-            if (page.status == Page.State.QUEUE) {
-                queuedPages += PriorityPage(page, 1).also { queue.offer(it) }
-            }
-            queuedPages += preloadNextPages(page, preloadSize)
+            offerPage(page, 1)
+            preloadNextPages(page, preloadSize)
 
+            // Consumers cancel their observation when moving away. The loader itself owns
+            // queued jobs, which are deduplicated and pruned by focusOnPage(). Cancelling one
+            // observer must not remove a request still needed by the visible page or translator.
             suspendCancellableCoroutine<Nothing> { continuation ->
-                continuation.invokeOnCancellation {
-                    queuedPages.forEach {
-                        if (it.page.status == Page.State.QUEUE) {
-                            queue.remove(it)
-                        }
-                    }
-                }
+                continuation.invokeOnCancellation { /* no shared cache or queue deletion */ }
             }
         }
     }
@@ -153,11 +183,7 @@ class HttpPageLoader(
         val pageIndex = currentPage.index
         val pages = currentPage.chapter.pages ?: return emptyList()
         return pagesAhead(pageIndex, pages.size, amount)
-            .mapNotNull { index ->
-                pages[index].takeIf { it.status == Page.State.QUEUE }?.let {
-                    PriorityPage(it, 0).apply { queue.offer(this) }
-                }
-            }
+            .mapNotNull { index -> offerPage(pages[index], 0) }
     }
 
     /**
@@ -167,7 +193,7 @@ class HttpPageLoader(
         if (page.status == Page.State.ERROR) {
             page.status = Page.State.QUEUE
         }
-        queue.offer(PriorityPage(page, 2))
+        offerPage(page, 2)
     }
 
     /**

@@ -15,6 +15,15 @@
         android:id="@+id/action_translation_page"
         android:title="@string/v6_translation_page"
         app:showAsAction="never" />
+    <item android:id="@+id/action_translation_toggle"
+        android:title="@string/v7_translation_toggle"
+        app:showAsAction="never" />
+    <item android:id="@+id/action_translation_appearance"
+        android:title="@string/v7_translation_appearance"
+        app:showAsAction="never" />
+    <item android:id="@+id/action_translation_retry"
+        android:title="@string/v7_translation_retry"
+        app:showAsAction="never" />
     <item
         android:id="@+id/action_translation_stop"
         android:title="@string/v6_translation_stop"
