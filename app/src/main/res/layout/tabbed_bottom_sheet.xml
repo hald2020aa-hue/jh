@@ -5,7 +5,7 @@
     android:id="@+id/tabs_layout"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:background="@drawable/bottom_sheet_rounded_background"
+    android:background="@drawable/neon_unified_sheet_background"
     android:orientation="vertical">
 
     <androidx.constraintlayout.widget.ConstraintLayout

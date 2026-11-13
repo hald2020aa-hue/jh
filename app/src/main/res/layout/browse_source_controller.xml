@@ -40,6 +40,7 @@
 
     <com.google.android.material.floatingtoolbar.FloatingToolbarLayout
         android:id="@+id/floating_browse_bar"
+        android:background="@drawable/neon_unified_pill_background"
         android:layout_gravity="bottom|center"
         app:layout_behavior="com.google.android.material.behavior.HideViewOnScrollBehavior"
         android:layout_width="wrap_content"
