@@ -29,7 +29,7 @@
 
                 <com.google.android.material.textview.MaterialTextView android:id="@+id/flash_duration_text" style="?textAppearanceBodyMedium" android:textSize="15sp" android:layout_width="wrap_content" android:layout_height="wrap_content" tools:text="@string/flash_duration"/>
 
-                <com.google.android.material.slider.Slider android:id="@+id/flash_duration" android:layout_width="0dp" android:layout_height="wrap_content" android:layout_weight="1" android:layout_marginStart="12dp" android:valueFrom="100" android:valueTo="1500" android:stepSize="100" tools:value="100"/>
+                <com.google.android.material.slider.Slider android:id="@+id/flash_duration" android:layout_width="0dp" android:layout_height="wrap_content" android:layout_weight="1" android:layout_marginStart="12dp" android:valueFrom="100" android:valueTo="1500" android:stepSize="100" tools:value="100" app:thumbColor="@color/v10_neon_cyan" app:trackColorActive="@color/v10_neon_pink" app:trackColorInactive="@color/v4_track"/>
 
             </LinearLayout>
 
@@ -37,7 +37,7 @@
 
                 <com.google.android.material.textview.MaterialTextView android:id="@+id/flash_interval_text" style="?textAppearanceBodyMedium" android:textSize="15sp" android:layout_width="wrap_content" android:layout_height="wrap_content" tools:text="@string/flash_page_interval"/>
 
-                <com.google.android.material.slider.Slider android:id="@+id/flash_interval" android:layout_width="0dp" android:layout_height="wrap_content" android:layout_weight="1" android:layout_marginStart="12dp" android:valueFrom="1" android:valueTo="10" android:stepSize="1" tools:value="1"/>
+                <com.google.android.material.slider.Slider android:id="@+id/flash_interval" android:layout_width="0dp" android:layout_height="wrap_content" android:layout_weight="1" android:layout_marginStart="12dp" android:valueFrom="1" android:valueTo="10" android:stepSize="1" tools:value="1" app:thumbColor="@color/v10_neon_cyan" app:trackColorActive="@color/v10_neon_pink" app:trackColorInactive="@color/v4_track"/>
 
             </LinearLayout>
 
@@ -57,7 +57,7 @@
 
                 <com.google.android.material.textview.MaterialTextView android:id="@+id/vertical_seekbar_height_text" style="?textAppearanceBodyMedium" android:textSize="15sp" android:layout_width="wrap_content" android:layout_height="wrap_content" tools:text="@string/vertical_seekbar_height"/>
 
-                <com.google.android.material.slider.Slider android:id="@+id/vertical_seekbar_height" android:layout_width="0dp" android:layout_height="wrap_content" android:layout_weight="1" android:layout_marginStart="12dp" android:valueFrom="60" android:valueTo="100" android:stepSize="5" tools:value="65"/>
+                <com.google.android.material.slider.Slider android:id="@+id/vertical_seekbar_height" android:layout_width="0dp" android:layout_height="wrap_content" android:layout_weight="1" android:layout_marginStart="12dp" android:valueFrom="60" android:valueTo="100" android:stepSize="5" tools:value="65" app:thumbColor="@color/v10_neon_cyan" app:trackColorActive="@color/v10_neon_pink" app:trackColorInactive="@color/v4_track"/>
 
             </LinearLayout>
 

@@ -838,6 +838,7 @@ open class BrowseSourceController(
             else -> 2
         }
         MaterialAlertDialogBuilder(v.context)
+            .setBackground(v.context.getDrawable(R.drawable.neon_unified_dialog_background))
             .setTitle("طريقة عرض المانجا")
             .setSingleChoiceItems(modes, selected) { dialog, selectedIndex ->
                 if (selectedIndex == 0) {
