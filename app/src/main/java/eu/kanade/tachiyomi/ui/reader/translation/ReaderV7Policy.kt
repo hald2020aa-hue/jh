@@ -1,5 +1,7 @@
 package eu.kanade.tachiyomi.ui.reader.translation
 
+import kotlin.math.roundToInt
+
 /** The OCR network is optional; keep its geometry normalized and bounded to the source image. */
 data class NormalizedBubbleRect(val left: Float, val top: Float, val right: Float, val bottom: Float)
 
@@ -29,12 +31,18 @@ fun expandedOcrTextRegion(rect: NormalizedBubbleRect): NormalizedBubbleRect {
     val horizontal = ((rect.right - rect.left) * 0.18f).coerceIn(0.006f, 0.035f)
     val vertical = ((rect.bottom - rect.top) * 0.45f).coerceIn(0.005f, 0.028f)
     return NormalizedBubbleRect(
-        (rect.left - horizontal).coerceAtLeast(0f),
-        (rect.top - vertical).coerceAtLeast(0f),
-        (rect.right + horizontal).coerceAtMost(1f),
-        (rect.bottom + vertical).coerceAtMost(1f),
+        stableOverlayCoordinate(rect.left - horizontal),
+        stableOverlayCoordinate(rect.top - vertical),
+        stableOverlayCoordinate(rect.right + horizontal),
+        stableOverlayCoordinate(rect.bottom + vertical),
     )
 }
+
+/** Snap to one-millionth of a normalized page to remove Float rounding drift.
+ * This is less than 0.01 px even for a 10,000 px image and keeps the text plate in bounds.
+ */
+private fun stableOverlayCoordinate(value: Float): Float =
+    (value.coerceIn(0f, 1f) * 1_000_000f).roundToInt() / 1_000_000f
 
 /** Screen-independent font/opacity settings; invalid preference values never break drawing. */
 fun safeArabicOverlayFontScale(value: Float): Float = if (value.isFinite()) value.coerceIn(0.75f, 1.6f) else 1f
