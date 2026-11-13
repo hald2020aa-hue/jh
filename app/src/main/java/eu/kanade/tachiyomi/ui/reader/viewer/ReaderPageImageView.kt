@@ -18,6 +18,8 @@ import android.view.View
 import android.view.ViewGroup.LayoutParams.MATCH_PARENT
 import android.view.WindowInsets
 import android.widget.FrameLayout
+import eu.kanade.tachiyomi.ui.reader.translation.ReaderBubbleOverlayView
+import eu.kanade.tachiyomi.ui.reader.translation.TranslatedTextBlock
 import androidx.annotation.AttrRes
 import androidx.annotation.CallSuper
 import androidx.annotation.StyleRes
@@ -70,6 +72,37 @@ open class ReaderPageImageView
     ) : FrameLayout(context, attrs, defStyleAttrs, defStyleRes) {
         protected var pageView: View? = null
 
+        /** Visible holder identity. Used to prevent placing an old chapter's OCR on a new page. */
+        var translationChapterId: Long? = null
+            private set
+        var translationPageIndex: Int = -1
+            private set
+        var translationMergedSpread: Boolean = false
+            private set
+        private var translationOverlay: ReaderBubbleOverlayView? = null
+
+        fun setTranslationIdentity(chapterId: Long?, pageIndex: Int, mergedSpread: Boolean = false) {
+            translationMergedSpread = mergedSpread
+            translationChapterId = chapterId
+            translationPageIndex = pageIndex
+            translationOverlay?.update(null, false, 0.83f, 1f)
+        }
+
+        fun showTranslation(
+            blocks: List<TranslatedTextBlock>?,
+            visible: Boolean,
+            opacity: Float,
+            fontScale: Float,
+        ) {
+            val overlay = translationOverlay ?: ReaderBubbleOverlayView(context) { pageView }.also {
+                translationOverlay = it
+                addView(it, MATCH_PARENT, MATCH_PARENT)
+            }
+            overlay.bringToFront()
+            overlay.update(blocks, visible, opacity, fontScale)
+        }
+
+
         private var config: Config? = null
 
         private var avifLoadJob: Job? = null
@@ -84,6 +117,7 @@ open class ReaderPageImageView
         @CallSuper
         open fun onImageLoaded() {
             onImageLoaded?.invoke()
+            translationOverlay?.invalidate()
         }
 
         @CallSuper
@@ -94,6 +128,7 @@ open class ReaderPageImageView
         @CallSuper
         open fun onScaleChanged(newScale: Float) {
             onScaleChanged?.invoke(newScale)
+            translationOverlay?.invalidate()
         }
 
         @CallSuper
@@ -183,6 +218,7 @@ open class ReaderPageImageView
         }
 
         fun recycle() {
+            translationOverlay?.update(null, false, 0.83f, 1f)
             avifLoadJob?.cancel()
             avifLoadJob = null
             pageView?.let {
@@ -215,19 +251,22 @@ open class ReaderPageImageView
                                 origin: Int,
                             ) {
                                 this@ReaderPageImageView.onScaleChanged(newScale)
+                                translationOverlay?.invalidate()
                             }
 
                             override fun onCenterChanged(
                                 newCenter: PointF?,
                                 origin: Int,
                             ) {
-                                // Not used
+                                translationOverlay?.invalidate()
                             }
                         },
                     )
                     setOnClickListener { this@ReaderPageImageView.onViewClicked() }
                 }
             addView(pageView, MATCH_PARENT, MATCH_PARENT)
+            translationOverlay?.bringToFront()
+            translationOverlay?.invalidate()
         }
 
         protected fun SubsamplingScaleImageView.setupZoom(config: Config?) {
@@ -389,6 +428,8 @@ open class ReaderPageImageView
                     }
                 }
             addView(pageView, MATCH_PARENT, MATCH_PARENT)
+            translationOverlay?.bringToFront()
+            translationOverlay?.invalidate()
         }
 
         private fun setAnimatedImage(

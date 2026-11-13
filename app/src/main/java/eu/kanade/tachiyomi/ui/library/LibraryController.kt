@@ -1620,6 +1620,9 @@ open class LibraryController(
         filterJob?.cancel()
         filterJob =
             viewScope.launchUI {
+                // Avoid running expensive searches for every keystroke in large libraries.
+                // Clearing search remains immediate, and the previous job is cancelled above.
+                if (this@LibraryController.query.isNotBlank()) delay(140)
                 adapter.performFilterAsync()
             }
     }

@@ -46,6 +46,15 @@ class DownloadStore(
         }
     }
 
+    /** Replace the order in one SharedPreferences transaction: never expose an empty queue on reorder. */
+    fun replaceAll(downloads: List<Download>) {
+        counter = 0
+        preferences.edit {
+            clear()
+            downloads.forEach { putString(getKey(it), serialize(it)) }
+        }
+    }
+
     /**
      * Removes a download from the store.
      *
@@ -97,8 +106,8 @@ class DownloadStore(
             }
         }
 
-        // Clear the store, downloads will be added again immediately.
-        clear()
+        // Never clear during restore: a process death between clear() and reinsert would
+        // silently lose the entire queue. DownloadQueue.addAll reconciles stale entries atomically.
         return downloads
     }
 

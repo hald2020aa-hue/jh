@@ -98,6 +98,7 @@ class WebtoonPageHolder(
      */
     fun bind(page: ReaderPage) {
         this.page = page
+        viewer.activity.decorateTranslationImage(frame, page)
         launchLoadJob()
         refreshLayoutParams()
     }

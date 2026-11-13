@@ -133,9 +133,11 @@ class DownloadManager(
             downloader.queue.clear()
             return
         }
+        // Keep the existing Download objects and progress in memory and persist the new
+        // ordering atomically. clear()/addAll() exposed an empty queue if Android killed
+        // the process between the two operations.
         downloader.pause()
-        downloader.queue.clear()
-        downloader.queue.addAll(downloads)
+        downloader.queue.reorder(downloads)
         if (!wasPaused) {
             downloader.start()
             DownloadJob.callListeners(true, this)

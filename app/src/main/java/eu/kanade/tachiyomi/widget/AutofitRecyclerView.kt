@@ -242,9 +242,15 @@ class AutofitRecyclerView
                 } else {
                     max(1, (dpWidth / columnWidth).roundToInt())
                 }
-                // The staggered manager throws when set mid-layout or scroll, even to the same count
+                // Keep the first visible cover anchored when a Fold is opened or resized.
+                // A column count change alone must not jump the user to another manga.
                 if (count != spanCount) {
+                    val first = if (spanCount > 0 && !isComputingLayout) findFirstVisibleItemPosition() else NO_POSITION
+                    val top = if (first != NO_POSITION) findViewHolderForAdapterPosition(first)?.itemView?.top else null
                     spanCount = count
+                    if (top != null && first != NO_POSITION) {
+                        doOnNextLayout { scrollToPositionWithOffset(first, top - paddingTop) }
+                    }
                 }
             }
         }

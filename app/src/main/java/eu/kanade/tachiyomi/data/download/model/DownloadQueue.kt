@@ -30,8 +30,20 @@ class DownloadQueue(
             download.status = Download.State.QUEUE
         }
         queue.addAll(downloads)
-        store.addAll(downloads)
+        store.replaceAll(queue.toList())
         _state.value = queue.toList()
+    }
+
+    /** Move the same Download objects without clearing their page progress or persisted queue. */
+    fun reorder(downloads: List<Download>) {
+        require(downloads.size == queue.size && downloads.toSet() == queue.toSet()) {
+            "Cannot reorder with missing or unknown downloads"
+        }
+        queue.clear()
+        queue.addAll(downloads)
+        store.replaceAll(queue.toList())
+        _state.value = queue.toList()
+        updateListeners()
     }
 
     fun remove(download: Download) {

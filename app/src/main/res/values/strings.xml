@@ -1305,4 +1305,7 @@
     <string name="v6_translation_off">This page has not been translated yet</string>
     <string name="v6_translation_original">Original text</string>
     <string name="v6_translation_attribution">Powered by Google Translate · Machine translation</string>
+    <string name="v7_translation_toggle">Show original / translated page</string>
+    <string name="v7_translation_appearance">Arabic translation appearance</string>
+    <string name="v7_translation_retry">Retry failed translated pages</string>
 </resources>
