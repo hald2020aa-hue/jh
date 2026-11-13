@@ -99,6 +99,8 @@ import eu.kanade.tachiyomi.ui.reader.ReaderViewModel.SetAsCoverResult.AddToLibra
 import eu.kanade.tachiyomi.ui.reader.ReaderViewModel.SetAsCoverResult.Error
 import eu.kanade.tachiyomi.ui.reader.ReaderViewModel.SetAsCoverResult.Success
 import eu.kanade.tachiyomi.ui.reader.model.ReaderChapter
+import eu.kanade.tachiyomi.ui.reader.translation.OnDeviceChapterTranslator
+import eu.kanade.tachiyomi.ui.reader.translation.SourceTextLanguage
 import eu.kanade.tachiyomi.ui.reader.model.ReaderPage
 import eu.kanade.tachiyomi.ui.reader.model.ViewerChapters
 import eu.kanade.tachiyomi.ui.reader.settings.FlashColor
@@ -151,6 +153,7 @@ import eu.kanade.tachiyomi.widget.doOnStart
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
+import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.flow.drop
 import kotlinx.coroutines.flow.filterNotNull
@@ -198,6 +201,12 @@ class ReaderActivity : BaseActivity<ReaderActivityBinding>() {
      * Whether the menu should stay visible.
      */
     private var menuTemporarilyVisible = false
+
+    // V6 is deliberately opt-in. Only text is cached in memory; original images stay untouched.
+    private val chapterTranslator = OnDeviceChapterTranslator()
+    private var translationJob: Job? = null
+    private var translatedPage: ReaderPage? = null
+    private var translationBanner: TextView? = null
 
     private var coroutine: Job? = null
 
@@ -895,9 +904,102 @@ class ReaderActivity : BaseActivity<ReaderActivityBinding>() {
                 shiftDoublePages()
                 manuallyShiftedPages = true
             }
+            R.id.action_translate_chapter -> askChapterTranslationLanguage()
+            R.id.action_translation_page -> showCurrentPageTranslation()
+            R.id.action_translation_stop -> {
+                translationJob?.cancel()
+                translationJob = null
+                translationBanner?.isVisible = false
+            }
             else -> return super.onOptionsItemSelected(item)
         }
         return true
+    }
+
+    private fun askChapterTranslationLanguage() {
+        val chapter = viewModel.state.value.viewerChapters?.currChapter
+        if (chapter?.pages.isNullOrEmpty()) {
+            toast("الفصل لم يجهز بعد")
+            return
+        }
+        val languages = SourceTextLanguage.entries.toTypedArray()
+        androidx.appcompat.app.AlertDialog.Builder(this)
+            .setTitle(R.string.v6_translate_chapter)
+            .setItems(languages.map { it.arabicName }.toTypedArray()) { _, selected ->
+                translationJob?.cancel()
+                translationBanner?.isVisible = false
+                translationJob = scope.launch {
+                    try {
+                        chapterTranslator.translateChapter(chapter!!, languages[selected], translatedPage?.index ?: 0)
+                    } catch (e: kotlinx.coroutines.CancellationException) {
+                        throw e
+                    } catch (e: Throwable) {
+                        toast(e.message ?: "تعذرت الترجمة")
+                    }
+                    refreshTranslationBanner()
+                }
+                // Collect in a separate reader-scoped job that is canceled at destruction.
+                translationUpdatesJob?.cancel()
+                translationUpdatesJob = scope.launch {
+                    chapterTranslator.progress.collect {
+                        refreshTranslationBanner()
+                    }
+                }
+            }
+            .setNegativeButton(android.R.string.cancel, null)
+            .show()
+    }
+
+    private var translationUpdatesJob: Job? = null
+
+    private fun refreshTranslationBanner() {
+        val page = translatedPage ?: return
+        val progress = chapterTranslator.progress.value
+        if (progress.chapterId != page.chapter.chapter.id) {
+            translationBanner?.isVisible = false
+            return
+        }
+        val translation = progress.translated[page.index]
+        val content = translation?.text
+        val message = when {
+            translation?.error != null -> "تعذرت ترجمة الصفحة: ${translation.error}"
+            !content.isNullOrBlank() -> content
+            translation != null -> "لا يوجد نص قابل للقراءة في الصفحة"
+            progress.running -> getString(R.string.v6_translation_processing, progress.processedPages, progress.totalPages)
+            else -> progress.message
+        }
+        if (message.isBlank()) return
+        val banner = translationBanner ?: TextView(this).also { view ->
+            view.setTextColor(Color.WHITE)
+            view.setBackgroundColor(Color.argb(225, 10, 20, 39))
+            view.textSize = 14f
+            view.maxLines = 3
+            view.ellipsize = TextUtils.TruncateAt.END
+            val padding = 12.dpToPx
+            view.setPadding(padding, padding, padding, padding)
+            view.setOnClickListener { showCurrentPageTranslation() }
+            val root = findViewById<FrameLayout>(android.R.id.content)
+            root.addView(view, FrameLayout.LayoutParams(
+                ViewGroup.LayoutParams.MATCH_PARENT,
+                ViewGroup.LayoutParams.WRAP_CONTENT,
+                Gravity.BOTTOM,
+            ).apply { bottomMargin = 72.dpToPx })
+            translationBanner = view
+        }
+        banner.text = message
+        banner.isVisible = true
+    }
+
+    private fun showCurrentPageTranslation() {
+        val page = translatedPage
+        val result = page?.let { chapterTranslator.progress.value.translated[it.index] }
+        val content = result?.text?.ifBlank { "لم يُعثر على نص في هذه الصفحة" }
+            ?: getString(R.string.v6_translation_off)
+        androidx.appcompat.app.AlertDialog.Builder(this)
+            .setTitle(R.string.v6_translation_page)
+            .setMessage("$content\n\n${getString(R.string.v6_translation_attribution)}")
+            .setPositiveButton(android.R.string.ok, null)
+            .show()
     }
 
     fun shiftDoublePages(
@@ -1998,6 +2100,14 @@ class ReaderActivity : BaseActivity<ReaderActivityBinding>() {
         hasExtraPage: Boolean,
     ) {
         viewModel.onPageSelected(page, hasExtraPage)
+        // A reader chapter change invalidates the prior chapter's translation work.
+        val translatingId = chapterTranslator.progress.value.chapterId
+        if (translatingId != null && translatingId != page.chapter.chapter.id) {
+            translationJob?.cancel()
+            translationBanner?.isVisible = false
+        }
+        translatedPage = page
+        refreshTranslationBanner()
         flashPage()
         val pages = page.chapter.pages ?: return
 

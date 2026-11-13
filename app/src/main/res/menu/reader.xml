@@ -7,4 +7,16 @@
         android:icon="@drawable/ic_page_next_outline_24dp"
         android:title="@string/shift_one_page_over"
         app:showAsAction="ifRoom" />
+    <item
+        android:id="@+id/action_translate_chapter"
+        android:title="@string/v6_translate_chapter"
+        app:showAsAction="never" />
+    <item
+        android:id="@+id/action_translation_page"
+        android:title="@string/v6_translation_page"
+        app:showAsAction="never" />
+    <item
+        android:id="@+id/action_translation_stop"
+        android:title="@string/v6_translation_stop"
+        app:showAsAction="never" />
 </menu>

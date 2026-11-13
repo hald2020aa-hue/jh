@@ -478,7 +478,7 @@ class SettingsReaderController : SettingsController() {
                     bindTo(preferences.preloadSize())
                     titleRes = R.string.page_preload_amount
                     summaryRes = R.string.amount_of_pages_to_preload
-                    entryValues = (4..20 step 2).toList()
+                    entryValues = (4..20 step 2).toList().plus(7).sorted()
                     valueFormatter = { context.resources.getQuantityString(R.plurals.pages_plural, it, it) }
                 }
             }
