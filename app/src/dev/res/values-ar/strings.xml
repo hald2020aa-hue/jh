@@ -2,4 +2,14 @@
 <resources>
     <string name="app_name">J2K المطوّر - نسخة تجريبية</string>
     <string name="app_short_name">J2K المطوّر</string>
+    <string name="download_queue">قائمة التنزيل</string>
+    <string name="downloads">التنزيل</string>
+    <string name="downloading">جاري التنزيل</string>
+    <string name="downloading_">جاري تنزيل: %1$s</string>
+    <string name="loading">جارٍ التحضير…</string>
+    <string name="failed_to_load_pages_">تعذّر جلب الصفحات: %1$s</string>
+    <string name="decode_image_error">تعذّر عرض هذه الصورة</string>
+    <string name="couldnt_download_low_space">لا توجد مساحة كافية لتنزيل الفصول</string>
+    <string name="auto_download_while_reading">التنزيل تلقائيًا أثناء القراءة</string>
+    <string name="enhanced_retry_failed">إعادة محاولة التنزيلات الفاشلة</string>
 </resources>

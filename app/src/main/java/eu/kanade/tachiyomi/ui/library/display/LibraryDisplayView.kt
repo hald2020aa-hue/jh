@@ -4,6 +4,9 @@ import android.content.Context
 import android.util.AttributeSet
 import android.view.View
 import com.google.android.material.slider.Slider
+import com.google.android.material.dialog.MaterialAlertDialogBuilder
+import eu.kanade.tachiyomi.ui.enhanced.NeonGridMode
+import eu.kanade.tachiyomi.ui.library.LibraryItem
 import eu.kanade.tachiyomi.R
 import eu.kanade.tachiyomi.databinding.LibraryDisplayLayoutBinding
 import eu.kanade.tachiyomi.util.bindToPreference
@@ -31,6 +34,31 @@ class LibraryDisplayView
 
         override fun initGeneralPreferences() {
             binding.displayGroup.bindToPreference(preferences.libraryLayout())
+            binding.v5DisplayModes.visibility = if (resources.getBoolean(R.bool.v4_neon_mode)) View.VISIBLE else View.GONE
+            binding.v5DisplayModes.setOnClickListener {
+                val modes = arrayOf("قائمة", "كبير — عمودان", "متوسط — 3 أعمدة", "صغير — 5 أعمدة")
+                val previous = if (preferences.libraryLayout().get() == LibraryItem.LAYOUT_LIST) 0 else when (NeonGridMode.getColumns(context)) {
+                    NeonGridMode.LARGE -> 1
+                    NeonGridMode.SMALL -> 3
+                    else -> 2
+                }
+                MaterialAlertDialogBuilder(context)
+                    .setTitle("طريقة عرض المانجا")
+                    .setSingleChoiceItems(modes, previous) { dialog, choice ->
+                        if (choice == 0) {
+                            preferences.libraryLayout().set(LibraryItem.LAYOUT_LIST)
+                        } else {
+                            NeonGridMode.setColumns(context, when (choice) {
+                                1 -> NeonGridMode.LARGE
+                                3 -> NeonGridMode.SMALL
+                                else -> NeonGridMode.MEDIUM
+                            })
+                            preferences.libraryLayout().set(LibraryItem.LAYOUT_COMFORTABLE_GRID)
+                            controller?.applyNeonGridMode()
+                        }
+                        dialog.dismiss()
+                    }.setNegativeButton(android.R.string.cancel, null).show()
+            }
             binding.uniformGrid.bindToPreference(preferences.uniformGrid()) {
                 binding.staggeredGrid.isEnabled = !it
             }

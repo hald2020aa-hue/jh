@@ -17,6 +17,7 @@ import coil.size.Precision
 import coil.size.Scale
 import eu.kanade.tachiyomi.R
 import eu.kanade.tachiyomi.ui.enhanced.knownChapterProgress
+import eu.kanade.tachiyomi.ui.enhanced.NeonGridMode
 import eu.kanade.tachiyomi.data.database.models.Manga
 import eu.kanade.tachiyomi.data.image.coil.loadManga
 import eu.kanade.tachiyomi.databinding.MangaGridItemBinding
@@ -67,7 +68,8 @@ class LibraryGridHolder(
     private val updateSubtitle =
         Runnable {
             val hasAuthorInFilter = filter.isNotBlank() && authorArtist.contains(filter, true)
-            val showSubtitle =
+            val tinyCards = view.resources.getBoolean(R.bool.v4_neon_mode) && NeonGridMode.getColumns(view.context) == NeonGridMode.SMALL
+            val showSubtitle = !tinyCards &&
                 (binding.title.lineCount <= 1 || hasAuthorInFilter) && authorArtist.isNotBlank()
             if (binding.subtitle.isVisible != showSubtitle) {
                 binding.subtitle.isVisible = showSubtitle
@@ -79,6 +81,16 @@ class LibraryGridHolder(
         }
 
     init {
+        if (view.resources.getBoolean(R.bool.v4_neon_mode) && NeonGridMode.getColumns(view.context) == NeonGridMode.SMALL) {
+            binding.card.updateLayoutParams<ConstraintLayout.LayoutParams> {
+                marginStart = 3.dpToPx
+                marginEnd = 3.dpToPx
+                topMargin = 4.dpToPx
+            }
+            binding.title.textSize = 11f
+            binding.title.maxLines = 2
+            binding.subtitle.isVisible = false
+        }
         binding.unreadDownloadBadge.badgeView.libraryColors = adapter.colors
         binding.behindTitle.isVisible = coverOnly
         if (libraryLayout >= LibraryItem.LAYOUT_COMFORTABLE_GRID) {

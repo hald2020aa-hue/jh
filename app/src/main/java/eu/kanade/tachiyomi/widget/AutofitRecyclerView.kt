@@ -6,6 +6,8 @@ import androidx.core.content.edit
 import androidx.core.view.WindowInsetsCompat.Type.systemBars
 import androidx.core.view.doOnNextLayout
 import androidx.preference.PreferenceManager
+import eu.kanade.tachiyomi.ui.enhanced.NeonGridMode
+import eu.kanade.tachiyomi.ui.enhanced.neonColumnCount
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.StaggeredGridLayoutManager
@@ -30,6 +32,8 @@ class AutofitRecyclerView
 
         var lastMeasuredWidth = 0
         private var pendingSpanUpdate = false
+        private var v5ModeColumns = 0
+
         var columnWidth = -1f
             set(value) {
                 field = value
@@ -69,6 +73,10 @@ class AutofitRecyclerView
             }
 
         private fun getTempSpan(): Int {
+            if (v5ModeColumns > 0) {
+                val widthDp = (if (measuredWidth > 0) measuredWidth else resources.displayMetrics.widthPixels) / resources.displayMetrics.density
+                return neonColumnCount(v5ModeColumns, widthDp)
+            }
             if (columnWidth > 0) {
                 val dpWidth = (measuredWidth.toFloat().pxToDp / 100f).roundToInt()
                 return max(1, (dpWidth / columnWidth).roundToInt())
@@ -190,11 +198,24 @@ class AutofitRecyclerView
                 }
             }
 
+            v5ModeColumns = if (resources.getBoolean(R.bool.v4_neon_mode)) {
+                NeonGridMode.getColumns(context)
+            } else {
+                0
+            }
             val size = 1.5f.pow(preferences.gridSize().get())
             val trueSize = MULTIPLE * ((size * 100 / MULTIPLE).roundToInt()) / 100f
             // Prevent unreadably narrow poster cards on phones, while the adaptive grid
             // still expands to more columns on Fold/tablet. Standard retains user defaults.
-            columnWidth = if (resources.getBoolean(R.bool.v4_neon_mode)) max(trueSize, 1.4f) else trueSize
+            columnWidth = if (v5ModeColumns > 0) {
+                // The existing grid uses 100dp-sized coordinate units.
+                val screenWidthDp = resources.displayMetrics.widthPixels / resources.displayMetrics.density
+                max(0.55f, (screenWidthDp / v5ModeColumns) / 100f)
+            } else if (resources.getBoolean(R.bool.v4_neon_mode)) {
+                max(trueSize, 1.4f)
+            } else {
+                trueSize
+            }
         }
 
         /**
@@ -216,7 +237,11 @@ class AutofitRecyclerView
                 columnWidth > 0
             ) {
                 val dpWidth = (width.pxToDp / 100f).roundToInt()
-                val count = max(1, (dpWidth / columnWidth).roundToInt())
+                val count = if (v5ModeColumns > 0) {
+                    neonColumnCount(v5ModeColumns, width.pxToDp)
+                } else {
+                    max(1, (dpWidth / columnWidth).roundToInt())
+                }
                 // The staggered manager throws when set mid-layout or scroll, even to the same count
                 if (count != spanCount) {
                     spanCount = count

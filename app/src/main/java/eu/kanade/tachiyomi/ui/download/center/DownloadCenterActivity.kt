@@ -68,6 +68,8 @@ import eu.kanade.tachiyomi.R
 import eu.kanade.tachiyomi.data.database.models.Manga
 import eu.kanade.tachiyomi.data.image.coil.loadManga
 import eu.kanade.tachiyomi.data.download.DownloadJob
+import eu.kanade.tachiyomi.ui.download.NeonDownloadPanel
+import eu.kanade.tachiyomi.ui.download.NeonDownloadRow
 import eu.kanade.tachiyomi.data.download.DownloadManager
 import eu.kanade.tachiyomi.data.download.model.Download
 import eu.kanade.tachiyomi.data.download.model.DownloadQueue
@@ -92,7 +94,24 @@ class DownloadCenterActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContent {
             EnhancedReadingTheme {
-                DownloadCenterScreen(model = model, onBack = { finish() })
+                if (resources.getBoolean(R.bool.v4_neon_mode)) {
+                    val rows by model.neonRows.collectAsState()
+                    val paused by model.paused.collectAsState()
+                    NeonDownloadPanel(
+                        rows = rows,
+                        isRunning = !paused,
+                        onToggleAll = model::toggleQueue,
+                        onDeleteAll = model::clearQueue,
+                        onPause = { item -> item.chapter.id?.let(model::pauseChapter) },
+                        onResume = { item -> item.chapter.id?.let(model::resumeChapter) },
+                        onDelete = { item -> item.chapter.id?.let(model::cancel) },
+                        onPrioritize = { item -> item.chapter.id?.let(model::prioritize) },
+                        onConcurrentSources = model::setConcurrentSources,
+                        onClose = { finish() },
+                    )
+                } else {
+                    DownloadCenterScreen(model = model, onBack = { finish() })
+                }
             }
         }
     }
@@ -121,6 +140,8 @@ internal class DownloadCenterModel : ViewModel() {
     private val manager: DownloadManager = Injekt.get()
     private val _rows = MutableStateFlow<List<DownloadCenterRow>>(emptyList())
     val rows = _rows.asStateFlow()
+    private val _neonRows = MutableStateFlow<List<NeonDownloadRow>>(emptyList())
+    val neonRows = _neonRows.asStateFlow()
     private val _paused = MutableStateFlow(true)
     // Frame-friendly coalescing: a page download may notify us dozens of times per second.
     private val refreshSignals = Channel<Unit>(Channel.CONFLATED)
@@ -136,6 +157,19 @@ internal class DownloadCenterModel : ViewModel() {
         viewModelScope.launch(Dispatchers.Main.immediate) {
             refreshSignals.receiveAsFlow().collect {
                 _paused.value = manager.isPaused()
+                _neonRows.value = manager.queue.map { download ->
+                    NeonDownloadRow(
+                        download = download,
+                        name = download.manga.title,
+                        chapterName = download.chapter.name,
+                        percentage = download.progress.coerceIn(0, 100),
+                        downloadedPages = download.downloadedImages,
+                        totalPages = download.pages?.size,
+                        paused = download.chapter.id?.let(manager::isChapterPaused) ?: false,
+                        status = download.status,
+                        completedInCache = manager.getDownloadCount(download.manga),
+                    )
+                }
                 _rows.value = manager.queue.mapNotNull { download ->
                     val id = download.chapter.id ?: return@mapNotNull null
                     DownloadCenterRow(
@@ -168,6 +202,29 @@ internal class DownloadCenterModel : ViewModel() {
         else manager.pauseDownloads()
         refresh()
     }
+
+    fun pauseChapter(id: Long) {
+        manager.pauseChapter(id)
+        refresh()
+    }
+
+    fun resumeChapter(id: Long) {
+        manager.resumeChapter(id)
+        refresh()
+    }
+
+    fun clearQueue() {
+        manager.clearQueue()
+        refresh()
+    }
+
+    fun setConcurrentSources(count: Int) {
+        // Keep this setting inside the established preferences subsystem.
+        val prefs = Injekt.get<eu.kanade.tachiyomi.data.preference.PreferencesHelper>()
+        prefs.numberOfConcurrentSourceDownloads().set(count.coerceIn(1, 3))
+        refresh()
+    }
+
 
     /** Prioritize via the existing queue API, preserving its persistence and source limits. */
     fun prioritize(id: Long) {
