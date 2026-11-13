@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Visual-only colors: no theme, preference, or business-logic changes. -->
+    <color name="v10_neon_cyan">#19DDF6</color>
+    <color name="v10_neon_blue">#377DFF</color>
+    <color name="v10_neon_purple">#9648F6</color>
+    <color name="v10_neon_pink">#EF22DF</color>
+    <color name="v10_neon_border_soft">#9035CEDB</color>
+</resources>
