@@ -13,7 +13,10 @@ assert all(i in ids for i in ('filter_bottom_sheet','library_grid_recycler','cat
 code=(ROOT/'app/src/main/java/eu/kanade/tachiyomi/ui/library/LibraryController.kt').read_text()
 for key,cmd in {'library_top_categories':'categoryButton.performClick()', 'library_top_group':'showGroupOptions()', 'library_top_display':'showDisplayOptions()', 'library_top_filter':'showSheet()', 'library_top_expand':'presenter.toggleAllCategoryVisibility()'}.items():
     assert f'R.id.{key}' in code and cmd in code, (key,cmd)
-assert 'top = topOffset + 72.dpToPx' in code, 'Cover clearance missing'
+assert 'top = topOffset + 86.dpToPx' in code, 'Initial cover clearance missing'
+assert 'searchCard.getLocationInWindow(cardPosition)' in code, 'Live search alignment missing'
+assert 'actions.translationY = actionTop.toFloat()' in code, 'Action row not anchored'
+assert 'removeOnPreDrawListener(callback)' in code, 'Listener cleanup missing'
 original=(ROOT/'app/src/main/res/menu/bottom_navigation.xml').read_text()
 override=(ROOT/'app/src/dev/res/menu/bottom_navigation.xml').read_text()
 import re
