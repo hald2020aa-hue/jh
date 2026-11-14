@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layer-list xmlns:android="http://schemas.android.com/apk/res/android">
+    <!-- Two-step lightweight neon halo; no blur bitmap, animation or GPU filter. -->
+    <item>
+        <shape android:shape="rectangle">
+            <gradient android:angle="0" android:startColor="#5540E5FF"
+                android:centerColor="#554C6BFF" android:endColor="#66F932EF"/>
+            <corners android:radius="32dp"/>
+        </shape>
+    </item>
+    <item android:left="2dp" android:top="2dp" android:right="2dp" android:bottom="2dp">
+        <shape android:shape="rectangle">
+            <gradient android:angle="0" android:startColor="@color/v10_neon_cyan"
+                android:centerColor="@color/v10_neon_blue" android:endColor="@color/v10_neon_pink"/>
+            <corners android:radius="30dp"/>
+        </shape>
+    </item>
+    <item android:left="4dp" android:top="4dp" android:right="4dp" android:bottom="4dp">
+        <shape android:shape="rectangle">
+            <solid android:color="@color/v4_bg"/>
+            <corners android:radius="28dp"/>
+        </shape>
+    </item>
+</layer-list>

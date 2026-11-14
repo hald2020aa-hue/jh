@@ -1,39 +1,11 @@
-<?xml version="1.0" encoding="utf-8"?>
-<com.google.android.material.card.MaterialCardView xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/container"
-    style="@style/Widget.Tachiyomi.CardView.Draggable"
-    android:layout_marginTop="8dp" app:strokeWidth="1dp" app:strokeColor="@color/v10_neon_border_soft" app:cardBackgroundColor="@color/v4_card">
+<?xml version='1.0' encoding='UTF-8'?>
+<com.google.android.material.card.MaterialCardView xmlns:android="http://schemas.android.com/apk/res/android" xmlns:app="http://schemas.android.com/apk/res-auto" xmlns:tools="http://schemas.android.com/tools" android:id="@+id/container" style="@style/Widget.Tachiyomi.CardView.Draggable" android:layout_marginTop="8dp" app:strokeWidth="2dp" app:strokeColor="@color/v10_neon_cyan" app:cardBackgroundColor="@color/v4_card">
 
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+    <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content">
 
-        <TextView
-            android:id="@+id/title"
-            android:textAppearance="?textAppearanceLabelLarge"
-            android:textColor="@color/v4_text"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:paddingHorizontal="16dp"
-            android:paddingVertical="8dp"
-            android:layout_weight="1"
-            android:layout_gravity="center_vertical"
-            tools:text="Title" />
+        <TextView android:id="@+id/title" android:textAppearance="?textAppearanceLabelLarge" android:textColor="@color/v4_text" android:layout_width="0dp" android:layout_height="wrap_content" android:paddingHorizontal="16dp" android:paddingVertical="8dp" android:layout_weight="1" android:layout_gravity="center_vertical" tools:text="Title"/>
 
-        <ImageView
-            android:id="@+id/reorder"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="start"
-            android:paddingStart="20dp"
-            android:paddingEnd="10dp"
-            android:paddingVertical="8dp"
-            android:scaleType="center"
-            app:srcCompat="@drawable/ic_drag_handle_24dp"
-            app:tint="?attr/colorOnBackground"
-            tools:ignore="ContentDescription" />
+        <ImageView android:id="@+id/reorder" android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_gravity="start" android:paddingStart="20dp" android:paddingEnd="10dp" android:paddingVertical="8dp" android:scaleType="center" app:srcCompat="@drawable/ic_drag_handle_24dp" app:tint="?attr/colorOnBackground" tools:ignore="ContentDescription"/>
 
     </LinearLayout>
 

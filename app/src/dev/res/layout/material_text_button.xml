@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Same existing button ID and click listener; MaterialButton manages its ripple and state. -->
+<com.google.android.material.button.MaterialButton
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/button"
+    style="@style/Widget.Material3Expressive.Button.TextButton"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:minHeight="48dp"
+    android:paddingStart="20dp"
+    android:paddingEnd="20dp"
+    android:text="@string/set_as_default_for_all"
+    android:textColor="@color/v4_text"
+    app:cornerRadius="24dp"
+    app:strokeWidth="2dp"
+    app:strokeColor="@color/v10_neon_pink"
+    app:backgroundTint="@color/v4_card" />

@@ -1,6 +1,10 @@
 package eu.kanade.tachiyomi.ui.source.browse
 
 import android.os.Build
+import android.content.res.ColorStateList
+import android.widget.LinearLayout
+import android.widget.RadioGroup
+import com.google.android.material.radiobutton.MaterialRadioButton
 import android.os.Bundle
 import android.view.Gravity
 import android.view.LayoutInflater
@@ -828,24 +832,58 @@ open class BrowseSourceController(
         getHolder(manga)?.setImage(manga)
     }
 
-    /** Real four-mode layout selector; list mode uses existing list holders. */
+    /** Four existing list/2/3/5 modes in an actual neon radio-panel.
+     * Selection still writes only the original browseAsList and NeonGridMode prefs.
+     */
     private fun showNeonDisplayModes() {
         val v = view ?: return
+        val context = v.context
         val modes = arrayOf("قائمة", "كبير — عمودان", "متوسط — 3 أعمدة", "صغير — 5 أعمدة")
-        val selected = if (presenter.prefs.browseAsList().get()) 0 else when (NeonGridMode.getColumns(v.context)) {
+        val selected = if (presenter.prefs.browseAsList().get()) 0 else when (NeonGridMode.getColumns(context)) {
             NeonGridMode.LARGE -> 1
             NeonGridMode.SMALL -> 3
             else -> 2
         }
-        MaterialAlertDialogBuilder(v.context)
-            .setBackground(v.context.getDrawable(R.drawable.neon_unified_dialog_background))
+        fun dp(size: Int): Int = (size * context.resources.displayMetrics.density + .5f).toInt()
+        val rows = RadioGroup(context).apply {
+            orientation = RadioGroup.VERTICAL
+            layoutDirection = View.LAYOUT_DIRECTION_RTL
+            setPadding(dp(14), dp(6), dp(14), dp(6))
+        }
+        val radioButtons = modes.mapIndexed { index, title ->
+            MaterialRadioButton(context).apply {
+                text = title
+                textSize = 16f
+                isChecked = index == selected
+                setTextColor(context.getColor(android.R.color.white))
+                buttonTintList = ColorStateList.valueOf(context.getColor(
+                    if (index == selected) R.color.v10_neon_pink else R.color.v10_neon_cyan,
+                ))
+                setBackgroundResource(R.drawable.v11_neon_translation_row)
+                setPadding(dp(16), dp(8), dp(16), dp(8))
+                minimumHeight = dp(56)
+                isFocusable = true
+            }.also { radio ->
+                rows.addView(radio, RadioGroup.LayoutParams(
+                    ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT,
+                ).apply { bottomMargin = dp(8) })
+            }
+        }
+        val dialog = MaterialAlertDialogBuilder(context)
             .setTitle("طريقة عرض المانجا")
-            .setSingleChoiceItems(modes, selected) { dialog, selectedIndex ->
-                if (selectedIndex == 0) {
+            .setView(rows)
+            .setBackground(context.getDrawable(R.drawable.v11_neon_translation_popup))
+            .setNegativeButton(android.R.string.cancel, null)
+            .show()
+        dialog.getButton(android.content.DialogInterface.BUTTON_NEGATIVE)
+            ?.setTextColor(context.getColor(R.color.v10_neon_pink))
+        radioButtons.forEachIndexed { index, radio ->
+            radio.setOnClickListener {
+                if (index == 0) {
                     presenter.prefs.browseAsList().set(true)
                 } else {
                     presenter.prefs.browseAsList().set(false)
-                    NeonGridMode.setColumns(v.context, when (selectedIndex) {
+                    NeonGridMode.setColumns(context, when (index) {
                         1 -> NeonGridMode.LARGE
                         3 -> NeonGridMode.SMALL
                         else -> NeonGridMode.MEDIUM
@@ -855,7 +893,8 @@ open class BrowseSourceController(
                 updateDisplayMenuItem(activityBinding?.toolbar?.menu)
                 updateDisplayMenuItem(activityBinding?.searchToolbar?.menu)
                 dialog.dismiss()
-            }.setNegativeButton(android.R.string.cancel, null).show()
+            }
+        }
     }
 
     /**

@@ -343,7 +343,11 @@ class ReaderActivity : BaseActivity<ReaderActivityBinding>() {
 
         wic.isAppearanceLightStatusBars = themeLightStatusBars
         wic.isAppearanceLightNavigationBars = themeLightStatusBars
-        binding.appBar.setBackgroundColor(contextCompatColor(R.color.surface_alpha))
+        if (resources.getBoolean(R.bool.v4_neon_mode)) {
+            binding.appBar.setBackgroundResource(R.drawable.enhanced_reader_nav_background)
+        } else {
+            binding.appBar.setBackgroundColor(contextCompatColor(R.color.surface_alpha))
+        }
         // Preserve the enhanced reader panel's high-contrast surface in the development fork.
         if (BuildConfig.FLAVOR != "dev") {
             ViewCompat.setBackgroundTintList(
@@ -609,6 +613,13 @@ class ReaderActivity : BaseActivity<ReaderActivityBinding>() {
      */
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
         menuInflater.inflate(R.menu.reader, menu)
+        // Dev-only presentation of the same nine V9 translation MenuItems.
+        // The standard variant keeps Android's native reader overflow unchanged.
+        if (resources.getBoolean(R.bool.v4_neon_mode)) {
+            NeonReaderTranslationMenu.attach(binding.toolbar, menu) { item ->
+                onOptionsItemSelected(item)
+            }
+        }
         return true
     }
 
@@ -1447,7 +1458,11 @@ class ReaderActivity : BaseActivity<ReaderActivityBinding>() {
                 getResourceColor(R.attr.colorSurface),
                 200,
             )
-        binding.appBar.setBackgroundColor(primaryColor)
+        if (resources.getBoolean(R.bool.v4_neon_mode)) {
+            binding.appBar.setBackgroundResource(R.drawable.enhanced_reader_nav_background)
+        } else {
+            binding.appBar.setBackgroundColor(primaryColor)
+        }
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
         binding.toolbar.navigationIcon?.setTint(getResourceColor(R.attr.actionBarTintColor))
         binding.toolbar.setNavigationOnClickListener {

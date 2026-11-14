@@ -35,6 +35,8 @@ jobs:
         run: python3 qa/v8/validate_v8.py
       - name: Validate V9 auto OCR, translation routing, bubble geometry and update identity
         run: python3 qa/v9/validate_v9.py
+      - name: Verify V11 neon redesign preserves all bound controls and V9 actions
+        run: python3 qa/v11/validate_visual_redesign.py
       - name: Run unit tests and compile debug APKs
         run: ./gradlew -Pjh.arm64Only=true --no-daemon testDevDebugUnitTest verifySingleArm64DevApk --stacktrace
       - name: Verify single APK integrity and debug signature

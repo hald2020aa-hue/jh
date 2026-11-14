@@ -979,7 +979,13 @@ open class MainActivity : BaseActivity<MainActivityBinding>() {
             !onSmallerController &&
             (showSearchAnyway || isAppBarVisible)
         ) {
-            binding.appBar.background = null
+            // Do not wipe the enhanced neon header while the search bar animates.
+            // The standard flavor retains its original transparent app bar behavior.
+            if (resources.getBoolean(R.bool.v4_neon_mode)) {
+                binding.appBar.setBackgroundResource(R.drawable.neon_unified_sheet_background)
+            } else {
+                binding.appBar.background = null
+            }
             searchBarAnimation?.cancel()
             if (showSearchBar && !binding.cardFrame.isVisible) {
                 binding.cardFrame.alpha = 0f
@@ -999,7 +1005,7 @@ open class MainActivity : BaseActivity<MainActivityBinding>() {
             binding.cardFrame.isVisible = showSearchBar
         }
         val bgColor = binding.appBar.backgroundColor ?: Color.TRANSPARENT
-        if (changeBG && solidBG && bgColor == Color.TRANSPARENT) {
+        if (changeBG && solidBG && bgColor == Color.TRANSPARENT && !resources.getBoolean(R.bool.v4_neon_mode)) {
             binding.appBar.setBackgroundColor(getResourceColor(R.attr.colorSurface))
         }
         setupSearchTBMenu(binding.toolbar.menu)
