@@ -691,6 +691,40 @@ open class LibraryController(
         }
         setupFilterSheet()
         setUpHopper()
+        // V15: anchor the actions to the live search card, not to a guessed app-bar height.
+        // The app-bar can be translated during scroll and compact-search transitions.
+        // Positioning using window coordinates keeps the actions below the visible card.
+        if (resources?.getBoolean(R.bool.v14_library_actions_top) == true) {
+            val actions = binding.root.findViewById<View>(R.id.library_top_actions)
+            val searchCard = activityBinding?.cardFrame
+            if (actions != null && searchCard != null) {
+                val callback = ViewTreeObserver.OnPreDrawListener {
+                    if (actions.isAttachedToWindow && searchCard.isAttachedToWindow) {
+                        val cardPosition = IntArray(2)
+                        val rootPosition = IntArray(2)
+                        searchCard.getLocationInWindow(cardPosition)
+                        binding.root.getLocationInWindow(rootPosition)
+                        val cardBottom = cardPosition[1] - rootPosition[1] + searchCard.height
+                        val actionTop = (cardBottom + 10.dpToPx).coerceAtLeast(0)
+                        // Translation is used instead of changing layout on every draw:
+                        // it cannot trigger an endless measure/insets relayout loop.
+                        if (kotlin.math.abs(actions.translationY - actionTop) > 1f) {
+                            actions.translationY = actionTop.toFloat()
+                        }
+                        // Reserve real space for the empty state and the first manga row.
+                        // Recompute only when the expanded app-bar position changes.
+                        val contentTop = actionTop + actions.height + 14.dpToPx
+                        val recycler = binding.libraryGridRecycler.recycler
+                        if (recycler.paddingTop < contentTop) {
+                            recycler.updatePaddingRelative(top = contentTop)
+                        }
+                    }
+                    true
+                }
+                binding.root.viewTreeObserver.addOnPreDrawListener(callback)
+                libraryTopActionsDrawListener = callback
+            }
+        }
         // V14: top actions reuse the exact callbacks of the original filter sheet.
         // No preference keys or filtering/selection algorithms are duplicated.
         if (resources?.getBoolean(R.bool.v14_library_actions_top) == true) {
@@ -725,14 +759,15 @@ open class LibraryController(
                     updateSmallerViewsTopMargins()
                     if (resources?.getBoolean(R.bool.v14_library_actions_top) == true) {
                         val topOffset = systemInsets.top + (fullAppBarHeight ?: 0)
+                        // The live search-card callback positions the actions; never use
+                        // the expanded app-bar height as the actions' own y-position.
                         binding.root.findViewById<View>(R.id.library_top_actions)
                             ?.updateLayoutParams<CoordinatorLayout.LayoutParams> {
-                                topMargin = topOffset + 6.dpToPx
+                                topMargin = 0
                             }
-                        // Recycler's top padding is set by scrollViewWith just before this
-                        // callback; reserve space so the first cover never sits under actions.
+                        // Keep initial content clear until the first pre-draw measurement.
                         binding.libraryGridRecycler.recycler.updatePaddingRelative(
-                            top = topOffset + 72.dpToPx,
+                            top = topOffset + 86.dpToPx,
                         )
                     }
                     binding.headerCard.updateLayoutParams<ViewGroup.MarginLayoutParams> {
@@ -793,7 +828,9 @@ open class LibraryController(
                 topMargin = value
             }
             binding.emptyView.updatePadding(
-                top = bigToolbarHeight + activityBinding.appBar.paddingTop,
+                // Leave room for the V14 action row even when the library is empty.
+                top = bigToolbarHeight + activityBinding.appBar.paddingTop +
+                    (if (resources?.getBoolean(R.bool.v14_library_actions_top) == true) 86.dpToPx else 0),
                 bottom = binding.libraryGridRecycler.recycler.paddingBottom,
             )
             binding.progress.updateLayoutParams<ViewGroup.MarginLayoutParams> {
@@ -1248,7 +1285,15 @@ open class LibraryController(
         observeLater = true
     }
 
+    private var libraryTopActionsDrawListener: ViewTreeObserver.OnPreDrawListener? = null
+
     override fun onDestroyView(view: View) {
+        libraryTopActionsDrawListener?.let { callback ->
+            if (binding.root.viewTreeObserver.isAlive) {
+                binding.root.viewTreeObserver.removeOnPreDrawListener(callback)
+            }
+        }
+        libraryTopActionsDrawListener = null
         destroyActionModeIfNeeded()
         if (isBindingInitialized) {
             binding.libraryGridRecycler.recycler.removeOnScrollListener(scrollListener)
