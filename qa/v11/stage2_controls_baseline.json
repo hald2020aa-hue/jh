@@ -1,0 +1,2766 @@
+{
+  "base_source_commit": "7ffa25b17ad6ccd3062a179fd355e8a1d60f0803",
+  "schema": "j2k-v11-functional-baseline-v1",
+  "screen_bindings": {
+    "app/src/dev/res/layout/browse_source_controller.xml": {
+      "buttonGroup": {
+        "functional_attrs": {
+          "style": "@style/Widget.Material3Expressive.MaterialButtonGroup.Connected",
+          "{http://schemas.android.com/apk/res/android}id": "@+id/buttonGroup"
+        },
+        "tag": "com.google.android.material.button.MaterialButtonGroup"
+      },
+      "catalogue_view": {
+        "functional_attrs": {
+          "{http://schemas.android.com/apk/res/android}id": "@+id/catalogue_view",
+          "{http://schemas.android.com/apk/res/android}orientation": "vertical"
+        },
+        "tag": "FrameLayout"
+      },
+      "empty_view": {
+        "functional_attrs": {
+          "{http://schemas.android.com/apk/res-auto}layout_constraintBottom_toBottomOf": "parent",
+          "{http://schemas.android.com/apk/res-auto}layout_constraintStart_toStartOf": "parent",
+          "{http://schemas.android.com/apk/res-auto}layout_constraintTop_toBottomOf": "@id/extension_uninstall_button",
+          "{http://schemas.android.com/apk/res/android}id": "@+id/empty_view",
+          "{http://schemas.android.com/apk/res/android}visibility": "gone"
+        },
+        "tag": "eu.kanade.tachiyomi.widget.EmptyView"
+      },
+      "filter_group": {
+        "functional_attrs": {
+          "style": "?attr/materialButtonStyle",
+          "{http://schemas.android.com/apk/res-auto}icon": "@drawable/ic_filter_list_24dp",
+          "{http://schemas.android.com/apk/res-auto}toggleCheckedStateOnClick": "false",
+          "{http://schemas.android.com/apk/res/android}checkable": "true",
+          "{http://schemas.android.com/apk/res/android}id": "@+id/filter_group",
+          "{http://schemas.android.com/apk/res/android}text": "@string/filter"
+        },
+        "tag": "com.google.android.material.button.MaterialButton"
+      },
+      "floating_browse_bar": {
+        "functional_attrs": {
+          "{http://schemas.android.com/apk/res-auto}layout_behavior": "com.google.android.material.behavior.HideViewOnScrollBehavior",
+          "{http://schemas.android.com/apk/res/android}id": "@+id/floating_browse_bar",
+          "{http://schemas.android.com/apk/res/android}outlineProvider": "background"
+        },
+        "tag": "com.google.android.material.floatingtoolbar.FloatingToolbarLayout"
+      },
+      "latest_group": {
+        "functional_attrs": {
+          "style": "?attr/materialButtonStyle",
+          "{http://schemas.android.com/apk/res-auto}icon": "@drawable/ic_new_releases_checked_selector_24dp",
+          "{http://schemas.android.com/apk/res-auto}toggleCheckedStateOnClick": "false",
+          "{http://schemas.android.com/apk/res/android}checkable": "true",
+          "{http://schemas.android.com/apk/res/android}id": "@+id/latest_group",
+          "{http://schemas.android.com/apk/res/android}text": "@string/latest"
+        },
+        "tag": "com.google.android.material.button.MaterialButton"
+      },
+      "popular_group": {
+        "functional_attrs": {
+          "style": "?attr/materialButtonStyle",
+          "{http://schemas.android.com/apk/res-auto}icon": "@drawable/ic_heart_checked_selector_24dp",
+          "{http://schemas.android.com/apk/res-auto}toggleCheckedStateOnClick": "false",
+          "{http://schemas.android.com/apk/res/android}checkable": "true",
+          "{http://schemas.android.com/apk/res/android}id": "@+id/popular_group",
+          "{http://schemas.android.com/apk/res/android}text": "@string/popular"
+        },
+        "tag": "com.google.android.material.button.MaterialButton"
+      },
+      "progress": {
+        "functional_attrs": {
+          "{http://schemas.android.com/apk/res-auto}indicatorSize": "100dp",
+          "{http://schemas.android.com/apk/res/android}id": "@+id/progress",
+          "{http://schemas.android.com/apk/res/android}visibility": "gone"
+        },
+        "tag": "com.google.android.material.loadingindicator.LoadingIndicator"
+      },
+      "source_layout": {
+        "functional_attrs": {
+          "{http://schemas.android.com/apk/res/android}id": "@+id/source_layout"
+        },
+        "tag": "androidx.coordinatorlayout.widget.CoordinatorLayout"
+      }
+    },
+    "app/src/dev/res/layout/chapters_item.xml": {
+      "bookmark": {
+        "functional_attrs": {
+          "{http://schemas.android.com/apk/res-auto}tint": "?colorOnPrimary",
+          "{http://schemas.android.com/apk/res/android}contentDescription": "@string/bookmarked",
+          "{http://schemas.android.com/apk/res/android}id": "@+id/bookmark",
+          "{http://schemas.android.com/apk/res/android}src": "@drawable/ic_bookmark_24dp"
+        },
+        "tag": "ImageView"
+      },
+      "chapter_card": {
+        "functional_attrs": {
+          "style": "@style/Widget.Tachiyomi.CardView.Container",
+          "{http://schemas.android.com/apk/res/android}id": "@+id/chapter_card"
+        },
+        "tag": "com.google.android.material.card.MaterialCardView"
+      },
+      "chapter_layout": {
+        "functional_attrs": {
+          "{http://schemas.android.com/apk/res/android}id": "@+id/chapter_layout"
+        },
+        "tag": "FrameLayout"
+      },
+      "chapter_scanlator": {
+        "functional_attrs": {
+          "style": "?textAppearanceBodySmall",
+          "{http://schemas.android.com/apk/res-auto}layout_constraintBottom_toBottomOf": "parent",
+          "{http://schemas.android.com/apk/res-auto}layout_constraintEnd_toStartOf": "@id/download_button",
+          "{http://schemas.android.com/apk/res-auto}layout_constraintStart_toStartOf": "parent",
+          "{http://schemas.android.com/apk/res-auto}layout_constraintTop_toBottomOf": "@+id/chapter_title",
+          "{http://schemas.android.com/apk/res/android}ellipsize": "end",
+          "{http://schemas.android.com/apk/res/android}id": "@+id/chapter_scanlator",
+          "{http://schemas.android.com/apk/res/android}maxLines": "1"
+        },
+        "tag": "TextView"
+      },
+      "chapter_title": {
+        "functional_attrs": {
+          "style": "?textAppearanceBodyMedium",
+          "{http://schemas.android.com/apk/res-auto}layout_constraintBottom_toTopOf": "@id/chapter_scanlator",
+          "{http://schemas.android.com/apk/res-auto}layout_constraintEnd_toStartOf": "@id/download_button",
+          "{http://schemas.android.com/apk/res-auto}layout_constraintStart_toStartOf": "parent",
+          "{http://schemas.android.com/apk/res-auto}layout_constraintTop_toTopOf": "parent",
+          "{http://schemas.android.com/apk/res/android}ellipsize": "end",
+          "{http://schemas.android.com/apk/res/android}id": "@+id/chapter_title",
+          "{http://schemas.android.com/apk/res/android}maxLines": "2"
+        },
+        "tag": "TextView"
+      },
+      "download_button": {
+        "functional_attrs": {
+          "layout": "@layout/download_button",
+          "{http://schemas.android.com/apk/res-auto}layout_constraintBottom_toBottomOf": "parent",
+          "{http://schemas.android.com/apk/res-auto}layout_constraintTop_toTopOf": "parent",
+          "{http://schemas.android.com/apk/res/android}id": "@+id/download_button"
+        },
+        "tag": "include"
+      },
+      "end_view": {
+        "functional_attrs": {
+          "style": "@style/Widget.Tachiyomi.CardView.Container",
+          "{http://schemas.android.com/apk/res/android}id": "@+id/end_view",
+          "{http://schemas.android.com/apk/res/android}visibility": "gone"
+        },
+        "tag": "com.google.android.material.card.MaterialCardView"
+      },
+      "expanded_download_target": {
+        "functional_attrs": {
+          "{http://schemas.android.com/apk/res/android}id": "@+id/expanded_download_target"
+        },
+        "tag": "View"
+      },
+      "front_view": {
+        "functional_attrs": {
+          "{http://schemas.android.com/apk/res-auto}layout_constraintBottom_toBottomOf": "parent",
+          "{http://schemas.android.com/apk/res-auto}layout_constraintStart_toStartOf": "parent",
+          "{http://schemas.android.com/apk/res-auto}layout_constraintTop_toTopOf": "parent",
+          "{http://schemas.android.com/apk/res/android}id": "@+id/front_view"
+        },
+        "tag": "androidx.constraintlayout.widget.ConstraintLayout"
+      },
+      "read": {
+        "functional_attrs": {
+          "{http://schemas.android.com/apk/res-auto}tint": "@color/md_white_1000",
+          "{http://schemas.android.com/apk/res/android}contentDescription": "@string/read",
+          "{http://schemas.android.com/apk/res/android}id": "@+id/read",
+          "{http://schemas.android.com/apk/res/android}src": "@drawable/ic_read_24dp"
+        },
+        "tag": "ImageView"
+      },
+      "start_view": {
+        "functional_attrs": {
+          "style": "@style/Widget.Tachiyomi.CardView.Container",
+          "{http://schemas.android.com/apk/res/android}id": "@+id/start_view",
+          "{http://schemas.android.com/apk/res/android}visibility": "gone"
+        },
+        "tag": "com.google.android.material.card.MaterialCardView"
+      }
+    },
+    "app/src/dev/res/layout/download_bottom_sheet.xml": {
+      "dl_bottom_sheet": {
+        "functional_attrs": {
+          "style": "@style/BottomSheetDialogTheme",
+          "{http://schemas.android.com/apk/res-auto}behavior_peekHeight": "48sp",
+          "{http://schemas.android.com/apk/res-auto}layout_behavior": "com.google.android.material.bottomsheet.BottomSheetBehavior",
+          "{http://schemas.android.com/apk/res/android}id": "@+id/dl_bottom_sheet",
+          "{http://schemas.android.com/apk/res/android}orientation": "vertical"
+        },
+        "tag": "eu.kanade.tachiyomi.ui.download.DownloadBottomSheet"
+      },
+      "dl_recycler": {
+        "functional_attrs": {
+          "{http://schemas.android.com/apk/res/android}id": "@+id/dl_recycler"
+        },
+        "tag": "androidx.recyclerview.widget.RecyclerView"
+      },
+      "download_fab": {
+        "functional_attrs": {
+          "style": "@style/Theme.Widget.FAB",
+          "{http://schemas.android.com/apk/res-auto}icon": "@drawable/ic_play_arrow_24dp",
+          "{http://schemas.android.com/apk/res/android}id": "@+id/download_fab",
+          "{http://schemas.android.com/apk/res/android}text": "@string/resume"
+        },
+        "tag": "com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton"
+      },
+      "empty_view": {
+        "functional_attrs": {
+          "{http://schemas.android.com/apk/res/android}id": "@+id/empty_view",
+          "{http://schemas.android.com/apk/res/android}visibility": "gone"
+        },
+        "tag": "eu.kanade.tachiyomi.widget.EmptyView"
+      },
+      "fast_scroller": {
+        "functional_attrs": {
+          "{http://schemas.android.com/apk/res-auto}fastScrollerBubbleEnabled": "true",
+          "{http://schemas.android.com/apk/res/android}id": "@+id/fast_scroller"
+        },
+        "tag": "eu.kanade.tachiyomi.ui.base.MaterialFastScroll"
+      },
+      "pill": {
+        "functional_attrs": {
+          "{http://schemas.android.com/apk/res-auto}layout_constraintStart_toStartOf": "parent",
+          "{http://schemas.android.com/apk/res-auto}layout_constraintTop_toTopOf": "parent",
+          "{http://schemas.android.com/apk/res/android}alpha": "0.25",
+          "{http://schemas.android.com/apk/res/android}contentDescription": "@string/drag_handle",
+          "{http://schemas.android.com/apk/res/android}id": "@+id/pill",
+          "{http://schemas.android.com/apk/res/android}src": "@drawable/draggable_pill"
+        },
+        "tag": "ImageView"
+      },
+      "recycler_layout": {
+        "functional_attrs": {
+          "{http://schemas.android.com/apk/res/android}id": "@+id/recycler_layout"
+        },
+        "tag": "androidx.coordinatorlayout.widget.CoordinatorLayout"
+      },
+      "sheet_layout": {
+        "functional_attrs": {
+          "{http://schemas.android.com/apk/res-auto}layout_constraintBottom_toBottomOf": "parent",
+          "{http://schemas.android.com/apk/res-auto}layout_constraintStart_toStartOf": "parent",
+          "{http://schemas.android.com/apk/res-auto}layout_constraintTop_toTopOf": "parent",
+          "{http://schemas.android.com/apk/res/android}id": "@+id/sheet_layout",
+          "{http://schemas.android.com/apk/res/android}orientation": "vertical"
+        },
+        "tag": "androidx.constraintlayout.widget.ConstraintLayout"
+      },
+      "sheet_toolbar": {
+        "functional_attrs": {
+          "{http://schemas.android.com/apk/res-auto}collapseIcon": "@drawable/ic_arrow_back_24dp",
+          "{http://schemas.android.com/apk/res-auto}layout_constraintBottom_toBottomOf": "parent",
+          "{http://schemas.android.com/apk/res-auto}layout_constraintTop_toBottomOf": "@id/pill",
+          "{http://schemas.android.com/apk/res-auto}layout_constraintVertical_bias": "1.0",
+          "{http://schemas.android.com/apk/res-auto}menu": "@menu/download_queue",
+          "{http://schemas.android.com/apk/res-auto}navigationIcon": "@drawable/ic_close_24dp",
+          "{http://schemas.android.com/apk/res-auto}navigationIconTint": "?actionBarTintColor",
+          "{http://schemas.android.com/apk/res-auto}titleTextColor": "?actionBarTintColor",
+          "{http://schemas.android.com/apk/res/android}id": "@+id/sheet_toolbar"
+        },
+        "tag": "eu.kanade.tachiyomi.ui.base.CenteredToolbar"
+      },
+      "title_text": {
+        "functional_attrs": {
+          "style": "?textAppearanceTitleLarge",
+          "{http://schemas.android.com/apk/res-auto}layout_constraintTop_toBottomOf": "@id/pill",
+          "{http://schemas.android.com/apk/res/android}ellipsize": "end",
+          "{http://schemas.android.com/apk/res/android}id": "@+id/title_text",
+          "{http://schemas.android.com/apk/res/android}maxLines": "1"
+        },
+        "tag": "com.google.android.material.textview.MaterialTextView"
+      },
+      "toolbar_title": {
+        "functional_attrs": {
+          "style": "?textAppearanceTitleLarge",
+          "{http://schemas.android.com/apk/res/android}drawableTint": "?actionBarTintColor",
+          "{http://schemas.android.com/apk/res/android}ellipsize": "end",
+          "{http://schemas.android.com/apk/res/android}id": "@+id/toolbar_title",
+          "{http://schemas.android.com/apk/res/android}maxLines": "1",
+          "{http://schemas.android.com/apk/res/android}text": "@string/extensions"
+        },
+        "tag": "com.google.android.material.textview.MaterialTextView"
+      }
+    },
+    "app/src/dev/res/layout/download_header.xml": {
+      "container": {
+        "functional_attrs": {
+          "style": "@style/Widget.Tachiyomi.CardView.Draggable",
+          "{http://schemas.android.com/apk/res/android}id": "@+id/container"
+        },
+        "tag": "com.google.android.material.card.MaterialCardView"
+      },
+      "reorder": {
+        "functional_attrs": {
+          "{http://schemas.android.com/apk/res-auto}srcCompat": "@drawable/ic_drag_handle_24dp",
+          "{http://schemas.android.com/apk/res-auto}tint": "?attr/colorOnBackground",
+          "{http://schemas.android.com/apk/res/android}id": "@+id/reorder",
+          "{http://schemas.android.com/apk/res/android}paddingVertical": "8dp",
+          "{http://schemas.android.com/apk/res/android}scaleType": "center"
+        },
+        "tag": "ImageView"
+      },
+      "title": {
+        "functional_attrs": {
+          "{http://schemas.android.com/apk/res/android}id": "@+id/title",
+          "{http://schemas.android.com/apk/res/android}paddingHorizontal": "16dp",
+          "{http://schemas.android.com/apk/res/android}paddingVertical": "8dp",
+          "{http://schemas.android.com/apk/res/android}textAppearance": "?textAppearanceLabelLarge"
+        },
+        "tag": "TextView"
+      }
+    },
+    "app/src/dev/res/layout/download_item.xml": {
+      "chapter_title": {
+        "functional_attrs": {
+          "{http://schemas.android.com/apk/res-auto}layout_constraintEnd_toStartOf": "@+id/download_menu",
+          "{http://schemas.android.com/apk/res-auto}layout_constraintStart_toStartOf": "@+id/title",
+          "{http://schemas.android.com/apk/res-auto}layout_constraintTop_toBottomOf": "@+id/title",
+          "{http://schemas.android.com/apk/res/android}ellipsize": "end",
+          "{http://schemas.android.com/apk/res/android}id": "@+id/chapter_title",
+          "{http://schemas.android.com/apk/res/android}layout_toEndOf": "@id/reorder",
+          "{http://schemas.android.com/apk/res/android}maxLines": "1",
+          "{http://schemas.android.com/apk/res/android}textAppearance": "?textAppearanceBodySecondary"
+        },
+        "tag": "TextView"
+      },
+      "close_left": {
+        "functional_attrs": {
+          "{http://schemas.android.com/apk/res-auto}tint": "@color/md_white_1000",
+          "{http://schemas.android.com/apk/res/android}contentDescription": "@string/cancel",
+          "{http://schemas.android.com/apk/res/android}id": "@+id/close_left",
+          "{http://schemas.android.com/apk/res/android}src": "@drawable/ic_close_24dp"
+        },
+        "tag": "ImageView"
+      },
+      "close_right": {
+        "functional_attrs": {
+          "{http://schemas.android.com/apk/res-auto}tint": "@color/md_white_1000",
+          "{http://schemas.android.com/apk/res/android}contentDescription": "@string/cancel",
+          "{http://schemas.android.com/apk/res/android}id": "@+id/close_right",
+          "{http://schemas.android.com/apk/res/android}src": "@drawable/ic_close_24dp"
+        },
+        "tag": "ImageView"
+      },
+      "download_menu": {
+        "functional_attrs": {
+          "{http://schemas.android.com/apk/res-auto}layout_constraintBottom_toBottomOf": "parent",
+          "{http://schemas.android.com/apk/res-auto}layout_constraintTop_toTopOf": "parent",
+          "{http://schemas.android.com/apk/res-auto}srcCompat": "@drawable/ic_more_vert_24dp",
+          "{http://schemas.android.com/apk/res/android}contentDescription": "@string/cover_of_image",
+          "{http://schemas.android.com/apk/res/android}id": "@+id/download_menu",
+          "{http://schemas.android.com/apk/res/android}layout_toEndOf": "@id/download_progress_text"
+        },
+        "tag": "ImageView"
+      },
+      "download_progress": {
+        "functional_attrs": {
+          "{http://schemas.android.com/apk/res-auto}indicatorColor": "@color/v4_primary",
+          "{http://schemas.android.com/apk/res-auto}layout_constraintBottom_toBottomOf": "@id/progress_guide",
+          "{http://schemas.android.com/apk/res-auto}layout_constraintStart_toStartOf": "@id/progress_guide",
+          "{http://schemas.android.com/apk/res-auto}layout_constraintTop_toTopOf": "@id/progress_guide",
+          "{http://schemas.android.com/apk/res-auto}trackColor": "@color/v4_track",
+          "{http://schemas.android.com/apk/res-auto}trackCornerRadius": "7dp",
+          "{http://schemas.android.com/apk/res-auto}trackThickness": "7dp",
+          "{http://schemas.android.com/apk/res/android}id": "@+id/download_progress"
+        },
+        "tag": "com.google.android.material.progressindicator.LinearProgressIndicator"
+      },
+      "download_progress_text": {
+        "functional_attrs": {
+          "{http://schemas.android.com/apk/res-auto}layout_constraintBottom_toBottomOf": "@+id/title",
+          "{http://schemas.android.com/apk/res-auto}layout_constraintEnd_toStartOf": "@+id/download_menu",
+          "{http://schemas.android.com/apk/res-auto}layout_constraintTop_toTopOf": "@+id/title",
+          "{http://schemas.android.com/apk/res/android}id": "@+id/download_progress_text",
+          "{http://schemas.android.com/apk/res/android}layout_toEndOf": "@id/title",
+          "{http://schemas.android.com/apk/res/android}maxLines": "1",
+          "{http://schemas.android.com/apk/res/android}textAppearance": "?textAppearanceCaption"
+        },
+        "tag": "TextView"
+      },
+      "end_view": {
+        "functional_attrs": {
+          "{http://schemas.android.com/apk/res/android}id": "@+id/end_view",
+          "{http://schemas.android.com/apk/res/android}visibility": "gone"
+        },
+        "tag": "FrameLayout"
+      },
+      "front_view": {
+        "functional_attrs": {
+          "{http://schemas.android.com/apk/res/android}id": "@+id/front_view"
+        },
+        "tag": "androidx.constraintlayout.widget.ConstraintLayout"
+      },
+      "progress_guide": {
+        "functional_attrs": {
+          "{http://schemas.android.com/apk/res-auto}layout_constraintBottom_toBottomOf": "parent",
+          "{http://schemas.android.com/apk/res-auto}layout_constraintEnd_toStartOf": "@+id/download_menu",
+          "{http://schemas.android.com/apk/res-auto}layout_constraintStart_toEndOf": "@+id/reorder",
+          "{http://schemas.android.com/apk/res-auto}layout_constraintTop_toBottomOf": "@+id/chapter_title",
+          "{http://schemas.android.com/apk/res/android}id": "@+id/progress_guide",
+          "{http://schemas.android.com/apk/res/android}orientation": "horizontal"
+        },
+        "tag": "androidx.constraintlayout.widget.Placeholder"
+      },
+      "reorder": {
+        "functional_attrs": {
+          "{http://schemas.android.com/apk/res-auto}layout_constraintBottom_toBottomOf": "parent",
+          "{http://schemas.android.com/apk/res-auto}layout_constraintStart_toStartOf": "parent",
+          "{http://schemas.android.com/apk/res-auto}layout_constraintTop_toTopOf": "parent",
+          "{http://schemas.android.com/apk/res-auto}srcCompat": "@drawable/ic_drag_handle_24dp",
+          "{http://schemas.android.com/apk/res-auto}tint": "@color/v4_muted",
+          "{http://schemas.android.com/apk/res/android}contentDescription": "@string/reorder",
+          "{http://schemas.android.com/apk/res/android}id": "@+id/reorder",
+          "{http://schemas.android.com/apk/res/android}layout_alignParentStart": "true",
+          "{http://schemas.android.com/apk/res/android}scaleType": "center"
+        },
+        "tag": "ImageView"
+      },
+      "start_view": {
+        "functional_attrs": {
+          "{http://schemas.android.com/apk/res/android}id": "@+id/start_view",
+          "{http://schemas.android.com/apk/res/android}visibility": "gone"
+        },
+        "tag": "FrameLayout"
+      },
+      "title": {
+        "functional_attrs": {
+          "{http://schemas.android.com/apk/res-auto}layout_constraintEnd_toStartOf": "@+id/download_progress_text",
+          "{http://schemas.android.com/apk/res-auto}layout_constraintStart_toEndOf": "@+id/reorder",
+          "{http://schemas.android.com/apk/res-auto}layout_constraintTop_toTopOf": "parent",
+          "{http://schemas.android.com/apk/res/android}ellipsize": "end",
+          "{http://schemas.android.com/apk/res/android}id": "@+id/title",
+          "{http://schemas.android.com/apk/res/android}layout_toEndOf": "@id/reorder",
+          "{http://schemas.android.com/apk/res/android}maxLines": "1",
+          "{http://schemas.android.com/apk/res/android}textAppearance": "?textAppearanceBodyMedium",
+          "{http://schemas.android.com/apk/res/android}textStyle": "bold"
+        },
+        "tag": "TextView"
+      }
+    },
+    "app/src/dev/res/layout/download_swipe_tut_item.xml": {
+      "close_left": {
+        "functional_attrs": {
+          "{http://schemas.android.com/apk/res-auto}tint": "@color/md_white_1000",
+          "{http://schemas.android.com/apk/res/android}contentDescription": "@string/cancel",
+          "{http://schemas.android.com/apk/res/android}id": "@+id/close_left",
+          "{http://schemas.android.com/apk/res/android}src": "@drawable/ic_close_24dp"
+        },
+        "tag": "ImageView"
+      },
+      "close_right": {
+        "functional_attrs": {
+          "{http://schemas.android.com/apk/res-auto}tint": "@color/md_white_1000",
+          "{http://schemas.android.com/apk/res/android}contentDescription": "@string/cancel",
+          "{http://schemas.android.com/apk/res/android}id": "@+id/close_right",
+          "{http://schemas.android.com/apk/res/android}src": "@drawable/ic_close_24dp"
+        },
+        "tag": "ImageView"
+      },
+      "end_view": {
+        "functional_attrs": {
+          "{http://schemas.android.com/apk/res/android}id": "@+id/end_view",
+          "{http://schemas.android.com/apk/res/android}visibility": "gone"
+        },
+        "tag": "FrameLayout"
+      },
+      "front_view": {
+        "functional_attrs": {
+          "{http://schemas.android.com/apk/res/android}id": "@+id/front_view"
+        },
+        "tag": "androidx.constraintlayout.widget.ConstraintLayout"
+      },
+      "reorder": {
+        "functional_attrs": {
+          "{http://schemas.android.com/apk/res-auto}layout_constraintBottom_toBottomOf": "parent",
+          "{http://schemas.android.com/apk/res-auto}layout_constraintEnd_toStartOf": "@id/title",
+          "{http://schemas.android.com/apk/res-auto}layout_constraintStart_toStartOf": "parent",
+          "{http://schemas.android.com/apk/res-auto}layout_constraintTop_toTopOf": "parent",
+          "{http://schemas.android.com/apk/res-auto}srcCompat": "@drawable/ic_help_24dp",
+          "{http://schemas.android.com/apk/res-auto}tint": "?attr/colorOnBackground",
+          "{http://schemas.android.com/apk/res/android}contentDescription": "@string/reorder",
+          "{http://schemas.android.com/apk/res/android}id": "@+id/reorder",
+          "{http://schemas.android.com/apk/res/android}layout_alignParentStart": "true",
+          "{http://schemas.android.com/apk/res/android}scaleType": "center"
+        },
+        "tag": "ImageView"
+      },
+      "start_view": {
+        "functional_attrs": {
+          "{http://schemas.android.com/apk/res/android}id": "@+id/start_view",
+          "{http://schemas.android.com/apk/res/android}visibility": "gone"
+        },
+        "tag": "FrameLayout"
+      },
+      "title": {
+        "functional_attrs": {
+          "{http://schemas.android.com/apk/res-auto}layout_constraintBottom_toBottomOf": "parent",
+          "{http://schemas.android.com/apk/res-auto}layout_constraintStart_toEndOf": "@+id/reorder",
+          "{http://schemas.android.com/apk/res-auto}layout_constraintTop_toTopOf": "parent",
+          "{http://schemas.android.com/apk/res/android}ellipsize": "end",
+          "{http://schemas.android.com/apk/res/android}id": "@+id/title",
+          "{http://schemas.android.com/apk/res/android}layout_toEndOf": "@id/reorder",
+          "{http://schemas.android.com/apk/res/android}text": "@string/downloads_swipe_tutorial",
+          "{http://schemas.android.com/apk/res/android}textAppearance": "?textAppearanceBodyMedium",
+          "{http://schemas.android.com/apk/res/android}textStyle": "italic"
+        },
+        "tag": "TextView"
+      }
+    },
+    "app/src/dev/res/layout/library_controller.xml": {
+      "category_hopper_frame": {
+        "functional_attrs": {
+          "{http://schemas.android.com/apk/res/android}id": "@+id/category_hopper_frame"
+        },
+        "tag": "FrameLayout"
+      },
+      "category_recycler": {
+        "functional_attrs": {
+          "{http://schemas.android.com/apk/res/android}id": "@+id/category_recycler",
+          "{http://schemas.android.com/apk/res/android}scrollbars": "vertical",
+          "{http://schemas.android.com/apk/res/android}visibility": "invisible"
+        },
+        "tag": "eu.kanade.tachiyomi.ui.library.category.CategoryRecyclerView"
+      },
+      "empty_view": {
+        "functional_attrs": {
+          "{http://schemas.android.com/apk/res/android}id": "@+id/empty_view",
+          "{http://schemas.android.com/apk/res/android}visibility": "gone"
+        },
+        "tag": "eu.kanade.tachiyomi.widget.EmptyView"
+      },
+      "fast_scroller": {
+        "functional_attrs": {
+          "{http://schemas.android.com/apk/res-auto}fastScrollerBubbleEnabled": "true",
+          "{http://schemas.android.com/apk/res/android}id": "@+id/fast_scroller"
+        },
+        "tag": "eu.kanade.tachiyomi.ui.library.LibraryFastScroll"
+      },
+      "filter_bottom_sheet": {
+        "functional_attrs": {
+          "layout": "@layout/filter_bottom_sheet",
+          "{http://schemas.android.com/apk/res/android}id": "@+id/filter_bottom_sheet"
+        },
+        "tag": "include"
+      },
+      "header_card": {
+        "functional_attrs": {
+          "{http://schemas.android.com/apk/res/android}id": "@+id/header_card"
+        },
+        "tag": "com.google.android.material.card.MaterialCardView"
+      },
+      "header_title": {
+        "functional_attrs": {
+          "style": "?textAppearanceTitleSmall",
+          "{http://schemas.android.com/apk/res/android}clickable": "true",
+          "{http://schemas.android.com/apk/res/android}ellipsize": "end",
+          "{http://schemas.android.com/apk/res/android}focusable": "true",
+          "{http://schemas.android.com/apk/res/android}id": "@+id/header_title",
+          "{http://schemas.android.com/apk/res/android}inputType": "none",
+          "{http://schemas.android.com/apk/res/android}maxLines": "1"
+        },
+        "tag": "TextView"
+      },
+      "jumper_category_text": {
+        "functional_attrs": {
+          "style": "@style/FloatingTextView",
+          "{http://schemas.android.com/apk/res-auto}layout_anchor": "@id/category_hopper_frame",
+          "{http://schemas.android.com/apk/res-auto}layout_anchorGravity": "start|center",
+          "{http://schemas.android.com/apk/res/android}alpha": "0.0",
+          "{http://schemas.android.com/apk/res/android}id": "@+id/jumper_category_text"
+        },
+        "tag": "com.google.android.material.textview.MaterialTextView"
+      },
+      "library_grid_recycler": {
+        "functional_attrs": {
+          "layout": "@layout/library_grid_recycler",
+          "{http://schemas.android.com/apk/res/android}id": "@+id/library_grid_recycler"
+        },
+        "tag": "include"
+      },
+      "library_layout": {
+        "functional_attrs": {
+          "{http://schemas.android.com/apk/res/android}id": "@+id/library_layout"
+        },
+        "tag": "androidx.coordinatorlayout.widget.CoordinatorLayout"
+      },
+      "progress": {
+        "functional_attrs": {
+          "{http://schemas.android.com/apk/res-auto}indicatorSize": "75dp",
+          "{http://schemas.android.com/apk/res/android}id": "@+id/progress"
+        },
+        "tag": "com.google.android.material.loadingindicator.LoadingIndicator"
+      },
+      "recycler_cover": {
+        "functional_attrs": {
+          "{http://schemas.android.com/apk/res/android}alpha": "0",
+          "{http://schemas.android.com/apk/res/android}id": "@+id/recycler_cover"
+        },
+        "tag": "View"
+      },
+      "recycler_layout": {
+        "functional_attrs": {
+          "{http://schemas.android.com/apk/res/android}id": "@+id/recycler_layout"
+        },
+        "tag": "FrameLayout"
+      },
+      "recycler_shadow": {
+        "functional_attrs": {
+          "{http://schemas.android.com/apk/res-auto}layout_constraintBottom_toTopOf": "@id/recycler",
+          "{http://schemas.android.com/apk/res-auto}layout_constraintStart_toStartOf": "parent",
+          "{http://schemas.android.com/apk/res/android}alpha": "0.25",
+          "{http://schemas.android.com/apk/res/android}id": "@+id/recycler_shadow",
+          "{http://schemas.android.com/apk/res/android}translationY": "12dp"
+        },
+        "tag": "View"
+      },
+      "rounded_category_hopper": {
+        "functional_attrs": {
+          "layout": "@layout/rounded_category_hopper",
+          "{http://schemas.android.com/apk/res/android}id": "@+id/rounded_category_hopper"
+        },
+        "tag": "include"
+      },
+      "swipe_refresh": {
+        "functional_attrs": {
+          "{http://schemas.android.com/apk/res/android}id": "@+id/swipe_refresh"
+        },
+        "tag": "androidx.swiperefreshlayout.widget.SwipeRefreshLayout"
+      }
+    },
+    "app/src/dev/res/layout/main_activity.xml": {
+      "action_mode_status_bar": {
+        "functional_attrs": {
+          "{http://schemas.android.com/apk/res-auto}layout_constraintStart_toStartOf": "parent",
+          "{http://schemas.android.com/apk/res-auto}layout_constraintTop_toTopOf": "parent",
+          "{http://schemas.android.com/apk/res/android}id": "@+id/action_mode_status_bar",
+          "{http://schemas.android.com/apk/res/android}visibility": "gone"
+        },
+        "tag": "View"
+      },
+      "app_bar": {
+        "functional_attrs": {
+          "{http://schemas.android.com/apk/res-auto}layout_constraintLeft_toLeftOf": "parent",
+          "{http://schemas.android.com/apk/res-auto}layout_constraintRight_toRightOf": "parent",
+          "{http://schemas.android.com/apk/res-auto}layout_constraintTop_toTopOf": "parent",
+          "{http://schemas.android.com/apk/res/android}id": "@+id/app_bar",
+          "{http://schemas.android.com/apk/res/android}stateListAnimator": "@null"
+        },
+        "tag": "eu.kanade.tachiyomi.ui.base.ExpandedAppBarLayout"
+      },
+      "back_shadow": {
+        "functional_attrs": {
+          "{http://schemas.android.com/apk/res/android}alpha": "0.25",
+          "{http://schemas.android.com/apk/res/android}id": "@+id/back_shadow",
+          "{http://schemas.android.com/apk/res/android}importantForAccessibility": "no",
+          "{http://schemas.android.com/apk/res/android}src": "@drawable/shape_gradient_start_shadow",
+          "{http://schemas.android.com/apk/res/android}visibility": "gone"
+        },
+        "tag": "ImageView"
+      },
+      "big_icon": {
+        "functional_attrs": {
+          "{http://schemas.android.com/apk/res/android}id": "@+id/big_icon"
+        },
+        "tag": "androidx.appcompat.widget.AppCompatImageView"
+      },
+      "big_icon_layout": {
+        "functional_attrs": {
+          "{http://schemas.android.com/apk/res-auto}layout_constraintBottom_toBottomOf": "@id/big_title",
+          "{http://schemas.android.com/apk/res-auto}layout_constraintEnd_toStartOf": "@id/big_title",
+          "{http://schemas.android.com/apk/res-auto}layout_constraintHeight_min": "wrap",
+          "{http://schemas.android.com/apk/res-auto}layout_constraintStart_toStartOf": "parent",
+          "{http://schemas.android.com/apk/res-auto}layout_constraintTop_toTopOf": "@id/big_title",
+          "{http://schemas.android.com/apk/res-auto}layout_constraintVertical_bias": "1.0",
+          "{http://schemas.android.com/apk/res/android}id": "@+id/big_icon_layout",
+          "{http://schemas.android.com/apk/res/android}visibility": "gone"
+        },
+        "tag": "FrameLayout"
+      },
+      "big_title": {
+        "functional_attrs": {
+          "style": "?textAppearanceHeadlineLarge",
+          "{http://schemas.android.com/apk/res-auto}layout_constraintBottom_toTopOf": "@id/enhanced_header_subtitle",
+          "{http://schemas.android.com/apk/res-auto}layout_constraintStart_toEndOf": "@id/big_icon_layout",
+          "{http://schemas.android.com/apk/res-auto}layout_constraintTop_toTopOf": "parent",
+          "{http://schemas.android.com/apk/res/android}drawableTint": "?actionBarTintColor",
+          "{http://schemas.android.com/apk/res/android}ellipsize": "end",
+          "{http://schemas.android.com/apk/res/android}id": "@+id/big_title",
+          "{http://schemas.android.com/apk/res/android}maxLines": "2",
+          "{http://schemas.android.com/apk/res/android}textStyle": "bold"
+        },
+        "tag": "com.google.android.material.textview.MaterialTextView"
+      },
+      "big_toolbar": {
+        "functional_attrs": {
+          "{http://schemas.android.com/apk/res/android}id": "@+id/big_toolbar"
+        },
+        "tag": "androidx.constraintlayout.widget.ConstraintLayout"
+      },
+      "bottom_nav": {
+        "functional_attrs": {
+          "{http://schemas.android.com/apk/res-auto}labelVisibilityMode": "labeled",
+          "{http://schemas.android.com/apk/res-auto}layout_constraintBottom_toBottomOf": "parent",
+          "{http://schemas.android.com/apk/res-auto}layout_constraintLeft_toLeftOf": "parent",
+          "{http://schemas.android.com/apk/res-auto}layout_constraintRight_toRightOf": "parent",
+          "{http://schemas.android.com/apk/res-auto}menu": "@menu/bottom_navigation",
+          "{http://schemas.android.com/apk/res/android}id": "@+id/bottom_nav"
+        },
+        "tag": "com.google.android.material.bottomnavigation.BottomNavigationView"
+      },
+      "bottom_view": {
+        "functional_attrs": {
+          "{http://schemas.android.com/apk/res-auto}layout_constraintBottom_toBottomOf": "parent",
+          "{http://schemas.android.com/apk/res-auto}layout_constraintLeft_toLeftOf": "parent",
+          "{http://schemas.android.com/apk/res-auto}layout_constraintRight_toRightOf": "parent",
+          "{http://schemas.android.com/apk/res/android}clickable": "true",
+          "{http://schemas.android.com/apk/res/android}id": "@+id/bottom_view",
+          "{http://schemas.android.com/apk/res/android}visibility": "gone"
+        },
+        "tag": "View"
+      },
+      "card_frame": {
+        "functional_attrs": {
+          "{http://schemas.android.com/apk/res/android}id": "@+id/card_frame",
+          "{http://schemas.android.com/apk/res/android}orientation": "horizontal"
+        },
+        "tag": "LinearLayout"
+      },
+      "card_incog_image": {
+        "functional_attrs": {
+          "{http://schemas.android.com/apk/res-auto}tint": "?actionBarTintColor",
+          "{http://schemas.android.com/apk/res/android}contentDescription": "@string/incognito_mode",
+          "{http://schemas.android.com/apk/res/android}id": "@+id/card_incog_image",
+          "{http://schemas.android.com/apk/res/android}src": "@drawable/ic_incognito_circle_24dp"
+        },
+        "tag": "ImageView"
+      },
+      "card_subtitle": {
+        "functional_attrs": {
+          "style": "?textAppearanceTitleLarge",
+          "{http://schemas.android.com/apk/res/android}ellipsize": "end",
+          "{http://schemas.android.com/apk/res/android}id": "@+id/card_subtitle",
+          "{http://schemas.android.com/apk/res/android}maxLines": "1"
+        },
+        "tag": "com.google.android.material.textview.MaterialTextView"
+      },
+      "card_title": {
+        "functional_attrs": {
+          "style": "?textAppearanceTitleLarge",
+          "{http://schemas.android.com/apk/res/android}drawableTint": "?actionBarTintColor",
+          "{http://schemas.android.com/apk/res/android}ellipsize": "end",
+          "{http://schemas.android.com/apk/res/android}id": "@+id/card_title",
+          "{http://schemas.android.com/apk/res/android}maxLines": "1"
+        },
+        "tag": "com.google.android.material.textview.MaterialTextView"
+      },
+      "card_view": {
+        "functional_attrs": {
+          "{http://schemas.android.com/apk/res/android}id": "@+id/card_view"
+        },
+        "tag": "com.google.android.material.card.MaterialCardView"
+      },
+      "controller_container": {
+        "functional_attrs": {
+          "{http://schemas.android.com/apk/res-auto}layout_constraintBottom_toBottomOf": "parent",
+          "{http://schemas.android.com/apk/res-auto}layout_constraintStart_toStartOf": "parent",
+          "{http://schemas.android.com/apk/res-auto}layout_constraintTop_toTopOf": "parent",
+          "{http://schemas.android.com/apk/res-auto}layout_constraintVertical_bias": "0.0",
+          "{http://schemas.android.com/apk/res/android}id": "@+id/controller_container"
+        },
+        "tag": "com.bluelinelabs.conductor.ChangeHandlerFrameLayout"
+      },
+      "enhanced_header_subtitle": {
+        "functional_attrs": {
+          "{http://schemas.android.com/apk/res-auto}layout_constraintBottom_toBottomOf": "parent",
+          "{http://schemas.android.com/apk/res-auto}layout_constraintStart_toStartOf": "@id/big_title",
+          "{http://schemas.android.com/apk/res-auto}layout_constraintTop_toBottomOf": "@id/big_title",
+          "{http://schemas.android.com/apk/res/android}id": "@+id/enhanced_header_subtitle",
+          "{http://schemas.android.com/apk/res/android}letterSpacing": "0.12",
+          "{http://schemas.android.com/apk/res/android}text": "@string/enhanced_header_tagline",
+          "{http://schemas.android.com/apk/res/android}textStyle": "bold"
+        },
+        "tag": "com.google.android.material.textview.MaterialTextView"
+      },
+      "main_content": {
+        "functional_attrs": {
+          "{http://schemas.android.com/apk/res/android}id": "@+id/main_content",
+          "{http://schemas.android.com/apk/res/android}orientation": "vertical"
+        },
+        "tag": "androidx.constraintlayout.widget.ConstraintLayout"
+      },
+      "main_tabs": {
+        "functional_attrs": {
+          "style": "@style/Theme.Widget.Tabs.Highlight",
+          "{http://schemas.android.com/apk/res-auto}layout_constraintBottom_toBottomOf": "parent",
+          "{http://schemas.android.com/apk/res-auto}layout_constraintStart_toStartOf": "parent",
+          "{http://schemas.android.com/apk/res-auto}layout_constraintTop_toTopOf": "parent",
+          "{http://schemas.android.com/apk/res-auto}tabGravity": "fill",
+          "{http://schemas.android.com/apk/res/android}id": "@+id/main_tabs"
+        },
+        "tag": "com.google.android.material.tabs.TabLayout"
+      },
+      "nav_bar": {
+        "functional_attrs": {
+          "{http://schemas.android.com/apk/res-auto}layout_constraintBottom_toBottomOf": "parent",
+          "{http://schemas.android.com/apk/res-auto}layout_constraintStart_toStartOf": "parent",
+          "{http://schemas.android.com/apk/res/android}id": "@+id/nav_bar",
+          "{http://schemas.android.com/apk/res/android}translationZ": "100dp"
+        },
+        "tag": "View"
+      },
+      "search_toolbar": {
+        "functional_attrs": {
+          "{http://schemas.android.com/apk/res-auto}collapseIcon": "@drawable/ic_arrow_back_24dp",
+          "{http://schemas.android.com/apk/res-auto}contentInsetEnd": "0dp",
+          "{http://schemas.android.com/apk/res-auto}contentInsetEndWithActions": "0dp",
+          "{http://schemas.android.com/apk/res-auto}contentInsetStart": "0dp",
+          "{http://schemas.android.com/apk/res-auto}contentInsetStartWithNavigation": "0dp",
+          "{http://schemas.android.com/apk/res-auto}navigationIcon": "@drawable/ic_search_24dp",
+          "{http://schemas.android.com/apk/res-auto}navigationIconTint": "@color/text_color_secondary",
+          "{http://schemas.android.com/apk/res-auto}subtitleTextAppearance": "?textAppearanceBodySmall",
+          "{http://schemas.android.com/apk/res-auto}titleTextAppearance": "@style/TextAppearance.FloatingTitle",
+          "{http://schemas.android.com/apk/res/android}id": "@+id/search_toolbar"
+        },
+        "tag": "eu.kanade.tachiyomi.ui.base.FloatingToolbar"
+      },
+      "status_bar": {
+        "functional_attrs": {
+          "{http://schemas.android.com/apk/res-auto}layout_constraintStart_toStartOf": "parent",
+          "{http://schemas.android.com/apk/res-auto}layout_constraintTop_toTopOf": "parent",
+          "{http://schemas.android.com/apk/res/android}id": "@+id/status_bar"
+        },
+        "tag": "View"
+      },
+      "tabs_frame_layout": {
+        "functional_attrs": {
+          "{http://schemas.android.com/apk/res/android}clickable": "true",
+          "{http://schemas.android.com/apk/res/android}id": "@+id/tabs_frame_layout",
+          "{http://schemas.android.com/apk/res/android}visibility": "gone"
+        },
+        "tag": "FrameLayout"
+      },
+      "toolbar": {
+        "functional_attrs": {
+          "{http://schemas.android.com/apk/res-auto}collapseIcon": "@drawable/ic_arrow_back_24dp",
+          "{http://schemas.android.com/apk/res-auto}titleTextColor": "?actionBarTintColor",
+          "{http://schemas.android.com/apk/res/android}id": "@+id/toolbar",
+          "{http://schemas.android.com/apk/res/android}outlineProvider": "none",
+          "{http://schemas.android.com/apk/res/android}translationZ": "5dp"
+        },
+        "tag": "eu.kanade.tachiyomi.ui.base.CenteredToolbar"
+      },
+      "toolbar_filter_button": {
+        "functional_attrs": {
+          "style": "@style/Widget.Tachiyomi.Button.IconButton.ToolbarFilled",
+          "{http://schemas.android.com/apk/res-auto}icon": "@drawable/ic_filter_alt_24dp",
+          "{http://schemas.android.com/apk/res/android}contentDescription": "@string/filter",
+          "{http://schemas.android.com/apk/res/android}id": "@+id/toolbar_filter_button",
+          "{http://schemas.android.com/apk/res/android}tooltipText": "@string/search_filters",
+          "{http://schemas.android.com/apk/res/android}visibility": "gone"
+        },
+        "tag": "com.google.android.material.button.MaterialButton"
+      },
+      "toolbar_title": {
+        "functional_attrs": {
+          "style": "?textAppearanceTitleLarge",
+          "{http://schemas.android.com/apk/res/android}drawableTint": "?actionBarTintColor",
+          "{http://schemas.android.com/apk/res/android}ellipsize": "end",
+          "{http://schemas.android.com/apk/res/android}id": "@+id/toolbar_title",
+          "{http://schemas.android.com/apk/res/android}maxLines": "1",
+          "{http://schemas.android.com/apk/res/android}textStyle": "bold"
+        },
+        "tag": "com.google.android.material.textview.MaterialTextView"
+      }
+    },
+    "app/src/dev/res/layout/manga_grid_item.xml": {
+      "badge_guide": {
+        "functional_attrs": {
+          "{http://schemas.android.com/apk/res-auto}layout_constraintTop_toTopOf": "@+id/card",
+          "{http://schemas.android.com/apk/res/android}id": "@+id/badge_guide"
+        },
+        "tag": "View"
+      },
+      "behind_title": {
+        "functional_attrs": {
+          "style": "?textAppearanceBodyMedium",
+          "{http://schemas.android.com/apk/res-auto}layout_constraintBottom_toBottomOf": "@id/cover_thumbnail",
+          "{http://schemas.android.com/apk/res-auto}layout_constraintStart_toStartOf": "@id/cover_thumbnail",
+          "{http://schemas.android.com/apk/res-auto}layout_constraintTop_toTopOf": "@id/cover_thumbnail",
+          "{http://schemas.android.com/apk/res/android}ellipsize": "end",
+          "{http://schemas.android.com/apk/res/android}id": "@+id/behind_title",
+          "{http://schemas.android.com/apk/res/android}maxLines": "3"
+        },
+        "tag": "com.google.android.material.textview.MaterialTextView"
+      },
+      "card": {
+        "functional_attrs": {
+          "{http://schemas.android.com/apk/res-auto}layout_constraintBottom_toTopOf": "@+id/text_layout",
+          "{http://schemas.android.com/apk/res-auto}layout_constraintStart_toStartOf": "parent",
+          "{http://schemas.android.com/apk/res-auto}layout_constraintTop_toTopOf": "parent",
+          "{http://schemas.android.com/apk/res-auto}layout_constraintVertical_bias": "1.0",
+          "{http://schemas.android.com/apk/res/android}id": "@+id/card"
+        },
+        "tag": "com.google.android.material.card.MaterialCardView"
+      },
+      "compact_title": {
+        "functional_attrs": {
+          "style": "?textAppearanceLabelMedium",
+          "{http://schemas.android.com/apk/res/android}ellipsize": "end",
+          "{http://schemas.android.com/apk/res/android}id": "@+id/compact_title",
+          "{http://schemas.android.com/apk/res/android}maxLines": "2",
+          "{http://schemas.android.com/apk/res/android}shadowColor": "#AA000000",
+          "{http://schemas.android.com/apk/res/android}shadowDy": "1",
+          "{http://schemas.android.com/apk/res/android}shadowRadius": "4"
+        },
+        "tag": "com.google.android.material.textview.MaterialTextView"
+      },
+      "constraint_layout": {
+        "functional_attrs": {
+          "{http://schemas.android.com/apk/res/android}id": "@+id/constraint_layout",
+          "{http://schemas.android.com/apk/res/android}orientation": "vertical"
+        },
+        "tag": "androidx.constraintlayout.widget.ConstraintLayout"
+      },
+      "cover_constraint": {
+        "functional_attrs": {
+          "{http://schemas.android.com/apk/res/android}id": "@+id/cover_constraint"
+        },
+        "tag": "androidx.constraintlayout.widget.ConstraintLayout"
+      },
+      "cover_thumbnail": {
+        "functional_attrs": {
+          "{http://schemas.android.com/apk/res-auto}layout_constraintBottom_toBottomOf": "parent",
+          "{http://schemas.android.com/apk/res-auto}layout_constraintStart_toStartOf": "parent",
+          "{http://schemas.android.com/apk/res-auto}layout_constraintTop_toTopOf": "parent",
+          "{http://schemas.android.com/apk/res-auto}layout_constraintVertical_bias": "0.0",
+          "{http://schemas.android.com/apk/res/android}id": "@+id/cover_thumbnail",
+          "{http://schemas.android.com/apk/res/android}scaleType": "centerCrop"
+        },
+        "tag": "ImageView"
+      },
+      "gradient": {
+        "functional_attrs": {
+          "{http://schemas.android.com/apk/res-auto}layout_constraintBottom_toBottomOf": "@id/cover_thumbnail",
+          "{http://schemas.android.com/apk/res-auto}layout_constraintStart_toStartOf": "@id/cover_thumbnail",
+          "{http://schemas.android.com/apk/res-auto}layout_constraintVertical_bias": "0.0",
+          "{http://schemas.android.com/apk/res/android}alpha": "0.75",
+          "{http://schemas.android.com/apk/res/android}id": "@+id/gradient"
+        },
+        "tag": "View"
+      },
+      "manga_layout": {
+        "functional_attrs": {
+          "{http://schemas.android.com/apk/res/android}id": "@+id/manga_layout"
+        },
+        "tag": "FrameLayout"
+      },
+      "play_button": {
+        "functional_attrs": {
+          "style": "@style/Widget.Tachiyomi.Button.IconButton.CoverOverlay",
+          "{http://schemas.android.com/apk/res-auto}icon": "@drawable/ic_start_reading_24dp",
+          "{http://schemas.android.com/apk/res-auto}iconSize": "18dp",
+          "{http://schemas.android.com/apk/res/android}clickable": "false",
+          "{http://schemas.android.com/apk/res/android}contentDescription": "@string/start_reading",
+          "{http://schemas.android.com/apk/res/android}focusable": "false",
+          "{http://schemas.android.com/apk/res/android}id": "@+id/play_button"
+        },
+        "tag": "com.google.android.material.button.MaterialButton"
+      },
+      "play_layout": {
+        "functional_attrs": {
+          "{http://schemas.android.com/apk/res/android}clickable": "true",
+          "{http://schemas.android.com/apk/res/android}focusable": "true",
+          "{http://schemas.android.com/apk/res/android}id": "@+id/play_layout",
+          "{http://schemas.android.com/apk/res/android}tooltipText": "@string/start_reading",
+          "{http://schemas.android.com/apk/res/android}visibility": "gone"
+        },
+        "tag": "FrameLayout"
+      },
+      "progress": {
+        "functional_attrs": {
+          "style": "?android:attr/progressBarStyleSmall",
+          "{http://schemas.android.com/apk/res-auto}layout_constraintBottom_toBottomOf": "parent",
+          "{http://schemas.android.com/apk/res-auto}layout_constraintStart_toStartOf": "parent",
+          "{http://schemas.android.com/apk/res-auto}layout_constraintTop_toTopOf": "parent",
+          "{http://schemas.android.com/apk/res/android}id": "@+id/progress",
+          "{http://schemas.android.com/apk/res/android}visibility": "gone"
+        },
+        "tag": "ProgressBar"
+      },
+      "reading_progress": {
+        "functional_attrs": {
+          "{http://schemas.android.com/apk/res-auto}layout_constraintBottom_toBottomOf": "@id/card",
+          "{http://schemas.android.com/apk/res-auto}layout_constraintStart_toStartOf": "@id/card",
+          "{http://schemas.android.com/apk/res/android}id": "@+id/reading_progress",
+          "{http://schemas.android.com/apk/res/android}importantForAccessibility": "no",
+          "{http://schemas.android.com/apk/res/android}max": "100",
+          "{http://schemas.android.com/apk/res/android}progress": "0",
+          "{http://schemas.android.com/apk/res/android}progressBackgroundTint": "@color/v4_track",
+          "{http://schemas.android.com/apk/res/android}progressTint": "@color/v4_primary",
+          "{http://schemas.android.com/apk/res/android}visibility": "gone"
+        },
+        "tag": "ProgressBar"
+      },
+      "subtitle": {
+        "functional_attrs": {
+          "style": "?textAppearanceBodySmall",
+          "{http://schemas.android.com/apk/res/android}ellipsize": "end",
+          "{http://schemas.android.com/apk/res/android}id": "@+id/subtitle",
+          "{http://schemas.android.com/apk/res/android}singleLine": "true"
+        },
+        "tag": "com.google.android.material.textview.MaterialTextView"
+      },
+      "text_layout": {
+        "functional_attrs": {
+          "{http://schemas.android.com/apk/res-auto}layout_constraintBottom_toBottomOf": "parent",
+          "{http://schemas.android.com/apk/res-auto}layout_constraintStart_toStartOf": "parent",
+          "{http://schemas.android.com/apk/res/android}id": "@+id/text_layout",
+          "{http://schemas.android.com/apk/res/android}orientation": "vertical"
+        },
+        "tag": "LinearLayout"
+      },
+      "title": {
+        "functional_attrs": {
+          "style": "?textAppearanceBodySmall",
+          "{http://schemas.android.com/apk/res-auto}layout_constraintBottom_toTopOf": "@+id/subtitle",
+          "{http://schemas.android.com/apk/res-auto}lineHeight": "15sp",
+          "{http://schemas.android.com/apk/res/android}ellipsize": "end",
+          "{http://schemas.android.com/apk/res/android}id": "@+id/title",
+          "{http://schemas.android.com/apk/res/android}maxLines": "2"
+        },
+        "tag": "com.google.android.material.textview.MaterialTextView"
+      },
+      "unread_download_badge": {
+        "functional_attrs": {
+          "layout": "@layout/unread_download_badge",
+          "{http://schemas.android.com/apk/res-auto}layout_constraintStart_toStartOf": "parent",
+          "{http://schemas.android.com/apk/res-auto}layout_constraintTop_toTopOf": "parent",
+          "{http://schemas.android.com/apk/res/android}id": "@+id/unread_download_badge"
+        },
+        "tag": "include"
+      }
+    },
+    "app/src/dev/res/layout/manga_header_item.xml": {
+      "backdrop": {
+        "functional_attrs": {
+          "{http://schemas.android.com/apk/res-auto}layout_constraintBottom_toBottomOf": "@+id/true_backdrop",
+          "{http://schemas.android.com/apk/res-auto}layout_constraintStart_toStartOf": "parent",
+          "{http://schemas.android.com/apk/res-auto}layout_constraintTop_toTopOf": "@+id/true_backdrop",
+          "{http://schemas.android.com/apk/res/android}alpha": "0.24",
+          "{http://schemas.android.com/apk/res/android}id": "@+id/backdrop",
+          "{http://schemas.android.com/apk/res/android}scaleType": "centerCrop"
+        },
+        "tag": "ImageView"
+      },
+      "backdrop_fill": {
+        "functional_attrs": {
+          "{http://schemas.android.com/apk/res-auto}layout_constraintBottom_toBottomOf": "parent",
+          "{http://schemas.android.com/apk/res-auto}layout_constraintTop_toBottomOf": "@id/backdrop_gradient",
+          "{http://schemas.android.com/apk/res/android}id": "@+id/backdrop_fill"
+        },
+        "tag": "View"
+      },
+      "backdrop_gradient": {
+        "functional_attrs": {
+          "{http://schemas.android.com/apk/res-auto}layout_constraintBottom_toBottomOf": "@+id/true_backdrop",
+          "{http://schemas.android.com/apk/res/android}id": "@+id/backdrop_gradient"
+        },
+        "tag": "View"
+      },
+      "bottom_line": {
+        "functional_attrs": {
+          "{http://schemas.android.com/apk/res-auto}barrierDirection": "bottom",
+          "{http://schemas.android.com/apk/res-auto}constraint_referenced_ids": "manga_source,cover_card",
+          "{http://schemas.android.com/apk/res/android}id": "@+id/bottom_line",
+          "{http://schemas.android.com/apk/res/android}layout_margin": "6dp",
+          "{http://schemas.android.com/apk/res/android}orientation": "horizontal"
+        },
+        "tag": "androidx.constraintlayout.widget.Barrier"
+      },
+      "button_layout": {
+        "functional_attrs": {
+          "style": "@style/Widget.Tachiyomi.MaterialButtonGroup",
+          "{http://schemas.android.com/apk/res-auto}layout_constraintBottom_toTopOf": "@id/manga_summary_label",
+          "{http://schemas.android.com/apk/res-auto}layout_constraintStart_toStartOf": "parent",
+          "{http://schemas.android.com/apk/res-auto}layout_constraintTop_toBottomOf": "@id/bottom_line",
+          "{http://schemas.android.com/apk/res-auto}layout_constraintWidth_default": "wrap",
+          "{http://schemas.android.com/apk/res-auto}overflowMode": "menu",
+          "{http://schemas.android.com/apk/res/android}id": "@+id/button_layout",
+          "{http://schemas.android.com/apk/res/android}orientation": "horizontal",
+          "{http://schemas.android.com/apk/res/android}spacing": "4dp"
+        },
+        "tag": "com.google.android.material.button.MaterialButtonGroup"
+      },
+      "chapter_layout": {
+        "functional_attrs": {
+          "{http://schemas.android.com/apk/res-auto}layout_constraintBottom_toBottomOf": "parent",
+          "{http://schemas.android.com/apk/res-auto}layout_constraintStart_toStartOf": "parent",
+          "{http://schemas.android.com/apk/res-auto}layout_constraintTop_toBottomOf": "@id/v4_progress_card",
+          "{http://schemas.android.com/apk/res/android}id": "@+id/chapter_layout",
+          "{http://schemas.android.com/apk/res/android}tooltipText": "@string/sort_and_filter"
+        },
+        "tag": "androidx.constraintlayout.widget.ConstraintLayout"
+      },
+      "chapters_title": {
+        "functional_attrs": {
+          "style": "?textAppearanceTitleSmall",
+          "{http://schemas.android.com/apk/res-auto}layout_constraintBottom_toBottomOf": "parent",
+          "{http://schemas.android.com/apk/res-auto}layout_constraintEnd_toStartOf": "@id/filters_text",
+          "{http://schemas.android.com/apk/res-auto}layout_constraintStart_toStartOf": "parent",
+          "{http://schemas.android.com/apk/res-auto}layout_constraintTop_toTopOf": "parent",
+          "{http://schemas.android.com/apk/res/android}id": "@+id/chapters_title",
+          "{http://schemas.android.com/apk/res/android}maxLines": "1",
+          "{http://schemas.android.com/apk/res/android}text": "@string/chapters"
+        },
+        "tag": "com.google.android.material.textview.MaterialTextView"
+      },
+      "cover_card": {
+        "functional_attrs": {
+          "{http://schemas.android.com/apk/res-auto}layout_constraintStart_toStartOf": "parent",
+          "{http://schemas.android.com/apk/res-auto}layout_constraintTop_toBottomOf": "@id/top_view",
+          "{http://schemas.android.com/apk/res-auto}layout_constraintVertical_bias": "1.0",
+          "{http://schemas.android.com/apk/res-auto}layout_constraintWidth_max": "@dimen/cover_max_width",
+          "{http://schemas.android.com/apk/res-auto}layout_constraintWidth_min": "50dp",
+          "{http://schemas.android.com/apk/res-auto}layout_constraintWidth_percent": "0.25",
+          "{http://schemas.android.com/apk/res/android}id": "@+id/cover_card",
+          "{http://schemas.android.com/apk/res/android}maxHeight": "200dp"
+        },
+        "tag": "com.google.android.material.card.MaterialCardView"
+      },
+      "favorite_button": {
+        "functional_attrs": {
+          "style": "@style/Widget.Tachiyomi.Button.OutlinedButton.Icon",
+          "{http://schemas.android.com/apk/res-auto}icon": "@drawable/ic_heart_outline_24dp",
+          "{http://schemas.android.com/apk/res/android}id": "@+id/favorite_button",
+          "{http://schemas.android.com/apk/res/android}text": "@string/add_to_library"
+        },
+        "tag": "com.google.android.material.button.MaterialButton"
+      },
+      "filter_button": {
+        "functional_attrs": {
+          "{http://schemas.android.com/apk/res-auto}layout_constraintBottom_toBottomOf": "@id/chapters_title",
+          "{http://schemas.android.com/apk/res-auto}layout_constraintTop_toTopOf": "@id/chapters_title",
+          "{http://schemas.android.com/apk/res-auto}tint": "?attr/colorPrimary",
+          "{http://schemas.android.com/apk/res/android}contentDescription": "@string/sort_and_filter",
+          "{http://schemas.android.com/apk/res/android}id": "@+id/filter_button",
+          "{http://schemas.android.com/apk/res/android}src": "@drawable/ic_filter_list_24dp"
+        },
+        "tag": "ImageView"
+      },
+      "filters_text": {
+        "functional_attrs": {
+          "{http://schemas.android.com/apk/res-auto}layout_constraintBottom_toBottomOf": "@id/filter_button",
+          "{http://schemas.android.com/apk/res-auto}layout_constraintEnd_toStartOf": "@id/filter_button",
+          "{http://schemas.android.com/apk/res-auto}layout_constraintStart_toEndOf": "@+id/chapters_title",
+          "{http://schemas.android.com/apk/res-auto}layout_constraintTop_toTopOf": "@id/filter_button",
+          "{http://schemas.android.com/apk/res/android}id": "@+id/filters_text",
+          "{http://schemas.android.com/apk/res/android}maxLines": "2"
+        },
+        "tag": "com.google.android.material.textview.MaterialTextView"
+      },
+      "less_button": {
+        "functional_attrs": {
+          "style": "@style/Widget.Material3Expressive.Button.TextButton",
+          "{http://schemas.android.com/apk/res-auto}drawableTint": "?colorPrimary",
+          "{http://schemas.android.com/apk/res-auto}layout_constraintBottom_toTopOf": "@id/start_reading_button",
+          "{http://schemas.android.com/apk/res-auto}layout_constraintStart_toStartOf": "parent",
+          "{http://schemas.android.com/apk/res-auto}layout_constraintTop_toBottomOf": "@id/manga_genres_tags",
+          "{http://schemas.android.com/apk/res-auto}rippleColor": "@null",
+          "{http://schemas.android.com/apk/res/android}drawableEnd": "@drawable/ic_expand_less_24dp",
+          "{http://schemas.android.com/apk/res/android}id": "@+id/less_button",
+          "{http://schemas.android.com/apk/res/android}text": "@string/less",
+          "{http://schemas.android.com/apk/res/android}visibility": "gone"
+        },
+        "tag": "com.google.android.material.button.MaterialButton"
+      },
+      "manga_author": {
+        "functional_attrs": {
+          "style": "?textAppearanceLabelLarge",
+          "{http://schemas.android.com/apk/res-auto}layout_constraintStart_toStartOf": "@id/title",
+          "{http://schemas.android.com/apk/res-auto}layout_constraintTop_toBottomOf": "@+id/title",
+          "{http://schemas.android.com/apk/res/android}ellipsize": "end",
+          "{http://schemas.android.com/apk/res/android}id": "@+id/manga_author",
+          "{http://schemas.android.com/apk/res/android}maxLines": "2",
+          "{http://schemas.android.com/apk/res/android}text": "@string/author",
+          "{http://schemas.android.com/apk/res/android}textIsSelectable": "false"
+        },
+        "tag": "TextView"
+      },
+      "manga_cover": {
+        "functional_attrs": {
+          "{http://schemas.android.com/apk/res/android}adjustViewBounds": "true",
+          "{http://schemas.android.com/apk/res/android}clickable": "true",
+          "{http://schemas.android.com/apk/res/android}contentDescription": "@string/cover_of_image",
+          "{http://schemas.android.com/apk/res/android}focusable": "true",
+          "{http://schemas.android.com/apk/res/android}id": "@+id/manga_cover",
+          "{http://schemas.android.com/apk/res/android}maxHeight": "@dimen/cover_max_height"
+        },
+        "tag": "ImageView"
+      },
+      "manga_genres_tags": {
+        "functional_attrs": {
+          "{http://schemas.android.com/apk/res-auto}chipSpacingVertical": "-12dp",
+          "{http://schemas.android.com/apk/res-auto}layout_constrainedHeight": "true",
+          "{http://schemas.android.com/apk/res-auto}layout_constraintBottom_toTopOf": "@id/less_button",
+          "{http://schemas.android.com/apk/res-auto}layout_constraintStart_toStartOf": "parent",
+          "{http://schemas.android.com/apk/res-auto}layout_constraintTop_toBottomOf": "@id/manga_summary",
+          "{http://schemas.android.com/apk/res/android}id": "@+id/manga_genres_tags",
+          "{http://schemas.android.com/apk/res/android}visibility": "gone"
+        },
+        "tag": "com.google.android.material.chip.ChipGroup"
+      },
+      "manga_header_layout": {
+        "functional_attrs": {
+          "{http://schemas.android.com/apk/res/android}id": "@+id/manga_header_layout"
+        },
+        "tag": "androidx.constraintlayout.widget.ConstraintLayout"
+      },
+      "manga_source": {
+        "functional_attrs": {
+          "style": "?textAppearanceBodySecondary",
+          "{http://schemas.android.com/apk/res-auto}layout_constraintStart_toStartOf": "@id/title",
+          "{http://schemas.android.com/apk/res-auto}layout_constraintTop_toBottomOf": "@id/manga_status",
+          "{http://schemas.android.com/apk/res/android}ellipsize": "end",
+          "{http://schemas.android.com/apk/res/android}id": "@+id/manga_source",
+          "{http://schemas.android.com/apk/res/android}maxLines": "2",
+          "{http://schemas.android.com/apk/res/android}textIsSelectable": "false"
+        },
+        "tag": "com.google.android.material.textview.MaterialTextView"
+      },
+      "manga_status": {
+        "functional_attrs": {
+          "style": "?textAppearanceBodySecondary",
+          "{http://schemas.android.com/apk/res-auto}layout_constraintStart_toStartOf": "@id/title",
+          "{http://schemas.android.com/apk/res-auto}layout_constraintTop_toBottomOf": "@+id/manga_author",
+          "{http://schemas.android.com/apk/res/android}id": "@+id/manga_status",
+          "{http://schemas.android.com/apk/res/android}text": "@string/unknown_status",
+          "{http://schemas.android.com/apk/res/android}textIsSelectable": "false"
+        },
+        "tag": "TextView"
+      },
+      "manga_summary": {
+        "functional_attrs": {
+          "style": "?textAppearanceBodySecondary",
+          "{http://schemas.android.com/apk/res-auto}layout_constraintBottom_toTopOf": "@id/manga_genres_tags",
+          "{http://schemas.android.com/apk/res-auto}layout_constraintStart_toStartOf": "parent",
+          "{http://schemas.android.com/apk/res-auto}layout_constraintTop_toBottomOf": "@id/manga_summary_label",
+          "{http://schemas.android.com/apk/res/android}clickable": "true",
+          "{http://schemas.android.com/apk/res/android}focusable": "true",
+          "{http://schemas.android.com/apk/res/android}id": "@+id/manga_summary",
+          "{http://schemas.android.com/apk/res/android}lineSpacingExtra": "4dp",
+          "{http://schemas.android.com/apk/res/android}maxLines": "3"
+        },
+        "tag": "TextView"
+      },
+      "manga_summary_label": {
+        "functional_attrs": {
+          "style": "?textAppearanceTitleSmall",
+          "{http://schemas.android.com/apk/res-auto}layout_constraintStart_toStartOf": "parent",
+          "{http://schemas.android.com/apk/res-auto}layout_constraintTop_toBottomOf": "@id/button_layout",
+          "{http://schemas.android.com/apk/res/android}id": "@+id/manga_summary_label",
+          "{http://schemas.android.com/apk/res/android}text": "@string/description",
+          "{http://schemas.android.com/apk/res/android}textIsSelectable": "false",
+          "{http://schemas.android.com/apk/res/android}textStyle": "bold"
+        },
+        "tag": "com.google.android.material.textview.MaterialTextView"
+      },
+      "more_bg_gradient": {
+        "functional_attrs": {
+          "{http://schemas.android.com/apk/res-auto}layout_constraintBottom_toBottomOf": "@id/manga_summary",
+          "{http://schemas.android.com/apk/res/android}id": "@+id/more_bg_gradient"
+        },
+        "tag": "View"
+      },
+      "more_bg_solid": {
+        "functional_attrs": {
+          "{http://schemas.android.com/apk/res-auto}layout_constraintBottom_toBottomOf": "@id/manga_summary",
+          "{http://schemas.android.com/apk/res-auto}layout_constraintStart_toStartOf": "@id/more_button",
+          "{http://schemas.android.com/apk/res/android}id": "@+id/more_bg_solid"
+        },
+        "tag": "View"
+      },
+      "more_button": {
+        "functional_attrs": {
+          "style": "@style/Widget.Material3Expressive.Button.TextButton",
+          "{http://schemas.android.com/apk/res-auto}drawableTint": "?colorPrimary",
+          "{http://schemas.android.com/apk/res-auto}layout_constraintBottom_toBottomOf": "@id/more_guide",
+          "{http://schemas.android.com/apk/res-auto}rippleColor": "@null",
+          "{http://schemas.android.com/apk/res/android}drawableEnd": "@drawable/ic_expand_more_24dp",
+          "{http://schemas.android.com/apk/res/android}id": "@+id/more_button",
+          "{http://schemas.android.com/apk/res/android}minWidth": "0dp",
+          "{http://schemas.android.com/apk/res/android}text": "@string/more"
+        },
+        "tag": "com.google.android.material.button.MaterialButton"
+      },
+      "more_button_group": {
+        "functional_attrs": {
+          "{http://schemas.android.com/apk/res-auto}constraint_referenced_ids": "more_button,more_bg_gradient,more_bg_solid",
+          "{http://schemas.android.com/apk/res/android}id": "@+id/more_button_group"
+        },
+        "tag": "androidx.constraintlayout.widget.Group"
+      },
+      "more_end_guide": {
+        "functional_attrs": {
+          "{http://schemas.android.com/apk/res-auto}layout_constraintBottom_toBottomOf": "@id/more_button",
+          "{http://schemas.android.com/apk/res-auto}layout_constraintStart_toStartOf": "@+id/more_button",
+          "{http://schemas.android.com/apk/res-auto}layout_constraintTop_toTopOf": "@id/more_button",
+          "{http://schemas.android.com/apk/res/android}id": "@+id/more_end_guide"
+        },
+        "tag": "View"
+      },
+      "more_guide": {
+        "functional_attrs": {
+          "{http://schemas.android.com/apk/res-auto}layout_constraintTop_toBottomOf": "@id/manga_summary",
+          "{http://schemas.android.com/apk/res/android}id": "@+id/more_guide"
+        },
+        "tag": "View"
+      },
+      "share_button": {
+        "functional_attrs": {
+          "style": "@style/Widget.Tachiyomi.Button.IconButton.Outlined.Connected",
+          "{http://schemas.android.com/apk/res-auto}icon": "@drawable/ic_share_24dp",
+          "{http://schemas.android.com/apk/res/android}contentDescription": "@string/share",
+          "{http://schemas.android.com/apk/res/android}id": "@+id/share_button",
+          "{http://schemas.android.com/apk/res/android}tooltipText": "@string/share"
+        },
+        "tag": "com.google.android.material.button.MaterialButton"
+      },
+      "start_reading_button": {
+        "functional_attrs": {
+          "{http://schemas.android.com/apk/res-auto}layout_constraintBottom_toTopOf": "@id/v4_progress_card",
+          "{http://schemas.android.com/apk/res-auto}layout_constraintStart_toStartOf": "parent",
+          "{http://schemas.android.com/apk/res-auto}layout_constraintTop_toBottomOf": "@+id/less_button",
+          "{http://schemas.android.com/apk/res/android}id": "@+id/start_reading_button",
+          "{http://schemas.android.com/apk/res/android}text": "@string/start_reading"
+        },
+        "tag": "com.google.android.material.button.MaterialButton"
+      },
+      "sub_item_group": {
+        "functional_attrs": {
+          "{http://schemas.android.com/apk/res-auto}constraint_referenced_ids": "manga_summary,manga_summary_label,button_layout",
+          "{http://schemas.android.com/apk/res/android}id": "@+id/sub_item_group"
+        },
+        "tag": "androidx.constraintlayout.widget.Group"
+      },
+      "title": {
+        "functional_attrs": {
+          "style": "?textAppearanceTitleMedium",
+          "{http://schemas.android.com/apk/res-auto}layout_constraintStart_toEndOf": "@id/cover_card",
+          "{http://schemas.android.com/apk/res-auto}layout_constraintTop_toTopOf": "@id/cover_card",
+          "{http://schemas.android.com/apk/res/android}ellipsize": "end",
+          "{http://schemas.android.com/apk/res/android}id": "@+id/title",
+          "{http://schemas.android.com/apk/res/android}maxLines": "4",
+          "{http://schemas.android.com/apk/res/android}text": "@string/title",
+          "{http://schemas.android.com/apk/res/android}textIsSelectable": "false",
+          "{http://schemas.android.com/apk/res/android}textStyle": "bold"
+        },
+        "tag": "TextView"
+      },
+      "top_view": {
+        "functional_attrs": {
+          "{http://schemas.android.com/apk/res-auto}layout_constraintBottom_toTopOf": "@id/cover_card",
+          "{http://schemas.android.com/apk/res-auto}layout_constraintStart_toStartOf": "parent",
+          "{http://schemas.android.com/apk/res-auto}layout_constraintTop_toTopOf": "parent",
+          "{http://schemas.android.com/apk/res/android}id": "@+id/top_view"
+        },
+        "tag": "View"
+      },
+      "track_button": {
+        "functional_attrs": {
+          "style": "@style/Widget.Tachiyomi.Button.OutlinedButton.Icon",
+          "{http://schemas.android.com/apk/res-auto}icon": "@drawable/ic_sync_24dp",
+          "{http://schemas.android.com/apk/res/android}id": "@+id/track_button",
+          "{http://schemas.android.com/apk/res/android}text": "@string/tracking"
+        },
+        "tag": "com.google.android.material.button.MaterialButton"
+      },
+      "true_backdrop": {
+        "functional_attrs": {
+          "{http://schemas.android.com/apk/res-auto}layout_constraintBottom_toBottomOf": "@id/bottom_line",
+          "{http://schemas.android.com/apk/res-auto}layout_constraintHeight_min": "200dp",
+          "{http://schemas.android.com/apk/res-auto}layout_constraintStart_toStartOf": "parent",
+          "{http://schemas.android.com/apk/res-auto}layout_constraintTop_toTopOf": "parent",
+          "{http://schemas.android.com/apk/res-auto}layout_constraintVertical_bias": "0.0",
+          "{http://schemas.android.com/apk/res/android}id": "@+id/true_backdrop"
+        },
+        "tag": "View"
+      },
+      "v4_chapter_progress": {
+        "functional_attrs": {
+          "style": "?android:attr/progressBarStyleHorizontal",
+          "{http://schemas.android.com/apk/res/android}id": "@+id/v4_chapter_progress",
+          "{http://schemas.android.com/apk/res/android}importantForAccessibility": "no",
+          "{http://schemas.android.com/apk/res/android}max": "100",
+          "{http://schemas.android.com/apk/res/android}progressBackgroundTint": "@color/v4_track",
+          "{http://schemas.android.com/apk/res/android}progressTint": "@color/v4_primary"
+        },
+        "tag": "ProgressBar"
+      },
+      "v4_progress_card": {
+        "functional_attrs": {
+          "{http://schemas.android.com/apk/res-auto}layout_constraintBottom_toTopOf": "@id/chapter_layout",
+          "{http://schemas.android.com/apk/res-auto}layout_constraintStart_toStartOf": "parent",
+          "{http://schemas.android.com/apk/res-auto}layout_constraintTop_toBottomOf": "@id/start_reading_button",
+          "{http://schemas.android.com/apk/res/android}id": "@+id/v4_progress_card",
+          "{http://schemas.android.com/apk/res/android}visibility": "gone"
+        },
+        "tag": "com.google.android.material.card.MaterialCardView"
+      },
+      "v4_progress_numbers": {
+        "functional_attrs": {
+          "{http://schemas.android.com/apk/res/android}id": "@+id/v4_progress_numbers"
+        },
+        "tag": "TextView"
+      },
+      "v4_progress_title": {
+        "functional_attrs": {
+          "{http://schemas.android.com/apk/res/android}id": "@+id/v4_progress_title",
+          "{http://schemas.android.com/apk/res/android}text": "@string/v4_continue_reading",
+          "{http://schemas.android.com/apk/res/android}textStyle": "bold"
+        },
+        "tag": "TextView"
+      },
+      "webview_button": {
+        "functional_attrs": {
+          "style": "@style/Widget.Tachiyomi.Button.IconButton.Outlined.Connected",
+          "{http://schemas.android.com/apk/res-auto}icon": "@drawable/ic_open_in_webview_24dp",
+          "{http://schemas.android.com/apk/res-auto}iconGravity": "textStart",
+          "{http://schemas.android.com/apk/res/android}contentDescription": "@string/open_in_webview",
+          "{http://schemas.android.com/apk/res/android}id": "@+id/webview_button",
+          "{http://schemas.android.com/apk/res/android}tooltipText": "@string/open_in_webview"
+        },
+        "tag": "com.google.android.material.button.MaterialButton"
+      }
+    },
+    "app/src/dev/res/layout/manga_list_item.xml": {
+      "bottom_list_line": {
+        "functional_attrs": {
+          "{http://schemas.android.com/apk/res-auto}barrierDirection": "bottom",
+          "{http://schemas.android.com/apk/res-auto}constraint_referenced_ids": "card,subtitle",
+          "{http://schemas.android.com/apk/res/android}id": "@+id/bottom_list_line",
+          "{http://schemas.android.com/apk/res/android}layout_margin": "6dp",
+          "{http://schemas.android.com/apk/res/android}orientation": "horizontal"
+        },
+        "tag": "androidx.constraintlayout.widget.Barrier"
+      },
+      "card": {
+        "functional_attrs": {
+          "{http://schemas.android.com/apk/res-auto}layout_constrainedHeight": "true",
+          "{http://schemas.android.com/apk/res-auto}layout_constraintStart_toStartOf": "parent",
+          "{http://schemas.android.com/apk/res-auto}layout_constraintTop_toTopOf": "parent",
+          "{http://schemas.android.com/apk/res-auto}layout_constraintVertical_bias": "0.0",
+          "{http://schemas.android.com/apk/res/android}id": "@+id/card"
+        },
+        "tag": "com.google.android.material.card.MaterialCardView"
+      },
+      "constraint_layout": {
+        "functional_attrs": {
+          "{http://schemas.android.com/apk/res/android}id": "@+id/constraint_layout"
+        },
+        "tag": "androidx.constraintlayout.widget.ConstraintLayout"
+      },
+      "cover_thumbnail": {
+        "functional_attrs": {
+          "{http://schemas.android.com/apk/res-auto}layout_constrainedHeight": "true",
+          "{http://schemas.android.com/apk/res-auto}layout_constraintBottom_toBottomOf": "parent",
+          "{http://schemas.android.com/apk/res-auto}layout_constraintStart_toStartOf": "parent",
+          "{http://schemas.android.com/apk/res-auto}layout_constraintTop_toTopOf": "parent",
+          "{http://schemas.android.com/apk/res/android}adjustViewBounds": "true",
+          "{http://schemas.android.com/apk/res/android}id": "@+id/cover_thumbnail",
+          "{http://schemas.android.com/apk/res/android}scaleType": "centerCrop"
+        },
+        "tag": "ImageView"
+      },
+      "duplicate_in_library_badge": {
+        "functional_attrs": {
+          "layout": "@layout/duplicate_in_library_badge",
+          "{http://schemas.android.com/apk/res-auto}layout_constraintStart_toStartOf": "parent",
+          "{http://schemas.android.com/apk/res-auto}layout_constraintTop_toTopOf": "parent",
+          "{http://schemas.android.com/apk/res/android}id": "@+id/duplicate_in_library_badge"
+        },
+        "tag": "include"
+      },
+      "in_library_badge": {
+        "functional_attrs": {
+          "layout": "@layout/in_library_badge",
+          "{http://schemas.android.com/apk/res-auto}layout_constraintStart_toStartOf": "parent",
+          "{http://schemas.android.com/apk/res-auto}layout_constraintTop_toTopOf": "parent",
+          "{http://schemas.android.com/apk/res/android}id": "@+id/in_library_badge"
+        },
+        "tag": "include"
+      },
+      "list_card": {
+        "functional_attrs": {
+          "style": "@style/Widget.Tachiyomi.CardView.Container",
+          "{http://schemas.android.com/apk/res/android}id": "@+id/list_card"
+        },
+        "tag": "com.google.android.material.card.MaterialCardView"
+      },
+      "manga_list_layout": {
+        "functional_attrs": {
+          "{http://schemas.android.com/apk/res/android}id": "@+id/manga_list_layout"
+        },
+        "tag": "FrameLayout"
+      },
+      "padding": {
+        "functional_attrs": {
+          "{http://schemas.android.com/apk/res-auto}layout_constraintBottom_toBottomOf": "parent",
+          "{http://schemas.android.com/apk/res-auto}layout_constraintTop_toBottomOf": "@id/bottom_list_line",
+          "{http://schemas.android.com/apk/res/android}id": "@+id/padding"
+        },
+        "tag": "View"
+      },
+      "play_button": {
+        "functional_attrs": {
+          "style": "@style/Widget.Tachiyomi.Button.IconButton.Standard",
+          "{http://schemas.android.com/apk/res-auto}icon": "@drawable/ic_start_reading_24dp",
+          "{http://schemas.android.com/apk/res-auto}iconSize": "22dp",
+          "{http://schemas.android.com/apk/res/android}clickable": "false",
+          "{http://schemas.android.com/apk/res/android}contentDescription": "@string/start_reading",
+          "{http://schemas.android.com/apk/res/android}focusable": "false",
+          "{http://schemas.android.com/apk/res/android}id": "@+id/play_button"
+        },
+        "tag": "com.google.android.material.button.MaterialButton"
+      },
+      "play_layout": {
+        "functional_attrs": {
+          "{http://schemas.android.com/apk/res-auto}layout_constraintBottom_toBottomOf": "parent",
+          "{http://schemas.android.com/apk/res-auto}layout_constraintTop_toTopOf": "parent",
+          "{http://schemas.android.com/apk/res/android}clickable": "true",
+          "{http://schemas.android.com/apk/res/android}focusable": "true",
+          "{http://schemas.android.com/apk/res/android}id": "@+id/play_layout",
+          "{http://schemas.android.com/apk/res/android}tooltipText": "@string/start_reading",
+          "{http://schemas.android.com/apk/res/android}visibility": "gone"
+        },
+        "tag": "FrameLayout"
+      },
+      "progress": {
+        "functional_attrs": {
+          "style": "?android:attr/progressBarStyleSmall",
+          "{http://schemas.android.com/apk/res-auto}layout_constraintBottom_toBottomOf": "parent",
+          "{http://schemas.android.com/apk/res-auto}layout_constraintStart_toStartOf": "parent",
+          "{http://schemas.android.com/apk/res-auto}layout_constraintTop_toTopOf": "parent",
+          "{http://schemas.android.com/apk/res/android}id": "@+id/progress",
+          "{http://schemas.android.com/apk/res/android}visibility": "gone"
+        },
+        "tag": "ProgressBar"
+      },
+      "reading_progress": {
+        "functional_attrs": {
+          "{http://schemas.android.com/apk/res-auto}layout_constraintBottom_toBottomOf": "@id/constraint_layout",
+          "{http://schemas.android.com/apk/res-auto}layout_constraintStart_toStartOf": "@id/constraint_layout",
+          "{http://schemas.android.com/apk/res/android}id": "@+id/reading_progress",
+          "{http://schemas.android.com/apk/res/android}importantForAccessibility": "no",
+          "{http://schemas.android.com/apk/res/android}max": "100",
+          "{http://schemas.android.com/apk/res/android}progress": "0",
+          "{http://schemas.android.com/apk/res/android}progressBackgroundTint": "@color/v4_track",
+          "{http://schemas.android.com/apk/res/android}progressTint": "@color/v4_primary",
+          "{http://schemas.android.com/apk/res/android}visibility": "gone"
+        },
+        "tag": "ProgressBar"
+      },
+      "subtitle": {
+        "functional_attrs": {
+          "style": "?textAppearanceBodyMedium",
+          "{http://schemas.android.com/apk/res-auto}layout_constraintEnd_toStartOf": "@id/unread_download_badge",
+          "{http://schemas.android.com/apk/res-auto}layout_constraintStart_toStartOf": "@+id/title",
+          "{http://schemas.android.com/apk/res-auto}layout_constraintTop_toBottomOf": "@+id/title",
+          "{http://schemas.android.com/apk/res-auto}layout_constraintVertical_bias": "0.0",
+          "{http://schemas.android.com/apk/res/android}ellipsize": "end",
+          "{http://schemas.android.com/apk/res/android}id": "@+id/subtitle",
+          "{http://schemas.android.com/apk/res/android}maxLines": "1",
+          "{http://schemas.android.com/apk/res/android}singleLine": "true"
+        },
+        "tag": "com.google.android.material.textview.MaterialTextView"
+      },
+      "title": {
+        "functional_attrs": {
+          "style": "?textAppearanceLabelLarge",
+          "{http://schemas.android.com/apk/res-auto}layout_constraintEnd_toStartOf": "@id/unread_download_badge",
+          "{http://schemas.android.com/apk/res-auto}layout_constraintStart_toEndOf": "@+id/card",
+          "{http://schemas.android.com/apk/res-auto}layout_constraintTop_toTopOf": "parent",
+          "{http://schemas.android.com/apk/res/android}ellipsize": "end",
+          "{http://schemas.android.com/apk/res/android}id": "@+id/title",
+          "{http://schemas.android.com/apk/res/android}maxLines": "2"
+        },
+        "tag": "com.google.android.material.textview.MaterialTextView"
+      },
+      "unread_download_badge": {
+        "functional_attrs": {
+          "layout": "@layout/unread_download_badge",
+          "{http://schemas.android.com/apk/res-auto}layout_constraintBottom_toBottomOf": "parent",
+          "{http://schemas.android.com/apk/res-auto}layout_constraintEnd_toStartOf": "@id/play_layout",
+          "{http://schemas.android.com/apk/res-auto}layout_constraintTop_toTopOf": "parent",
+          "{http://schemas.android.com/apk/res-auto}layout_goneMarginEnd": "12dp",
+          "{http://schemas.android.com/apk/res/android}id": "@+id/unread_download_badge"
+        },
+        "tag": "include"
+      }
+    },
+    "app/src/dev/res/layout/reader_activity.xml": {
+      "app_bar": {
+        "functional_attrs": {
+          "{http://schemas.android.com/apk/res/android}id": "@+id/app_bar",
+          "{http://schemas.android.com/apk/res/android}visibility": "gone"
+        },
+        "tag": "FrameLayout"
+      },
+      "brightness_overlay": {
+        "functional_attrs": {
+          "{http://schemas.android.com/apk/res/android}id": "@+id/brightness_overlay",
+          "{http://schemas.android.com/apk/res/android}visibility": "gone"
+        },
+        "tag": "View"
+      },
+      "chapters_sheet": {
+        "functional_attrs": {
+          "layout": "@layout/reader_chapters_sheet",
+          "{http://schemas.android.com/apk/res/android}id": "@+id/chapters_sheet"
+        },
+        "tag": "include"
+      },
+      "color_overlay": {
+        "functional_attrs": {
+          "{http://schemas.android.com/apk/res/android}id": "@+id/color_overlay",
+          "{http://schemas.android.com/apk/res/android}visibility": "gone"
+        },
+        "tag": "eu.kanade.tachiyomi.ui.reader.ReaderColorFilterView"
+      },
+      "flash_overlay": {
+        "functional_attrs": {
+          "{http://schemas.android.com/apk/res/android}id": "@+id/flash_overlay",
+          "{http://schemas.android.com/apk/res/android}visibility": "gone"
+        },
+        "tag": "View"
+      },
+      "nav_bar": {
+        "functional_attrs": {
+          "{http://schemas.android.com/apk/res/android}id": "@+id/nav_bar"
+        },
+        "tag": "View"
+      },
+      "nav_layout": {
+        "functional_attrs": {
+          "{http://schemas.android.com/apk/res-auto}layout_anchor": "@id/chapters_sheet",
+          "{http://schemas.android.com/apk/res-auto}layout_anchorGravity": "top",
+          "{http://schemas.android.com/apk/res/android}id": "@+id/nav_layout"
+        },
+        "tag": "FrameLayout"
+      },
+      "navigation_overlay": {
+        "functional_attrs": {
+          "{http://schemas.android.com/apk/res/android}id": "@+id/navigation_overlay",
+          "{http://schemas.android.com/apk/res/android}visibility": "gone"
+        },
+        "tag": "eu.kanade.tachiyomi.ui.reader.ReaderNavigationOverlayView"
+      },
+      "page_number": {
+        "functional_attrs": {
+          "style": "?textAppearanceBodySmall",
+          "{http://schemas.android.com/apk/res/android}id": "@+id/page_number",
+          "{http://schemas.android.com/apk/res/android}textStyle": "bold"
+        },
+        "tag": "eu.kanade.tachiyomi.ui.reader.PageIndicatorTextView"
+      },
+      "please_wait": {
+        "functional_attrs": {
+          "{http://schemas.android.com/apk/res/android}id": "@+id/please_wait",
+          "{http://schemas.android.com/apk/res/android}visibility": "gone"
+        },
+        "tag": "com.google.android.material.loadingindicator.LoadingIndicator"
+      },
+      "reader_layout": {
+        "functional_attrs": {
+          "{http://schemas.android.com/apk/res/android}id": "@+id/reader_layout"
+        },
+        "tag": "androidx.coordinatorlayout.widget.CoordinatorLayout"
+      },
+      "reader_nav": {
+        "functional_attrs": {
+          "layout": "@layout/reader_nav",
+          "{http://schemas.android.com/apk/res/android}id": "@+id/reader_nav"
+        },
+        "tag": "include"
+      },
+      "toolbar": {
+        "functional_attrs": {
+          "{http://schemas.android.com/apk/res-auto}navigationContentDescription": "@string/close",
+          "{http://schemas.android.com/apk/res-auto}subtitleTextColor": "@color/action_bar_tint_alpha",
+          "{http://schemas.android.com/apk/res-auto}titleTextColor": "?actionBarTintColor",
+          "{http://schemas.android.com/apk/res/android}id": "@+id/toolbar"
+        },
+        "tag": "androidx.appcompat.widget.Toolbar"
+      },
+      "touch_view": {
+        "functional_attrs": {
+          "{http://schemas.android.com/apk/res/android}id": "@+id/touch_view"
+        },
+        "tag": "View"
+      },
+      "viewer_container": {
+        "functional_attrs": {
+          "{http://schemas.android.com/apk/res/android}descendantFocusability": "blocksDescendants",
+          "{http://schemas.android.com/apk/res/android}id": "@+id/viewer_container"
+        },
+        "tag": "FrameLayout"
+      }
+    },
+    "app/src/dev/res/layout/reader_chapter_item.xml": {
+      "bookmark_button": {
+        "functional_attrs": {
+          "{http://schemas.android.com/apk/res-auto}layout_constraintBottom_toBottomOf": "parent",
+          "{http://schemas.android.com/apk/res-auto}layout_constraintTop_toTopOf": "parent",
+          "{http://schemas.android.com/apk/res/android}clickable": "true",
+          "{http://schemas.android.com/apk/res/android}focusable": "true",
+          "{http://schemas.android.com/apk/res/android}id": "@+id/bookmark_button",
+          "{http://schemas.android.com/apk/res/android}src": "@drawable/ic_bookmark_24dp"
+        },
+        "tag": "FrameLayout"
+      },
+      "bookmark_image": {
+        "functional_attrs": {
+          "{http://schemas.android.com/apk/res-auto}tint": "@color/material_on_background_disabled",
+          "{http://schemas.android.com/apk/res/android}id": "@+id/bookmark_image",
+          "{http://schemas.android.com/apk/res/android}src": "@drawable/ic_bookmark_border_24dp"
+        },
+        "tag": "ImageView"
+      },
+      "chapter_subtitle": {
+        "functional_attrs": {
+          "style": "?textAppearanceCaption",
+          "{http://schemas.android.com/apk/res-auto}layout_constraintBottom_toBottomOf": "parent",
+          "{http://schemas.android.com/apk/res-auto}layout_constraintEnd_toStartOf": "@id/bookmark_button",
+          "{http://schemas.android.com/apk/res-auto}layout_constraintStart_toStartOf": "parent",
+          "{http://schemas.android.com/apk/res-auto}layout_constraintTop_toBottomOf": "@+id/chapter_title",
+          "{http://schemas.android.com/apk/res/android}ellipsize": "end",
+          "{http://schemas.android.com/apk/res/android}id": "@+id/chapter_subtitle",
+          "{http://schemas.android.com/apk/res/android}maxLines": "1"
+        },
+        "tag": "TextView"
+      },
+      "chapter_title": {
+        "functional_attrs": {
+          "style": "?textAppearanceBodyMedium",
+          "{http://schemas.android.com/apk/res-auto}layout_constraintBottom_toTopOf": "@id/chapter_subtitle",
+          "{http://schemas.android.com/apk/res-auto}layout_constraintEnd_toStartOf": "@id/bookmark_button",
+          "{http://schemas.android.com/apk/res-auto}layout_constraintStart_toStartOf": "parent",
+          "{http://schemas.android.com/apk/res-auto}layout_constraintTop_toTopOf": "parent",
+          "{http://schemas.android.com/apk/res/android}ellipsize": "end",
+          "{http://schemas.android.com/apk/res/android}id": "@+id/chapter_title",
+          "{http://schemas.android.com/apk/res/android}maxLines": "1"
+        },
+        "tag": "TextView"
+      },
+      "progress": {
+        "functional_attrs": {
+          "style": "?android:attr/progressBarStyleSmall",
+          "{http://schemas.android.com/apk/res/android}id": "@+id/progress",
+          "{http://schemas.android.com/apk/res/android}visibility": "gone"
+        },
+        "tag": "ProgressBar"
+      },
+      "reader_chapter_layout": {
+        "functional_attrs": {
+          "{http://schemas.android.com/apk/res/android}id": "@+id/reader_chapter_layout"
+        },
+        "tag": "androidx.constraintlayout.widget.ConstraintLayout"
+      }
+    },
+    "app/src/dev/res/layout/reader_chapters_sheet.xml": {
+      "buttonGroup": {
+        "functional_attrs": {
+          "{http://schemas.android.com/apk/res/android}id": "@+id/buttonGroup",
+          "{http://schemas.android.com/apk/res/android}orientation": "horizontal",
+          "{http://schemas.android.com/apk/res/android}spacing": "0dp"
+        },
+        "tag": "LinearLayout"
+      },
+      "chapter_recycler": {
+        "functional_attrs": {
+          "{http://schemas.android.com/apk/res/android}alpha": "0",
+          "{http://schemas.android.com/apk/res/android}focusable": "true",
+          "{http://schemas.android.com/apk/res/android}id": "@+id/chapter_recycler"
+        },
+        "tag": "eu.kanade.tachiyomi.ui.reader.chapter.ChapterRecyclerView"
+      },
+      "chapters_bottom_sheet": {
+        "functional_attrs": {
+          "{http://schemas.android.com/apk/res-auto}behavior_peekHeight": "60dp",
+          "{http://schemas.android.com/apk/res-auto}layout_behavior": "eu.kanade.tachiyomi.ui.reader.chapter.ReaderChapterSheetBehavior",
+          "{http://schemas.android.com/apk/res/android}id": "@+id/chapters_bottom_sheet",
+          "{http://schemas.android.com/apk/res/android}orientation": "vertical"
+        },
+        "tag": "eu.kanade.tachiyomi.ui.reader.chapter.ReaderChapterSheet"
+      },
+      "chapters_button": {
+        "functional_attrs": {
+          "style": "@style/Widget.Tachiyomi.Button.ReaderIcon",
+          "{http://schemas.android.com/apk/res-auto}icon": "@drawable/ic_format_list_numbered_24dp",
+          "{http://schemas.android.com/apk/res/android}contentDescription": "@string/view_chapters",
+          "{http://schemas.android.com/apk/res/android}id": "@+id/chapters_button",
+          "{http://schemas.android.com/apk/res/android}tooltipText": "@string/view_chapters"
+        },
+        "tag": "com.google.android.material.button.MaterialButton"
+      },
+      "crop_borders_sheet_button": {
+        "functional_attrs": {
+          "style": "@style/Widget.Tachiyomi.Button.ReaderIcon",
+          "{http://schemas.android.com/apk/res-auto}icon": "@drawable/anim_crop_to_free",
+          "{http://schemas.android.com/apk/res/android}contentDescription": "@string/crop_borders",
+          "{http://schemas.android.com/apk/res/android}id": "@+id/crop_borders_sheet_button",
+          "{http://schemas.android.com/apk/res/android}tooltipText": "@string/crop_borders",
+          "{http://schemas.android.com/apk/res/android}visibility": "gone"
+        },
+        "tag": "com.google.android.material.button.MaterialButton"
+      },
+      "display_options": {
+        "functional_attrs": {
+          "style": "@style/Widget.Tachiyomi.Button.ReaderIcon",
+          "{http://schemas.android.com/apk/res-auto}icon": "@drawable/ic_tune_24dp",
+          "{http://schemas.android.com/apk/res/android}contentDescription": "@string/display_options",
+          "{http://schemas.android.com/apk/res/android}id": "@+id/display_options",
+          "{http://schemas.android.com/apk/res/android}tooltipText": "@string/display_options"
+        },
+        "tag": "com.google.android.material.button.MaterialButton"
+      },
+      "double_page": {
+        "functional_attrs": {
+          "style": "@style/Widget.Tachiyomi.Button.ReaderIcon",
+          "{http://schemas.android.com/apk/res-auto}icon": "@drawable/ic_book_open_variant_24dp",
+          "{http://schemas.android.com/apk/res/android}contentDescription": "@string/page_layout",
+          "{http://schemas.android.com/apk/res/android}id": "@+id/double_page",
+          "{http://schemas.android.com/apk/res/android}tooltipText": "@string/page_layout"
+        },
+        "tag": "com.google.android.material.button.MaterialButton"
+      },
+      "pill": {
+        "functional_attrs": {
+          "{http://schemas.android.com/apk/res-auto}tint": "?actionBarTintColor",
+          "{http://schemas.android.com/apk/res/android}alpha": "0.25",
+          "{http://schemas.android.com/apk/res/android}contentDescription": "@string/drag_handle",
+          "{http://schemas.android.com/apk/res/android}id": "@+id/pill",
+          "{http://schemas.android.com/apk/res/android}src": "@drawable/draggable_pill"
+        },
+        "tag": "ImageView"
+      },
+      "reading_mode": {
+        "functional_attrs": {
+          "style": "@style/Widget.Tachiyomi.Button.ReaderIcon",
+          "{http://schemas.android.com/apk/res-auto}icon": "@drawable/ic_reader_default_24dp",
+          "{http://schemas.android.com/apk/res/android}contentDescription": "@string/reading_mode",
+          "{http://schemas.android.com/apk/res/android}id": "@+id/reading_mode",
+          "{http://schemas.android.com/apk/res/android}tooltipText": "@string/reading_mode"
+        },
+        "tag": "com.google.android.material.button.MaterialButton"
+      },
+      "rotation_sheet_button": {
+        "functional_attrs": {
+          "style": "@style/Widget.Tachiyomi.Button.ReaderIcon",
+          "{http://schemas.android.com/apk/res-auto}icon": "@drawable/ic_screen_rotation_24dp",
+          "{http://schemas.android.com/apk/res/android}contentDescription": "@string/rotation",
+          "{http://schemas.android.com/apk/res/android}id": "@+id/rotation_sheet_button",
+          "{http://schemas.android.com/apk/res/android}tooltipText": "@string/rotation",
+          "{http://schemas.android.com/apk/res/android}visibility": "gone"
+        },
+        "tag": "com.google.android.material.button.MaterialButton"
+      },
+      "shift_page_button": {
+        "functional_attrs": {
+          "style": "@style/Widget.Tachiyomi.Button.ReaderIcon",
+          "{http://schemas.android.com/apk/res-auto}icon": "@drawable/ic_page_next_outline_24dp",
+          "{http://schemas.android.com/apk/res/android}contentDescription": "@string/shift_one_page_over",
+          "{http://schemas.android.com/apk/res/android}id": "@+id/shift_page_button",
+          "{http://schemas.android.com/apk/res/android}tooltipText": "@string/shift_one_page_over"
+        },
+        "tag": "com.google.android.material.button.MaterialButton"
+      },
+      "topbar_layout": {
+        "functional_attrs": {
+          "{http://schemas.android.com/apk/res/android}clickable": "true",
+          "{http://schemas.android.com/apk/res/android}descendantFocusability": "afterDescendants",
+          "{http://schemas.android.com/apk/res/android}focusable": "false",
+          "{http://schemas.android.com/apk/res/android}id": "@+id/topbar_layout"
+        },
+        "tag": "FrameLayout"
+      },
+      "webview_button": {
+        "functional_attrs": {
+          "style": "@style/Widget.Tachiyomi.Button.ReaderIcon",
+          "{http://schemas.android.com/apk/res-auto}icon": "@drawable/ic_open_in_webview_24dp",
+          "{http://schemas.android.com/apk/res/android}contentDescription": "@string/open_in_webview",
+          "{http://schemas.android.com/apk/res/android}id": "@+id/webview_button",
+          "{http://schemas.android.com/apk/res/android}tooltipText": "@string/open_in_webview"
+        },
+        "tag": "com.google.android.material.button.MaterialButton"
+      }
+    },
+    "app/src/dev/res/layout/reader_color_filter.xml": {
+      "brightness_slider": {
+        "functional_attrs": {
+          "{http://schemas.android.com/apk/res-auto}layout_constraintBottom_toTopOf": "@id/grayscale",
+          "{http://schemas.android.com/apk/res-auto}layout_constraintEnd_toStartOf": "@id/txt_brightness_slider_value",
+          "{http://schemas.android.com/apk/res-auto}layout_constraintStart_toEndOf": "@id/txt_brightness_slider_icon",
+          "{http://schemas.android.com/apk/res-auto}layout_constraintTop_toBottomOf": "@id/custom_brightness",
+          "{http://schemas.android.com/apk/res-auto}tickVisible": "false",
+          "{http://schemas.android.com/apk/res/android}contentDescription": "@string/use_custom_brightness",
+          "{http://schemas.android.com/apk/res/android}id": "@+id/brightness_slider",
+          "{http://schemas.android.com/apk/res/android}stepSize": "1",
+          "{http://schemas.android.com/apk/res/android}valueFrom": "-75",
+          "{http://schemas.android.com/apk/res/android}valueTo": "100"
+        },
+        "tag": "com.google.android.material.slider.Slider"
+      },
+      "color_filter_mode": {
+        "functional_attrs": {
+          "{http://schemas.android.com/apk/res-auto}layout_constraintStart_toStartOf": "parent",
+          "{http://schemas.android.com/apk/res-auto}layout_constraintTop_toBottomOf": "@id/slider_color_filter_alpha",
+          "{http://schemas.android.com/apk/res-auto}title": "@string/color_filter_blend_mode",
+          "{http://schemas.android.com/apk/res/android}entries": "@array/color_filter_modes",
+          "{http://schemas.android.com/apk/res/android}id": "@+id/color_filter_mode"
+        },
+        "tag": "eu.kanade.tachiyomi.widget.MaterialSpinnerView"
+      },
+      "constraint_layout": {
+        "functional_attrs": {
+          "{http://schemas.android.com/apk/res/android}id": "@+id/constraint_layout"
+        },
+        "tag": "androidx.constraintlayout.widget.ConstraintLayout"
+      },
+      "custom_brightness": {
+        "functional_attrs": {
+          "{http://schemas.android.com/apk/res-auto}layout_constraintTop_toBottomOf": "@id/color_filter_mode",
+          "{http://schemas.android.com/apk/res/android}id": "@+id/custom_brightness",
+          "{http://schemas.android.com/apk/res/android}text": "@string/use_custom_brightness"
+        },
+        "tag": "com.google.android.material.materialswitch.MaterialSwitch"
+      },
+      "filter_bottom_sheet": {
+        "functional_attrs": {
+          "{http://schemas.android.com/apk/res/android}id": "@+id/filter_bottom_sheet"
+        },
+        "tag": "eu.kanade.tachiyomi.ui.reader.settings.ReaderFilterView"
+      },
+      "grayscale": {
+        "functional_attrs": {
+          "{http://schemas.android.com/apk/res-auto}layout_constraintTop_toBottomOf": "@id/brightness_slider",
+          "{http://schemas.android.com/apk/res/android}id": "@+id/grayscale",
+          "{http://schemas.android.com/apk/res/android}text": "@string/grayscale"
+        },
+        "tag": "com.google.android.material.materialswitch.MaterialSwitch"
+      },
+      "inverted_colors": {
+        "functional_attrs": {
+          "{http://schemas.android.com/apk/res-auto}layout_constraintBottom_toBottomOf": "parent",
+          "{http://schemas.android.com/apk/res-auto}layout_constraintTop_toBottomOf": "@id/grayscale",
+          "{http://schemas.android.com/apk/res/android}id": "@+id/inverted_colors",
+          "{http://schemas.android.com/apk/res/android}text": "@string/pref_inverted_colors"
+        },
+        "tag": "com.google.android.material.materialswitch.MaterialSwitch"
+      },
+      "slider_color_filter_alpha": {
+        "functional_attrs": {
+          "{http://schemas.android.com/apk/res-auto}layout_constraintEnd_toStartOf": "@id/txt_color_filter_alpha_value",
+          "{http://schemas.android.com/apk/res-auto}layout_constraintStart_toEndOf": "@id/txt_color_filter_alpha_symbol",
+          "{http://schemas.android.com/apk/res-auto}layout_constraintTop_toBottomOf": "@id/slider_color_filter_blue",
+          "{http://schemas.android.com/apk/res-auto}tickVisible": "false",
+          "{http://schemas.android.com/apk/res/android}contentDescription": "@string/alpha_initial",
+          "{http://schemas.android.com/apk/res/android}id": "@+id/slider_color_filter_alpha",
+          "{http://schemas.android.com/apk/res/android}stepSize": "1",
+          "{http://schemas.android.com/apk/res/android}valueTo": "255"
+        },
+        "tag": "com.google.android.material.slider.Slider"
+      },
+      "slider_color_filter_blue": {
+        "functional_attrs": {
+          "{http://schemas.android.com/apk/res-auto}layout_constraintEnd_toStartOf": "@id/txt_color_filter_blue_value",
+          "{http://schemas.android.com/apk/res-auto}layout_constraintStart_toEndOf": "@id/txt_color_filter_blue_symbol",
+          "{http://schemas.android.com/apk/res-auto}layout_constraintTop_toBottomOf": "@id/slider_color_filter_green",
+          "{http://schemas.android.com/apk/res-auto}tickVisible": "false",
+          "{http://schemas.android.com/apk/res/android}contentDescription": "@string/blue_initial",
+          "{http://schemas.android.com/apk/res/android}id": "@+id/slider_color_filter_blue",
+          "{http://schemas.android.com/apk/res/android}stepSize": "1",
+          "{http://schemas.android.com/apk/res/android}valueTo": "255"
+        },
+        "tag": "com.google.android.material.slider.Slider"
+      },
+      "slider_color_filter_green": {
+        "functional_attrs": {
+          "{http://schemas.android.com/apk/res-auto}layout_constraintEnd_toStartOf": "@id/txt_color_filter_green_value",
+          "{http://schemas.android.com/apk/res-auto}layout_constraintStart_toEndOf": "@id/txt_color_filter_green_symbol",
+          "{http://schemas.android.com/apk/res-auto}layout_constraintTop_toBottomOf": "@id/slider_color_filter_red",
+          "{http://schemas.android.com/apk/res-auto}tickVisible": "false",
+          "{http://schemas.android.com/apk/res/android}contentDescription": "@string/green_initial",
+          "{http://schemas.android.com/apk/res/android}id": "@+id/slider_color_filter_green",
+          "{http://schemas.android.com/apk/res/android}stepSize": "1",
+          "{http://schemas.android.com/apk/res/android}valueTo": "255"
+        },
+        "tag": "com.google.android.material.slider.Slider"
+      },
+      "slider_color_filter_red": {
+        "functional_attrs": {
+          "{http://schemas.android.com/apk/res-auto}layout_constraintEnd_toStartOf": "@id/txt_color_filter_red_value",
+          "{http://schemas.android.com/apk/res-auto}layout_constraintStart_toEndOf": "@id/txt_color_filter_red_symbol",
+          "{http://schemas.android.com/apk/res-auto}layout_constraintTop_toBottomOf": "@id/switch_color_filter",
+          "{http://schemas.android.com/apk/res-auto}tickVisible": "false",
+          "{http://schemas.android.com/apk/res/android}contentDescription": "@string/red_initial",
+          "{http://schemas.android.com/apk/res/android}id": "@+id/slider_color_filter_red",
+          "{http://schemas.android.com/apk/res/android}stepSize": "1",
+          "{http://schemas.android.com/apk/res/android}valueTo": "255"
+        },
+        "tag": "com.google.android.material.slider.Slider"
+      },
+      "spinner_end": {
+        "functional_attrs": {
+          "{http://schemas.android.com/apk/res-auto}layout_constraintStart_toEndOf": "parent",
+          "{http://schemas.android.com/apk/res-auto}layout_constraintTop_toTopOf": "parent",
+          "{http://schemas.android.com/apk/res/android}id": "@+id/spinner_end"
+        },
+        "tag": "Space"
+      },
+      "swipe_down": {
+        "functional_attrs": {
+          "style": "@style/Widget.Material3Expressive.Button.TextButton",
+          "{http://schemas.android.com/apk/res-auto}layout_constraintBaseline_toBaselineOf": "@+id/switch_color_filter",
+          "{http://schemas.android.com/apk/res-auto}layout_constraintEnd_toStartOf": "@id/switch_color_filter",
+          "{http://schemas.android.com/apk/res-auto}layout_constraintStart_toStartOf": "parent",
+          "{http://schemas.android.com/apk/res-auto}layout_constraintTop_toTopOf": "parent",
+          "{http://schemas.android.com/apk/res/android}id": "@+id/swipe_down",
+          "{http://schemas.android.com/apk/res/android}text": "@string/preview"
+        },
+        "tag": "com.google.android.material.button.MaterialButton"
+      },
+      "switch_color_filter": {
+        "functional_attrs": {
+          "{http://schemas.android.com/apk/res-auto}layout_constraintStart_toEndOf": "@id/swipe_down",
+          "{http://schemas.android.com/apk/res-auto}layout_constraintTop_toTopOf": "parent",
+          "{http://schemas.android.com/apk/res/android}id": "@+id/switch_color_filter",
+          "{http://schemas.android.com/apk/res/android}text": "@string/use_custom_color_filter"
+        },
+        "tag": "com.google.android.material.materialswitch.MaterialSwitch"
+      },
+      "txt_brightness_slider_icon": {
+        "functional_attrs": {
+          "{http://schemas.android.com/apk/res-auto}layout_constraintBottom_toBottomOf": "@id/brightness_slider",
+          "{http://schemas.android.com/apk/res-auto}layout_constraintStart_toStartOf": "parent",
+          "{http://schemas.android.com/apk/res-auto}layout_constraintTop_toTopOf": "@id/brightness_slider",
+          "{http://schemas.android.com/apk/res-auto}srcCompat": "@drawable/ic_brightness_day_24dp",
+          "{http://schemas.android.com/apk/res/android}id": "@+id/txt_brightness_slider_icon",
+          "{http://schemas.android.com/apk/res/android}tint": "?android:attr/textColorSecondary"
+        },
+        "tag": "androidx.appcompat.widget.AppCompatImageView"
+      },
+      "txt_brightness_slider_value": {
+        "functional_attrs": {
+          "style": "?textAppearanceBodyLarge",
+          "{http://schemas.android.com/apk/res-auto}layout_constraintBottom_toBottomOf": "@id/brightness_slider",
+          "{http://schemas.android.com/apk/res-auto}layout_constraintTop_toTopOf": "@id/brightness_slider",
+          "{http://schemas.android.com/apk/res/android}id": "@+id/txt_brightness_slider_value"
+        },
+        "tag": "TextView"
+      },
+      "txt_color_filter_alpha_symbol": {
+        "functional_attrs": {
+          "style": "?textAppearanceBodyLarge",
+          "{http://schemas.android.com/apk/res-auto}layout_constraintBottom_toBottomOf": "@id/slider_color_filter_alpha",
+          "{http://schemas.android.com/apk/res-auto}layout_constraintStart_toStartOf": "parent",
+          "{http://schemas.android.com/apk/res-auto}layout_constraintTop_toTopOf": "@id/slider_color_filter_alpha",
+          "{http://schemas.android.com/apk/res/android}id": "@+id/txt_color_filter_alpha_symbol",
+          "{http://schemas.android.com/apk/res/android}text": "@string/alpha_initial"
+        },
+        "tag": "TextView"
+      },
+      "txt_color_filter_alpha_value": {
+        "functional_attrs": {
+          "style": "?textAppearanceBodyLarge",
+          "{http://schemas.android.com/apk/res-auto}layout_constraintBottom_toBottomOf": "@id/slider_color_filter_alpha",
+          "{http://schemas.android.com/apk/res-auto}layout_constraintTop_toTopOf": "@id/slider_color_filter_alpha",
+          "{http://schemas.android.com/apk/res/android}id": "@+id/txt_color_filter_alpha_value",
+          "{http://schemas.android.com/apk/res/android}layout_alignParentEnd": "true"
+        },
+        "tag": "TextView"
+      },
+      "txt_color_filter_blue_symbol": {
+        "functional_attrs": {
+          "style": "?textAppearanceBodyLarge",
+          "{http://schemas.android.com/apk/res-auto}layout_constraintBottom_toBottomOf": "@id/slider_color_filter_blue",
+          "{http://schemas.android.com/apk/res-auto}layout_constraintStart_toStartOf": "parent",
+          "{http://schemas.android.com/apk/res-auto}layout_constraintTop_toTopOf": "@id/slider_color_filter_blue",
+          "{http://schemas.android.com/apk/res/android}id": "@+id/txt_color_filter_blue_symbol",
+          "{http://schemas.android.com/apk/res/android}text": "@string/blue_initial"
+        },
+        "tag": "TextView"
+      },
+      "txt_color_filter_blue_value": {
+        "functional_attrs": {
+          "style": "?textAppearanceBodyLarge",
+          "{http://schemas.android.com/apk/res-auto}layout_constraintBottom_toBottomOf": "@id/slider_color_filter_blue",
+          "{http://schemas.android.com/apk/res-auto}layout_constraintTop_toTopOf": "@id/slider_color_filter_blue",
+          "{http://schemas.android.com/apk/res/android}id": "@+id/txt_color_filter_blue_value",
+          "{http://schemas.android.com/apk/res/android}layout_alignParentEnd": "true"
+        },
+        "tag": "TextView"
+      },
+      "txt_color_filter_green_symbol": {
+        "functional_attrs": {
+          "style": "?textAppearanceBodyLarge",
+          "{http://schemas.android.com/apk/res-auto}layout_constraintBottom_toBottomOf": "@id/slider_color_filter_green",
+          "{http://schemas.android.com/apk/res-auto}layout_constraintStart_toStartOf": "parent",
+          "{http://schemas.android.com/apk/res-auto}layout_constraintTop_toTopOf": "@id/slider_color_filter_green",
+          "{http://schemas.android.com/apk/res/android}id": "@+id/txt_color_filter_green_symbol",
+          "{http://schemas.android.com/apk/res/android}text": "@string/green_initial"
+        },
+        "tag": "TextView"
+      },
+      "txt_color_filter_green_value": {
+        "functional_attrs": {
+          "style": "?textAppearanceBodyLarge",
+          "{http://schemas.android.com/apk/res-auto}layout_constraintBottom_toBottomOf": "@id/slider_color_filter_green",
+          "{http://schemas.android.com/apk/res-auto}layout_constraintTop_toTopOf": "@id/slider_color_filter_green",
+          "{http://schemas.android.com/apk/res/android}id": "@+id/txt_color_filter_green_value",
+          "{http://schemas.android.com/apk/res/android}layout_alignParentEnd": "true"
+        },
+        "tag": "TextView"
+      },
+      "txt_color_filter_red_symbol": {
+        "functional_attrs": {
+          "style": "?textAppearanceBodyLarge",
+          "{http://schemas.android.com/apk/res-auto}layout_constraintBottom_toBottomOf": "@id/slider_color_filter_red",
+          "{http://schemas.android.com/apk/res-auto}layout_constraintStart_toStartOf": "parent",
+          "{http://schemas.android.com/apk/res-auto}layout_constraintTop_toTopOf": "@id/slider_color_filter_red",
+          "{http://schemas.android.com/apk/res/android}id": "@+id/txt_color_filter_red_symbol",
+          "{http://schemas.android.com/apk/res/android}text": "@string/red_initial"
+        },
+        "tag": "TextView"
+      },
+      "txt_color_filter_red_value": {
+        "functional_attrs": {
+          "style": "?textAppearanceBodyLarge",
+          "{http://schemas.android.com/apk/res-auto}layout_constraintBottom_toBottomOf": "@id/slider_color_filter_red",
+          "{http://schemas.android.com/apk/res-auto}layout_constraintTop_toTopOf": "@id/slider_color_filter_red",
+          "{http://schemas.android.com/apk/res/android}id": "@+id/txt_color_filter_red_value",
+          "{http://schemas.android.com/apk/res/android}layout_alignParentEnd": "true"
+        },
+        "tag": "TextView"
+      }
+    },
+    "app/src/dev/res/layout/reader_general_layout.xml": {
+      "always_show_chapter_transition": {
+        "functional_attrs": {
+          "{http://schemas.android.com/apk/res/android}id": "@+id/always_show_chapter_transition",
+          "{http://schemas.android.com/apk/res/android}text": "@string/always_show_chapter_transition"
+        },
+        "tag": "com.google.android.material.materialswitch.MaterialSwitch"
+      },
+      "background_color": {
+        "functional_attrs": {
+          "{http://schemas.android.com/apk/res-auto}title": "@string/background_color",
+          "{http://schemas.android.com/apk/res/android}id": "@+id/background_color"
+        },
+        "tag": "eu.kanade.tachiyomi.widget.MaterialSpinnerView"
+      },
+      "constraint_layout": {
+        "functional_attrs": {
+          "style": "@style/BottomSheetDialogTheme",
+          "{http://schemas.android.com/apk/res/android}id": "@+id/constraint_layout",
+          "{http://schemas.android.com/apk/res/android}orientation": "vertical",
+          "{http://schemas.android.com/apk/res/android}spacing": "@dimen/reader_settings_spacing"
+        },
+        "tag": "LinearLayout"
+      },
+      "filter_bottom_sheet": {
+        "functional_attrs": {
+          "{http://schemas.android.com/apk/res/android}id": "@+id/filter_bottom_sheet"
+        },
+        "tag": "eu.kanade.tachiyomi.ui.reader.settings.ReaderGeneralView"
+      },
+      "flash_color": {
+        "functional_attrs": {
+          "{http://schemas.android.com/apk/res-auto}title": "@string/flash_with",
+          "{http://schemas.android.com/apk/res/android}id": "@+id/flash_color"
+        },
+        "tag": "eu.kanade.tachiyomi.widget.MaterialSpinnerView"
+      },
+      "flash_duration": {
+        "functional_attrs": {
+          "{http://schemas.android.com/apk/res/android}id": "@+id/flash_duration",
+          "{http://schemas.android.com/apk/res/android}stepSize": "100",
+          "{http://schemas.android.com/apk/res/android}valueFrom": "100",
+          "{http://schemas.android.com/apk/res/android}valueTo": "1500"
+        },
+        "tag": "com.google.android.material.slider.Slider"
+      },
+      "flash_duration_text": {
+        "functional_attrs": {
+          "style": "?textAppearanceBodyMedium",
+          "{http://schemas.android.com/apk/res/android}id": "@+id/flash_duration_text"
+        },
+        "tag": "com.google.android.material.textview.MaterialTextView"
+      },
+      "flash_extra_settings": {
+        "functional_attrs": {
+          "{http://schemas.android.com/apk/res/android}id": "@+id/flash_extra_settings",
+          "{http://schemas.android.com/apk/res/android}orientation": "vertical"
+        },
+        "tag": "LinearLayout"
+      },
+      "flash_interval": {
+        "functional_attrs": {
+          "{http://schemas.android.com/apk/res/android}id": "@+id/flash_interval",
+          "{http://schemas.android.com/apk/res/android}stepSize": "1",
+          "{http://schemas.android.com/apk/res/android}valueFrom": "1",
+          "{http://schemas.android.com/apk/res/android}valueTo": "10"
+        },
+        "tag": "com.google.android.material.slider.Slider"
+      },
+      "flash_interval_text": {
+        "functional_attrs": {
+          "style": "?textAppearanceBodyMedium",
+          "{http://schemas.android.com/apk/res/android}id": "@+id/flash_interval_text"
+        },
+        "tag": "com.google.android.material.textview.MaterialTextView"
+      },
+      "flash_on_page_change": {
+        "functional_attrs": {
+          "{http://schemas.android.com/apk/res/android}id": "@+id/flash_on_page_change",
+          "{http://schemas.android.com/apk/res/android}text": "@string/flash_page_on_change"
+        },
+        "tag": "com.google.android.material.materialswitch.MaterialSwitch"
+      },
+      "fullscreen": {
+        "functional_attrs": {
+          "{http://schemas.android.com/apk/res/android}id": "@+id/fullscreen",
+          "{http://schemas.android.com/apk/res/android}text": "@string/fullscreen"
+        },
+        "tag": "com.google.android.material.materialswitch.MaterialSwitch"
+      },
+      "keepscreen": {
+        "functional_attrs": {
+          "{http://schemas.android.com/apk/res/android}id": "@+id/keepscreen",
+          "{http://schemas.android.com/apk/res/android}text": "@string/keep_screen_on"
+        },
+        "tag": "com.google.android.material.materialswitch.MaterialSwitch"
+      },
+      "place_left_button": {
+        "functional_attrs": {
+          "style": "@style/Widget.Tachiyomi.Button.OutlinedButton.Icon",
+          "{http://schemas.android.com/apk/res-auto}toggleCheckedStateOnClick": "true",
+          "{http://schemas.android.com/apk/res/android}id": "@+id/place_left_button",
+          "{http://schemas.android.com/apk/res/android}text": "@string/left"
+        },
+        "tag": "com.google.android.material.button.MaterialButton"
+      },
+      "place_right_button": {
+        "functional_attrs": {
+          "style": "@style/Widget.Tachiyomi.Button.OutlinedButton.Icon",
+          "{http://schemas.android.com/apk/res-auto}toggleCheckedStateOnClick": "true",
+          "{http://schemas.android.com/apk/res/android}id": "@+id/place_right_button",
+          "{http://schemas.android.com/apk/res/android}text": "@string/right"
+        },
+        "tag": "com.google.android.material.button.MaterialButton"
+      },
+      "place_vertical_seekbar_text": {
+        "functional_attrs": {
+          "style": "?textAppearanceBodyMedium",
+          "{http://schemas.android.com/apk/res/android}id": "@+id/place_vertical_seekbar_text",
+          "{http://schemas.android.com/apk/res/android}text": "@string/vertical_seekbar_dock_left"
+        },
+        "tag": "com.google.android.material.textview.MaterialTextView"
+      },
+      "rotation_mode": {
+        "functional_attrs": {
+          "{http://schemas.android.com/apk/res-auto}title": "@string/orientation",
+          "{http://schemas.android.com/apk/res/android}entries": "@array/rotation_type",
+          "{http://schemas.android.com/apk/res/android}id": "@+id/rotation_mode"
+        },
+        "tag": "eu.kanade.tachiyomi.widget.MaterialSpinnerView"
+      },
+      "show_page_number": {
+        "functional_attrs": {
+          "{http://schemas.android.com/apk/res/android}id": "@+id/show_page_number",
+          "{http://schemas.android.com/apk/res/android}text": "@string/show_page_number"
+        },
+        "tag": "com.google.android.material.materialswitch.MaterialSwitch"
+      },
+      "vertical_seekbar_extra_settings": {
+        "functional_attrs": {
+          "{http://schemas.android.com/apk/res/android}id": "@+id/vertical_seekbar_extra_settings",
+          "{http://schemas.android.com/apk/res/android}orientation": "vertical"
+        },
+        "tag": "LinearLayout"
+      },
+      "vertical_seekbar_height": {
+        "functional_attrs": {
+          "{http://schemas.android.com/apk/res/android}id": "@+id/vertical_seekbar_height",
+          "{http://schemas.android.com/apk/res/android}stepSize": "5",
+          "{http://schemas.android.com/apk/res/android}valueFrom": "60",
+          "{http://schemas.android.com/apk/res/android}valueTo": "100"
+        },
+        "tag": "com.google.android.material.slider.Slider"
+      },
+      "vertical_seekbar_height_text": {
+        "functional_attrs": {
+          "style": "?textAppearanceBodyMedium",
+          "{http://schemas.android.com/apk/res/android}id": "@+id/vertical_seekbar_height_text"
+        },
+        "tag": "com.google.android.material.textview.MaterialTextView"
+      },
+      "vertical_seekbar_modes": {
+        "functional_attrs": {
+          "style": "@style/Widget.Tachiyomi.MaterialButtonGroup.Connected",
+          "{http://schemas.android.com/apk/res/android}id": "@+id/vertical_seekbar_modes",
+          "{http://schemas.android.com/apk/res/android}orientation": "horizontal",
+          "{http://schemas.android.com/apk/res/android}spacing": "4dp"
+        },
+        "tag": "com.google.android.material.button.MaterialButtonToggleGroup"
+      },
+      "vertical_seekbar_placement": {
+        "functional_attrs": {
+          "style": "@style/Widget.Tachiyomi.MaterialButtonGroup.Connected",
+          "{http://schemas.android.com/apk/res-auto}selectionRequired": "true",
+          "{http://schemas.android.com/apk/res-auto}singleSelection": "true",
+          "{http://schemas.android.com/apk/res/android}id": "@+id/vertical_seekbar_placement",
+          "{http://schemas.android.com/apk/res/android}layoutDirection": "ltr",
+          "{http://schemas.android.com/apk/res/android}orientation": "horizontal",
+          "{http://schemas.android.com/apk/res/android}spacing": "4dp"
+        },
+        "tag": "com.google.android.material.button.MaterialButtonToggleGroup"
+      },
+      "viewer_series": {
+        "functional_attrs": {
+          "{http://schemas.android.com/apk/res-auto}title": "@string/reading_mode",
+          "{http://schemas.android.com/apk/res/android}entries": "@array/viewers_selector",
+          "{http://schemas.android.com/apk/res/android}id": "@+id/viewer_series"
+        },
+        "tag": "eu.kanade.tachiyomi.widget.MaterialSpinnerView"
+      }
+    },
+    "app/src/dev/res/layout/reader_nav.xml": {
+      "end_cell": {
+        "functional_attrs": {
+          "{http://schemas.android.com/apk/res/android}id": "@+id/end_cell"
+        },
+        "tag": "FrameLayout"
+      },
+      "left_chapter": {
+        "functional_attrs": {
+          "{http://schemas.android.com/apk/res-auto}srcCompat": "@drawable/ic_skip_previous_24",
+          "{http://schemas.android.com/apk/res-auto}tint": "@color/v4_primary",
+          "{http://schemas.android.com/apk/res/android}contentDescription": "@string/previous_chapter",
+          "{http://schemas.android.com/apk/res/android}id": "@+id/left_chapter",
+          "{http://schemas.android.com/apk/res/android}visibility": "visible"
+        },
+        "tag": "ImageButton"
+      },
+      "left_page_text": {
+        "functional_attrs": {
+          "{http://schemas.android.com/apk/res/android}id": "@+id/left_page_text",
+          "{http://schemas.android.com/apk/res/android}textStyle": "bold"
+        },
+        "tag": "TextView"
+      },
+      "left_progress": {
+        "functional_attrs": {
+          "style": "@style/Widget.Material3.CircularProgressIndicator.Small",
+          "{http://schemas.android.com/apk/res-auto}indicatorColor": "@color/v4_cyan",
+          "{http://schemas.android.com/apk/res/android}id": "@+id/left_progress",
+          "{http://schemas.android.com/apk/res/android}indeterminate": "true",
+          "{http://schemas.android.com/apk/res/android}visibility": "gone"
+        },
+        "tag": "com.google.android.material.progressindicator.CircularProgressIndicator"
+      },
+      "page_seekbar": {
+        "functional_attrs": {
+          "{http://schemas.android.com/apk/res/android}id": "@+id/page_seekbar",
+          "{http://schemas.android.com/apk/res/android}maxHeight": "?attr/actionBarSize",
+          "{http://schemas.android.com/apk/res/android}stepSize": "1"
+        },
+        "tag": "eu.kanade.tachiyomi.ui.reader.ReaderSlider"
+      },
+      "reader_nav": {
+        "functional_attrs": {
+          "{http://schemas.android.com/apk/res/android}clickable": "true",
+          "{http://schemas.android.com/apk/res/android}descendantFocusability": "afterDescendants",
+          "{http://schemas.android.com/apk/res/android}focusable": "false",
+          "{http://schemas.android.com/apk/res/android}id": "@+id/reader_nav",
+          "{http://schemas.android.com/apk/res/android}layoutDirection": "ltr",
+          "{http://schemas.android.com/apk/res/android}orientation": "horizontal"
+        },
+        "tag": "eu.kanade.tachiyomi.ui.reader.ReaderNavView"
+      },
+      "reader_seekbar": {
+        "functional_attrs": {
+          "{http://schemas.android.com/apk/res/android}id": "@+id/reader_seekbar",
+          "{http://schemas.android.com/apk/res/android}orientation": "horizontal"
+        },
+        "tag": "LinearLayout"
+      },
+      "right_chapter": {
+        "functional_attrs": {
+          "{http://schemas.android.com/apk/res-auto}srcCompat": "@drawable/ic_skip_next_24",
+          "{http://schemas.android.com/apk/res-auto}tint": "@color/v4_primary",
+          "{http://schemas.android.com/apk/res/android}contentDescription": "@string/next_chapter",
+          "{http://schemas.android.com/apk/res/android}id": "@+id/right_chapter"
+        },
+        "tag": "ImageButton"
+      },
+      "right_page_text": {
+        "functional_attrs": {
+          "{http://schemas.android.com/apk/res/android}id": "@+id/right_page_text",
+          "{http://schemas.android.com/apk/res/android}textStyle": "bold"
+        },
+        "tag": "TextView"
+      },
+      "right_progress": {
+        "functional_attrs": {
+          "style": "@style/Widget.Material3.CircularProgressIndicator.Small",
+          "{http://schemas.android.com/apk/res-auto}indicatorColor": "@color/v4_cyan",
+          "{http://schemas.android.com/apk/res/android}id": "@+id/right_progress",
+          "{http://schemas.android.com/apk/res/android}indeterminate": "true",
+          "{http://schemas.android.com/apk/res/android}visibility": "gone"
+        },
+        "tag": "com.google.android.material.progressindicator.CircularProgressIndicator"
+      },
+      "start_cell": {
+        "functional_attrs": {
+          "{http://schemas.android.com/apk/res/android}id": "@+id/start_cell"
+        },
+        "tag": "FrameLayout"
+      },
+      "toggle_spread": {
+        "functional_attrs": {
+          "{http://schemas.android.com/apk/res-auto}srcCompat": "@drawable/ic_view_module_24dp",
+          "{http://schemas.android.com/apk/res-auto}tint": "@color/v4_primary",
+          "{http://schemas.android.com/apk/res/android}contentDescription": "@string/enhanced_toggle_spread",
+          "{http://schemas.android.com/apk/res/android}id": "@+id/toggle_spread"
+        },
+        "tag": "ImageButton"
+      }
+    },
+    "app/src/dev/res/layout/reader_paged_layout.xml": {
+      "crop_borders": {
+        "functional_attrs": {
+          "{http://schemas.android.com/apk/res/android}id": "@+id/crop_borders",
+          "{http://schemas.android.com/apk/res/android}text": "@string/crop_borders"
+        },
+        "tag": "com.google.android.material.materialswitch.MaterialSwitch"
+      },
+      "crop_borders_webtoon": {
+        "functional_attrs": {
+          "{http://schemas.android.com/apk/res-auto}layout_constraintTop_toTopOf": "parent",
+          "{http://schemas.android.com/apk/res/android}id": "@+id/crop_borders_webtoon",
+          "{http://schemas.android.com/apk/res/android}text": "@string/crop_borders"
+        },
+        "tag": "com.google.android.material.materialswitch.MaterialSwitch"
+      },
+      "extend_past_cutout": {
+        "functional_attrs": {
+          "{http://schemas.android.com/apk/res-auto}title": "@string/cutout_area_behavior",
+          "{http://schemas.android.com/apk/res/android}entries": "@array/cutout_behavior",
+          "{http://schemas.android.com/apk/res/android}id": "@+id/extend_past_cutout"
+        },
+        "tag": "eu.kanade.tachiyomi.widget.MaterialSpinnerView"
+      },
+      "extend_past_cutout_landscape": {
+        "functional_attrs": {
+          "{http://schemas.android.com/apk/res-auto}title": "@string/cutout_area_behavior",
+          "{http://schemas.android.com/apk/res/android}entries": "@array/cutout_behavior_landscape",
+          "{http://schemas.android.com/apk/res/android}id": "@+id/extend_past_cutout_landscape"
+        },
+        "tag": "eu.kanade.tachiyomi.widget.MaterialSpinnerView"
+      },
+      "filter_bottom_sheet": {
+        "functional_attrs": {
+          "{http://schemas.android.com/apk/res/android}id": "@+id/filter_bottom_sheet"
+        },
+        "tag": "eu.kanade.tachiyomi.ui.reader.settings.ReaderPagedView"
+      },
+      "filter_linear_layout": {
+        "functional_attrs": {
+          "{http://schemas.android.com/apk/res/android}id": "@+id/filter_linear_layout",
+          "{http://schemas.android.com/apk/res/android}orientation": "vertical"
+        },
+        "tag": "LinearLayout"
+      },
+      "invert_double_pages": {
+        "functional_attrs": {
+          "{http://schemas.android.com/apk/res/android}id": "@+id/invert_double_pages",
+          "{http://schemas.android.com/apk/res/android}text": "@string/invert_double_pages"
+        },
+        "tag": "com.google.android.material.materialswitch.MaterialSwitch"
+      },
+      "landscape_zoom": {
+        "functional_attrs": {
+          "{http://schemas.android.com/apk/res/android}id": "@+id/landscape_zoom",
+          "{http://schemas.android.com/apk/res/android}text": "@string/zoom_double_page_spreads"
+        },
+        "tag": "com.google.android.material.materialswitch.MaterialSwitch"
+      },
+      "navigate_pan": {
+        "functional_attrs": {
+          "{http://schemas.android.com/apk/res/android}id": "@+id/navigate_pan",
+          "{http://schemas.android.com/apk/res/android}text": "@string/navigate_pan"
+        },
+        "tag": "com.google.android.material.materialswitch.MaterialSwitch"
+      },
+      "page_layout": {
+        "functional_attrs": {
+          "{http://schemas.android.com/apk/res-auto}title": "@string/page_layout",
+          "{http://schemas.android.com/apk/res/android}entries": "@array/page_layouts",
+          "{http://schemas.android.com/apk/res/android}id": "@+id/page_layout"
+        },
+        "tag": "eu.kanade.tachiyomi.widget.MaterialSpinnerView"
+      },
+      "page_transitions": {
+        "functional_attrs": {
+          "{http://schemas.android.com/apk/res/android}id": "@+id/page_transitions",
+          "{http://schemas.android.com/apk/res/android}text": "@string/animate_page_transitions"
+        },
+        "tag": "com.google.android.material.materialswitch.MaterialSwitch"
+      },
+      "pager_invert": {
+        "functional_attrs": {
+          "{http://schemas.android.com/apk/res-auto}title": "@string/invert_tapping",
+          "{http://schemas.android.com/apk/res/android}entries": "@array/invert_tapping_mode",
+          "{http://schemas.android.com/apk/res/android}id": "@+id/pager_invert"
+        },
+        "tag": "eu.kanade.tachiyomi.widget.MaterialSpinnerView"
+      },
+      "pager_nav": {
+        "functional_attrs": {
+          "{http://schemas.android.com/apk/res-auto}title": "@string/tap_zones",
+          "{http://schemas.android.com/apk/res/android}entries": "@array/reader_nav",
+          "{http://schemas.android.com/apk/res/android}id": "@+id/pager_nav"
+        },
+        "tag": "eu.kanade.tachiyomi.widget.MaterialSpinnerView"
+      },
+      "scale_type": {
+        "functional_attrs": {
+          "{http://schemas.android.com/apk/res-auto}title": "@string/scale_type",
+          "{http://schemas.android.com/apk/res/android}entries": "@array/image_scale_type",
+          "{http://schemas.android.com/apk/res/android}id": "@+id/scale_type"
+        },
+        "tag": "eu.kanade.tachiyomi.widget.MaterialSpinnerView"
+      },
+      "webtoon_enable_zoom_out": {
+        "functional_attrs": {
+          "{http://schemas.android.com/apk/res-auto}layout_constraintTop_toBottomOf": "@id/webtoon_side_padding",
+          "{http://schemas.android.com/apk/res/android}id": "@+id/webtoon_enable_zoom_out",
+          "{http://schemas.android.com/apk/res/android}text": "@string/enable_zoom_out"
+        },
+        "tag": "com.google.android.material.materialswitch.MaterialSwitch"
+      },
+      "webtoon_invert": {
+        "functional_attrs": {
+          "{http://schemas.android.com/apk/res-auto}title": "@string/invert_tapping",
+          "{http://schemas.android.com/apk/res/android}entries": "@array/invert_tapping_mode",
+          "{http://schemas.android.com/apk/res/android}id": "@+id/webtoon_invert"
+        },
+        "tag": "eu.kanade.tachiyomi.widget.MaterialSpinnerView"
+      },
+      "webtoon_invert_double_pages": {
+        "functional_attrs": {
+          "{http://schemas.android.com/apk/res/android}id": "@+id/webtoon_invert_double_pages",
+          "{http://schemas.android.com/apk/res/android}text": "@string/invert_double_pages"
+        },
+        "tag": "com.google.android.material.materialswitch.MaterialSwitch"
+      },
+      "webtoon_nav": {
+        "functional_attrs": {
+          "{http://schemas.android.com/apk/res-auto}title": "@string/tap_zones",
+          "{http://schemas.android.com/apk/res/android}entries": "@array/reader_nav",
+          "{http://schemas.android.com/apk/res/android}id": "@+id/webtoon_nav"
+        },
+        "tag": "eu.kanade.tachiyomi.widget.MaterialSpinnerView"
+      },
+      "webtoon_page_layout": {
+        "functional_attrs": {
+          "{http://schemas.android.com/apk/res-auto}title": "@string/page_layout",
+          "{http://schemas.android.com/apk/res/android}entries": "@array/webtoon_page_layouts",
+          "{http://schemas.android.com/apk/res/android}id": "@+id/webtoon_page_layout"
+        },
+        "tag": "eu.kanade.tachiyomi.widget.MaterialSpinnerView"
+      },
+      "webtoon_page_transitions": {
+        "functional_attrs": {
+          "{http://schemas.android.com/apk/res/android}id": "@+id/webtoon_page_transitions",
+          "{http://schemas.android.com/apk/res/android}text": "@string/animate_page_transitions"
+        },
+        "tag": "com.google.android.material.materialswitch.MaterialSwitch"
+      },
+      "webtoon_side_padding": {
+        "functional_attrs": {
+          "style": "?textAppearanceBodyMedium",
+          "{http://schemas.android.com/apk/res/android}id": "@+id/webtoon_side_padding"
+        },
+        "tag": "com.google.android.material.textview.MaterialTextView"
+      },
+      "webtoon_side_padding_layout": {
+        "functional_attrs": {
+          "{http://schemas.android.com/apk/res/android}id": "@+id/webtoon_side_padding_layout",
+          "{http://schemas.android.com/apk/res/android}orientation": "horizontal"
+        },
+        "tag": "LinearLayout"
+      },
+      "webtoon_side_padding_slider": {
+        "functional_attrs": {
+          "{http://schemas.android.com/apk/res/android}id": "@+id/webtoon_side_padding_slider",
+          "{http://schemas.android.com/apk/res/android}stepSize": "5",
+          "{http://schemas.android.com/apk/res/android}valueFrom": "0",
+          "{http://schemas.android.com/apk/res/android}valueTo": "25"
+        },
+        "tag": "com.google.android.material.slider.Slider"
+      },
+      "zoom_start": {
+        "functional_attrs": {
+          "{http://schemas.android.com/apk/res-auto}title": "@string/zoom_start_position",
+          "{http://schemas.android.com/apk/res/android}entries": "@array/zoom_start",
+          "{http://schemas.android.com/apk/res/android}id": "@+id/zoom_start"
+        },
+        "tag": "eu.kanade.tachiyomi.widget.MaterialSpinnerView"
+      }
+    },
+    "app/src/dev/res/layout/source_filter_sheet.xml": {
+      "bottom_divider": {
+        "functional_attrs": {
+          "{http://schemas.android.com/apk/res-auto}layout_constraintStart_toStartOf": "parent",
+          "{http://schemas.android.com/apk/res-auto}layout_constraintTop_toTopOf": "parent",
+          "{http://schemas.android.com/apk/res/android}id": "@+id/bottom_divider"
+        },
+        "tag": "View"
+      },
+      "bottom_space": {
+        "functional_attrs": {
+          "{http://schemas.android.com/apk/res-auto}layout_constraintTop_toTopOf": "@id/title_layout",
+          "{http://schemas.android.com/apk/res/android}id": "@+id/bottom_space"
+        },
+        "tag": "Space"
+      },
+      "card_view": {
+        "functional_attrs": {
+          "{http://schemas.android.com/apk/res-auto}layout_constraintBottom_toBottomOf": "@id/bottom_space",
+          "{http://schemas.android.com/apk/res-auto}layout_constraintStart_toStartOf": "parent",
+          "{http://schemas.android.com/apk/res-auto}layout_constraintTop_toTopOf": "parent",
+          "{http://schemas.android.com/apk/res/android}id": "@+id/card_view"
+        },
+        "tag": "androidx.cardview.widget.CardView"
+      },
+      "filters_recycler": {
+        "functional_attrs": {
+          "{http://schemas.android.com/apk/res-auto}layout_constraintBottom_toTopOf": "@id/title_layout",
+          "{http://schemas.android.com/apk/res-auto}layout_constraintStart_toStartOf": "parent",
+          "{http://schemas.android.com/apk/res-auto}layout_constraintTop_toTopOf": "parent",
+          "{http://schemas.android.com/apk/res/android}id": "@+id/filters_recycler"
+        },
+        "tag": "androidx.recyclerview.widget.RecyclerView"
+      },
+      "reset_btn": {
+        "functional_attrs": {
+          "style": "@style/Widget.Material3Expressive.Button.TextButton",
+          "{http://schemas.android.com/apk/res-auto}layout_constraintBottom_toBottomOf": "parent",
+          "{http://schemas.android.com/apk/res-auto}layout_constraintEnd_toStartOf": "@id/search_btn",
+          "{http://schemas.android.com/apk/res-auto}layout_constraintHorizontal_chainStyle": "spread_inside",
+          "{http://schemas.android.com/apk/res-auto}layout_constraintStart_toStartOf": "parent",
+          "{http://schemas.android.com/apk/res-auto}layout_constraintTop_toTopOf": "parent",
+          "{http://schemas.android.com/apk/res/android}id": "@+id/reset_btn",
+          "{http://schemas.android.com/apk/res/android}text": "@string/reset"
+        },
+        "tag": "com.google.android.material.button.MaterialButton"
+      },
+      "save_btn": {
+        "functional_attrs": {
+          "style": "?materialIconButtonStyle",
+          "{http://schemas.android.com/apk/res-auto}icon": "@drawable/ic_outline_save_24dp",
+          "{http://schemas.android.com/apk/res-auto}layout_constraintBottom_toBottomOf": "parent",
+          "{http://schemas.android.com/apk/res-auto}layout_constraintEnd_toStartOf": "@id/search_btn",
+          "{http://schemas.android.com/apk/res-auto}layout_constraintStart_toEndOf": "@id/reset_btn",
+          "{http://schemas.android.com/apk/res-auto}layout_constraintTop_toTopOf": "parent",
+          "{http://schemas.android.com/apk/res/android}contentDescription": "@string/save",
+          "{http://schemas.android.com/apk/res/android}id": "@+id/save_btn",
+          "{http://schemas.android.com/apk/res/android}tooltipText": "@string/save"
+        },
+        "tag": "com.google.android.material.button.MaterialButton"
+      },
+      "search_btn": {
+        "functional_attrs": {
+          "{http://schemas.android.com/apk/res-auto}layout_constraintBottom_toBottomOf": "parent",
+          "{http://schemas.android.com/apk/res-auto}layout_constraintStart_toEndOf": "@id/reset_btn",
+          "{http://schemas.android.com/apk/res-auto}layout_constraintTop_toTopOf": "parent",
+          "{http://schemas.android.com/apk/res-auto}layout_constraintWidth_min": "150dp",
+          "{http://schemas.android.com/apk/res/android}id": "@+id/search_btn",
+          "{http://schemas.android.com/apk/res/android}text": "@string/filter"
+        },
+        "tag": "com.google.android.material.button.MaterialButton"
+      },
+      "source_filter_sheet": {
+        "functional_attrs": {
+          "{http://schemas.android.com/apk/res-auto}layout_constraintVertical_chainStyle": "packed",
+          "{http://schemas.android.com/apk/res/android}id": "@+id/source_filter_sheet"
+        },
+        "tag": "androidx.constraintlayout.widget.ConstraintLayout"
+      },
+      "title_layout": {
+        "functional_attrs": {
+          "{http://schemas.android.com/apk/res-auto}layout_constraintBottom_toBottomOf": "parent",
+          "{http://schemas.android.com/apk/res-auto}layout_constraintStart_toStartOf": "parent",
+          "{http://schemas.android.com/apk/res/android}clickable": "true",
+          "{http://schemas.android.com/apk/res/android}focusable": "true",
+          "{http://schemas.android.com/apk/res/android}id": "@+id/title_layout"
+        },
+        "tag": "androidx.constraintlayout.widget.ConstraintLayout"
+      }
+    },
+    "app/src/main/res/layout/common_view_empty.xml": {
+      "actions_container": {
+        "functional_attrs": {
+          "{http://schemas.android.com/apk/res-auto}layout_constraintBottom_toBottomOf": "parent",
+          "{http://schemas.android.com/apk/res-auto}layout_constraintStart_toEndOf": "@id/image_view",
+          "{http://schemas.android.com/apk/res-auto}layout_constraintTop_toBottomOf": "@id/text_label",
+          "{http://schemas.android.com/apk/res/android}id": "@+id/actions_container",
+          "{http://schemas.android.com/apk/res/android}orientation": "vertical"
+        },
+        "tag": "LinearLayout"
+      },
+      "image_view": {
+        "functional_attrs": {
+          "{http://schemas.android.com/apk/res-auto}layout_constraintBottom_toBottomOf": "parent",
+          "{http://schemas.android.com/apk/res-auto}layout_constraintDimensionRatio": "W,1:1",
+          "{http://schemas.android.com/apk/res-auto}layout_constraintEnd_toStartOf": "@id/text_label",
+          "{http://schemas.android.com/apk/res-auto}layout_constraintHeight_max": "128dp",
+          "{http://schemas.android.com/apk/res-auto}layout_constraintHeight_min": "24dp",
+          "{http://schemas.android.com/apk/res-auto}layout_constraintHorizontal_chainStyle": "packed",
+          "{http://schemas.android.com/apk/res-auto}layout_constraintStart_toStartOf": "parent",
+          "{http://schemas.android.com/apk/res-auto}layout_constraintTop_toTopOf": "parent",
+          "{http://schemas.android.com/apk/res-auto}layout_constraintVertical_bias": "0.0",
+          "{http://schemas.android.com/apk/res-auto}layout_constraintWidth_max": "128dp",
+          "{http://schemas.android.com/apk/res-auto}layout_constraintWidth_min": "24dp",
+          "{http://schemas.android.com/apk/res/android}id": "@+id/image_view"
+        },
+        "tag": "androidx.appcompat.widget.AppCompatImageView"
+      },
+      "text_label": {
+        "functional_attrs": {
+          "style": "?textAppearanceLabelMedium",
+          "{http://schemas.android.com/apk/res-auto}layout_constraintBottom_toTopOf": "@id/actions_container",
+          "{http://schemas.android.com/apk/res-auto}layout_constraintStart_toEndOf": "@id/image_view",
+          "{http://schemas.android.com/apk/res-auto}layout_constraintTop_toTopOf": "parent",
+          "{http://schemas.android.com/apk/res/android}id": "@+id/text_label"
+        },
+        "tag": "TextView"
+      }
+    },
+    "app/src/main/res/layout/material_text_button.xml": {
+      "button": {
+        "functional_attrs": {
+          "style": "@style/Widget.Material3Expressive.Button.TextButton",
+          "{http://schemas.android.com/apk/res/android}id": "@+id/button",
+          "{http://schemas.android.com/apk/res/android}text": "@string/set_as_default_for_all"
+        },
+        "tag": "com.google.android.material.button.MaterialButton"
+      }
+    }
+  }
+}

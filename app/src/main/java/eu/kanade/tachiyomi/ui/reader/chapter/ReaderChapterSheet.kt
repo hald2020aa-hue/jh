@@ -103,8 +103,14 @@ class ReaderChapterSheet
                         binding.pill.alpha = (1 - max(0f, progress)) * 0.25f
                         val trueProgress = max(progress, 0f)
                         activity.binding.readerNav.root.alpha = (1 - abs(progress)).coerceIn(0f, 1f)
-                        backgroundTintList =
-                            ColorStateList.valueOf(lerpColor(primary, fullPrimary, trueProgress))
+                        // The enhanced flavor has an actual multi-stop neon drawable.
+                        // Tinting the whole background destroys its gradient on scroll.
+                        if (!activity.resources.getBoolean(R.bool.v4_neon_mode)) {
+                            backgroundTintList =
+                                ColorStateList.valueOf(lerpColor(primary, fullPrimary, trueProgress))
+                        } else {
+                            backgroundTintList = null
+                        }
                         binding.chapterRecycler.alpha = trueProgress
                         if (activity.sheetManageNavColor && progress > 0f) {
                             activity.binding.navBar.backgroundColor =
@@ -238,14 +244,18 @@ class ReaderChapterSheet
                 },
             )
 
-            backgroundTintList =
-                ColorStateList.valueOf(
-                    if (!sheetBehavior.isExpanded()) {
-                        primary
-                    } else {
-                        fullPrimary
-                    },
-                )
+            if (!activity.resources.getBoolean(R.bool.v4_neon_mode)) {
+                backgroundTintList =
+                    ColorStateList.valueOf(
+                        if (!sheetBehavior.isExpanded()) {
+                            primary
+                        } else {
+                            fullPrimary
+                        },
+                    )
+            } else {
+                backgroundTintList = null
+            }
 
             binding.chapterRecycler.addOnScrollListener(
                 object : RecyclerView.OnScrollListener() {

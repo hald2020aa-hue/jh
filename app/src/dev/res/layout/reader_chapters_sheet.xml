@@ -1,5 +1,5 @@
 <?xml version='1.0' encoding='UTF-8'?>
-<eu.kanade.tachiyomi.ui.reader.chapter.ReaderChapterSheet xmlns:android="http://schemas.android.com/apk/res/android" xmlns:app="http://schemas.android.com/apk/res-auto" xmlns:tools="http://schemas.android.com/tools" android:id="@+id/chapters_bottom_sheet" android:layout_width="match_parent" android:layout_height="300dp" android:background="@drawable/v4_neon_nav" android:orientation="vertical" app:behavior_peekHeight="60dp" app:layout_behavior="eu.kanade.tachiyomi.ui.reader.chapter.ReaderChapterSheetBehavior" android:paddingBottom="12dp">
+<eu.kanade.tachiyomi.ui.reader.chapter.ReaderChapterSheet xmlns:android="http://schemas.android.com/apk/res/android" xmlns:app="http://schemas.android.com/apk/res-auto" xmlns:tools="http://schemas.android.com/tools" android:id="@+id/chapters_bottom_sheet" android:layout_width="match_parent" android:layout_height="300dp" android:background="@drawable/v11_neon_bottom_nav" android:orientation="vertical" app:behavior_peekHeight="60dp" app:layout_behavior="eu.kanade.tachiyomi.ui.reader.chapter.ReaderChapterSheetBehavior" android:paddingBottom="12dp">
 
     <FrameLayout android:id="@+id/topbar_layout" android:layout_width="match_parent" android:layout_height="?attr/actionBarSize" android:clickable="true" android:focusable="false" android:descendantFocusability="afterDescendants">
 

@@ -1,5 +1,5 @@
 <?xml version='1.0' encoding='UTF-8'?>
-<eu.kanade.tachiyomi.ui.reader.settings.ReaderPagedView xmlns:android="http://schemas.android.com/apk/res/android" xmlns:app="http://schemas.android.com/apk/res-auto" xmlns:tools="http://schemas.android.com/tools" android:id="@+id/filter_bottom_sheet" android:layout_width="match_parent" android:layout_height="wrap_content" android:background="@drawable/v4_neon_nav" android:clipToPadding="false" android:paddingBottom="12dp">
+<eu.kanade.tachiyomi.ui.reader.settings.ReaderPagedView xmlns:android="http://schemas.android.com/apk/res/android" xmlns:app="http://schemas.android.com/apk/res-auto" xmlns:tools="http://schemas.android.com/tools" android:id="@+id/filter_bottom_sheet" android:layout_width="match_parent" android:layout_height="wrap_content" android:background="@drawable/v11_neon_dialog_frame" android:clipToPadding="false" android:paddingBottom="12dp">
 
     <LinearLayout android:id="@+id/filter_linear_layout" android:layout_width="match_parent" android:layout_height="wrap_content" android:paddingStart="@dimen/material_component_dialogs_padding_around_content_area" android:orientation="vertical" android:paddingTop="0dp" android:paddingEnd="@dimen/material_component_dialogs_padding_around_content_area">
 

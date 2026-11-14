@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Dev neon presentation of existing empty-state ImageView, label and real actions. -->
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:gravity="center"
+    android:paddingStart="16dp"
+    android:paddingEnd="16dp"
+    android:paddingTop="18dp"
+    android:paddingBottom="18dp">
+    <androidx.appcompat.widget.AppCompatImageView
+        android:id="@+id/image_view"
+        android:layout_width="112dp"
+        android:layout_height="112dp"
+        android:layout_gravity="center_horizontal"
+        android:layout_marginBottom="22dp"
+        tools:src="@drawable/ic_heart_off_24dp" />
+    <TextView
+        android:id="@+id/text_label"
+        style="?textAppearanceBodyMedium"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:maxWidth="360dp"
+        android:paddingStart="16dp"
+        android:paddingEnd="16dp"
+        android:paddingTop="12dp"
+        android:paddingBottom="12dp"
+        android:background="@drawable/v11_neon_source_chip"
+        android:layout_gravity="center_horizontal"
+        android:gravity="center"
+        android:textColor="@color/v4_text"
+        android:textAlignment="center"
+        android:textSize="15sp"
+        tools:text="Your library is empty. Add series from Browse." />
+    <LinearLayout
+        android:id="@+id/actions_container"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:gravity="center"
+        android:layout_marginTop="14dp" />
+</LinearLayout>
