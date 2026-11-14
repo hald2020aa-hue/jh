@@ -47,7 +47,6 @@ import eu.kanade.tachiyomi.util.system.isPackageInstalled
 import eu.kanade.tachiyomi.util.system.launchIO
 import eu.kanade.tachiyomi.util.system.launchUI
 import eu.kanade.tachiyomi.util.system.localeContext
-import eu.kanade.tachiyomi.util.system.materialAlertDialog
 import eu.kanade.tachiyomi.util.system.setDefaultSettings
 import eu.kanade.tachiyomi.util.system.toast
 import eu.kanade.tachiyomi.util.system.withUIContext
@@ -156,7 +155,7 @@ class SettingsAdvancedController : SettingsController() {
                         it as Boolean
                         if (it != BuildConfig.BETA) {
                             activity!!
-                                .materialAlertDialog()
+                                .neonSettingsDialog()
                                 .setTitle(R.string.warning)
                                 .setMessage(if (it) R.string.warning_enroll_into_beta else R.string.warning_unenroll_from_beta)
                                 .setPositiveButton(android.R.string.ok) { _, _ -> isChecked = it }
@@ -229,7 +228,7 @@ class SettingsAdvancedController : SettingsController() {
 
                     onClick {
                         activity!!
-                            .materialAlertDialog()
+                            .neonSettingsDialog()
                             .setTitle(R.string.clean_up_downloaded_chapters)
                             .setMultiChoiceItems(
                                 R.array.clean_up_downloads,
@@ -352,7 +351,7 @@ class SettingsAdvancedController : SettingsController() {
                         if (it == ExtensionInstaller.SHIZUKU) {
                             return@onChange if (!context.isPackageInstalled(ShizukuInstaller.shizukuPkgName) && !Sui.isSui()) {
                                 context
-                                    .materialAlertDialog()
+                                    .neonSettingsDialog()
                                     .setTitle(R.string.ext_installer_shizuku)
                                     .setMessage(R.string.ext_installer_shizuku_unavailable_dialog)
                                     .setPositiveButton(R.string.download) { _, _ ->

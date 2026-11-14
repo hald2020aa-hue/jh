@@ -11,7 +11,7 @@ import androidx.preference.Preference
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import eu.kanade.tachiyomi.data.preference.PreferencesHelper
 import eu.kanade.tachiyomi.data.preference.TypeSafeSharedPreferences
-import eu.kanade.tachiyomi.util.system.materialAlertDialog
+import eu.kanade.tachiyomi.ui.setting.neonSettingsDialog
 import uy.kohesive.injekt.Injekt
 import uy.kohesive.injekt.api.get
 
@@ -102,7 +102,7 @@ open class MatPreference
         }
 
         open fun dialog(): MaterialAlertDialogBuilder =
-            (activity ?: context).materialAlertDialog().apply {
+            (activity ?: context).neonSettingsDialog().apply {
                 if (dialogTitleRes != null) {
                     setTitle(dialogTitleRes!!)
                 } else if (title != null) {

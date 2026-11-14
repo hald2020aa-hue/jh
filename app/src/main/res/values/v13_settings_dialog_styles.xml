@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Used only by existing settings choice dialogs in the dev build. -->
+    <style name="ThemeOverlay.J2K.NeonSettingsDialog" parent="ThemeOverlay.Material3.MaterialAlertDialog">
+        <item name="colorSurface">@color/v13_settings_background</item>
+        <item name="colorOnSurface">@android:color/white</item>
+        <item name="colorPrimary">@color/v13_settings_cyan</item>
+        <item name="android:windowBackground">@drawable/v13_settings_dialog</item>
+    </style>
+</resources>
