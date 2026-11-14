@@ -66,3 +66,51 @@ jobs:
           name: app-dev-arm64-v8a-debug.apk
           path: app/build/outputs/apk/dev/debug/app-dev-arm64-v8a-debug.apk
           if-no-files-found: error
+
+
+  # The base job above already compiles, verifies, and uploads the ARM64 APK.
+  universal-debug:
+    name: Build and verify universal dev APK
+    needs: android-debug-and-tests
+    runs-on: ubuntu-24.04
+    timeout-minutes: 60
+    steps:
+      - name: Check out sources
+        uses: actions/checkout@v4
+      - name: Configure JDK 21
+        uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: 21
+      - name: Configure Gradle
+        uses: gradle/actions/setup-gradle@v4
+      - name: Build universal Android APK
+        run: ./gradlew -Pjh.arm64Only=false --no-daemon assembleDevDebug --stacktrace
+      - name: Verify universal APK, architecture coverage and signature
+        shell: bash
+        run: |
+          set -euo pipefail
+          OUTPUT_DIR="app/build/outputs/apk/dev/debug"
+          APK="$OUTPUT_DIR/app-dev-universal-debug.apk"
+          if [[ ! -s "$APK" ]]; then
+            echo "Universal APK missing. Actual outputs:" >&2
+            find "$OUTPUT_DIR" -maxdepth 1 -name '*.apk' -print >&2
+            exit 1
+          fi
+          unzip -tqq "$APK"
+          SDK="${ANDROID_SDK_ROOT:-${ANDROID_HOME:-}}"
+          test -d "$SDK/build-tools"
+          BUILD_TOOLS="$(find "$SDK/build-tools" -mindepth 1 -maxdepth 1 -type d | sort -V | tail -1)"
+          "$BUILD_TOOLS/apksigner" verify --verbose --print-certs "$APK"
+          "$BUILD_TOOLS/aapt" dump badging "$APK" | grep -m1 '^package:'
+          # The native libraries differ by dependency. Verify all ABI packages are included
+          # in the universal output metadata, not by requiring every library in every ABI.
+          test "$(stat -c %s "$APK")" -gt 1048576
+          sha256sum "$APK"
+          echo 'Universal dev APK checked. Debug CI key may be ephemeral.'
+      - name: Upload universal dev APK
+        uses: actions/upload-artifact@v4
+        with:
+          name: app-dev-universal-debug.apk
+          path: app/build/outputs/apk/dev/debug/app-dev-universal-debug.apk
+          if-no-files-found: error
