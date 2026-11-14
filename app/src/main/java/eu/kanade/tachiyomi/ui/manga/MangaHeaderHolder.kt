@@ -457,10 +457,14 @@ class MangaHeaderHolder(
                 updateLayoutParams<ViewGroup.LayoutParams> { width = ViewGroup.LayoutParams.WRAP_CONTENT }
             }
         }
-        binding.trueBackdrop.setBackgroundColor(
-            adapter.delegate.themeColors().cover
-                ?: itemView.context.getResourceColor(R.attr.background),
-        )
+        if (itemView.context.resources.getBoolean(R.bool.v4_neon_mode)) {
+            binding.trueBackdrop.setBackgroundResource(R.drawable.v12_neon_details_header)
+        } else {
+            binding.trueBackdrop.setBackgroundColor(
+                adapter.delegate.themeColors().cover
+                    ?: itemView.context.getResourceColor(R.attr.background),
+            )
+        }
         applyBackgroundTint(binding)
         applyTextColorTint()
 
@@ -680,7 +684,11 @@ class MangaHeaderHolder(
 
     fun setBackDrop(color: Int) {
         binding ?: return
-        binding.trueBackdrop.setBackgroundColor(color)
+        if (itemView.context.resources.getBoolean(R.bool.v4_neon_mode)) {
+            binding.trueBackdrop.setBackgroundResource(R.drawable.v12_neon_details_header)
+        } else {
+            binding.trueBackdrop.setBackgroundColor(color)
+        }
     }
 
     /** Shifts the header/chapter-list text colors' hue to match the accent color, keeping their own saturation/lightness */
@@ -704,14 +712,21 @@ class MangaHeaderHolder(
 
     /** Tints the plain-background fill areas around the backdrop and "more" fade with the page's themed background */
     private fun applyBackgroundTint(binding: MangaHeaderItemBinding) {
-        val bgColor =
+        val bgColor = if (itemView.context.resources.getBoolean(R.bool.v4_neon_mode)) {
+            itemView.context.getColor(R.color.v12_neon_bg)
+        } else {
             adapter.delegate.themeColors().background
                 ?: itemView.context.getResourceColor(R.attr.background)
+        }
         binding.backdropGradient.backgroundTintList = ColorStateList.valueOf(bgColor)
         binding.backdropFill.setBackgroundColor(bgColor)
         binding.moreBgGradient.backgroundTintList = ColorStateList.valueOf(bgColor)
         binding.moreBgSolid.setBackgroundColor(bgColor)
-        binding.trueBackdrop.setBackgroundColor(bgColor)
+        if (itemView.context.resources.getBoolean(R.bool.v4_neon_mode)) {
+            binding.trueBackdrop.setBackgroundResource(R.drawable.v12_neon_details_header)
+        } else {
+            binding.trueBackdrop.setBackgroundColor(bgColor)
+        }
     }
 
     fun updateColors(updateAll: Boolean = true) {
@@ -755,7 +770,15 @@ class MangaHeaderHolder(
                     accentColor,
                 )
 
-            startReadingButton.backgroundTintList = ColorStateList(states, colors)
+            if (root.context.resources.getBoolean(R.bool.v4_neon_mode)) {
+                // Real gradient panel, not a solid palette tint. The existing
+                // MaterialButton, ID and click listener remain unchanged.
+                startReadingButton.backgroundTintList = null
+                startReadingButton.background =
+                    ContextCompat.getDrawable(root.context, R.drawable.v12_neon_read_button)
+            } else {
+                startReadingButton.backgroundTintList = ColorStateList(states, colors)
+            }
 
             val textColors =
                 intArrayOf(
@@ -770,7 +793,13 @@ class MangaHeaderHolder(
                     .children
                     .first { it.tag == MaterialButtonGroup.OVERFLOW_BUTTON_TAG } as? MaterialButton
             overflowButton ?.iconTint = ColorStateList.valueOf(accentColor)
-            startReadingButton.setTextColor(ColorStateList(states, textColors))
+            if (root.context.resources.getBoolean(R.bool.v4_neon_mode)) {
+                startReadingButton.setTextColor(
+                    ColorStateList(states, intArrayOf(Color.rgb(160, 170, 188), Color.WHITE)),
+                )
+            } else {
+                startReadingButton.setTextColor(ColorStateList(states, textColors))
+            }
             baseWebviewIconColor?.let { webviewButton.iconTint = ColorStateList.valueOf(it.hueShiftedTo(accentColor)) }
             baseShareIconColor?.let { shareButton.iconTint = ColorStateList.valueOf(it.hueShiftedTo(accentColor)) }
 

@@ -982,7 +982,7 @@ open class MainActivity : BaseActivity<MainActivityBinding>() {
             // Do not wipe the enhanced neon header while the search bar animates.
             // The standard flavor retains its original transparent app bar behavior.
             if (resources.getBoolean(R.bool.v4_neon_mode)) {
-                binding.appBar.setBackgroundResource(R.drawable.neon_unified_sheet_background)
+                binding.appBar.setBackgroundResource(R.drawable.v12_neon_details_header)
             } else {
                 binding.appBar.background = null
             }

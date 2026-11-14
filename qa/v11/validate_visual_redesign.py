@@ -99,7 +99,7 @@ for name in ('v11_neon_search_frame','v11_neon_bottom_nav','v11_neon_title_tag',
 source=(MAIN/'java/eu/kanade/tachiyomi/ui/source/browse/BrowseSourceController.kt').read_text()
 check('presenter.source.name' in source, 'Dynamic source title lost')
 main=(MAIN/'java/eu/kanade/tachiyomi/ui/main/MainActivity.kt').read_text()
-check('R.drawable.neon_unified_sheet_background' in main,'Search animation wipes out header gradient')
+check(any('R.drawable.' + drawable in main for drawable in ('neon_unified_sheet_background', 'v12_neon_details_header')), 'Search animation wipes out header gradient')
 sheet=(MAIN/'java/eu/kanade/tachiyomi/ui/reader/chapter/ReaderChapterSheet.kt').read_text()
 check('backgroundTintList = null' in sheet,'Bottom reader tint still wipes out neon frame')
 print(f'PASS V11 VISUAL SAFETY: {verified} stable bound widgets, {len(ids)} original translation commands, {parsed} valid XML resources')

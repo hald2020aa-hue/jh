@@ -999,12 +999,29 @@ class ReaderActivity : BaseActivity<ReaderActivityBinding>() {
         }
     }
 
-    /** User-controlled opt-in: first visible page + next seven, then the chapter. */
+    /** User-controlled opt-in. Retry once on another visible page if a text-free
+     * cover caused an early language-detection failure; avoid download loops. */
+    private var autoTranslationAttemptChapterId: Long? = null
+    private var autoTranslationAttempts = 0
+    private var autoTranslationLastPageIndex = -1
+
     private fun startAutoTranslationIfConfigured(page: ReaderPage) {
         if (!translationUiPrefs.getBoolean("auto_translate", false)) return
         val chapter = viewModel.state.value.viewerChapters?.currChapter ?: return
         if (chapter.pages.isNullOrEmpty()) return
-        if (chapterTranslator.progress.value.chapterId == chapter.chapter.id) return
+        if (autoTranslationAttemptChapterId != chapter.chapter.id) {
+            autoTranslationAttemptChapterId = chapter.chapter.id
+            autoTranslationAttempts = 0
+            autoTranslationLastPageIndex = -1
+        }
+        val existing = chapterTranslator.progress.value
+        if (existing.chapterId == chapter.chapter.id &&
+            (existing.running || existing.translated.values.any { it.blocks.isNotEmpty() })
+        ) return
+        // If models are unavailable, do not retry on every swipe indefinitely.
+        if (autoTranslationAttempts >= 2 || autoTranslationLastPageIndex == page.index) return
+        autoTranslationAttempts++
+        autoTranslationLastPageIndex = page.index
         val previous = translationJob
         if (previous?.isActive == true) previous.cancel()
         translationShown = true
@@ -1026,6 +1043,9 @@ class ReaderActivity : BaseActivity<ReaderActivityBinding>() {
             append("الحالة: ").append(state.message.ifBlank { "لم تبدأ الترجمة" })
             append("\nالصفحات: ").append(state.processedPages).append(" / ").append(state.totalPages)
             append("\nالأخطاء: ").append(state.failedPages)
+            append("\nالفقاعات المترجمة في الصفحة الحالية: ")
+                .append(page?.let { state.translated[it.index]?.blocks?.count { block -> block.arabic.isNotBlank() } } ?: 0)
+            append("\nالحالة الحالية: ").append(if (state.running) "تعمل الترجمة" else "الترجمة متوقفة")
             append("\nالاكتشاف التلقائي: ")
             append(if (translationUiPrefs.getBoolean("auto_translate", false)) "مفعّل" else "متوقف")
             if (failure != null) append("\nسبب فشل الصفحة: ").append(failure)
