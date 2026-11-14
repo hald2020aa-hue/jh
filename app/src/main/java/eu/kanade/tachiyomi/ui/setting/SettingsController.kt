@@ -18,6 +18,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.isVisible
+import androidx.core.view.updatePaddingRelative
 import androidx.appcompat.content.res.AppCompatResources
 import androidx.preference.Preference
 import androidx.preference.PreferenceController
@@ -33,6 +34,7 @@ import eu.kanade.tachiyomi.ui.base.controller.BaseController
 import eu.kanade.tachiyomi.ui.main.FloatingSearchInterface
 import eu.kanade.tachiyomi.ui.main.MainActivity
 import eu.kanade.tachiyomi.util.system.getResourceColor
+import eu.kanade.tachiyomi.util.system.dpToPx
 import eu.kanade.tachiyomi.util.view.BackHandlerControllerInterface
 import eu.kanade.tachiyomi.util.view.activityBinding
 import eu.kanade.tachiyomi.util.view.backgroundColor
@@ -72,7 +74,17 @@ abstract class SettingsController :
         val view = super.onCreateView(inflater, container, savedInstanceState)
         view.backgroundColor = if (BuildConfig.FLAVOR == "dev") Color.rgb(6, 16, 35)
             else view.context.getResourceColor(R.attr.background)
-        scrollViewWith(listView, padBottom = true)
+        // The shared expanded app bar contains the settings title and (on the main
+        // settings screen) an extra search field. Its visual overlay is taller than
+        // the toolbar height measured by scrollViewWith. Without extra top padding,
+        // the first Preference card starts behind the opaque header and is clipped.
+        // Apply the gap AFTER scrollViewWith recalculates its insets (including on
+        // rotation). The callback receives a fresh base padding, so it cannot stack.
+        scrollViewWith(listView, padBottom = true, afterInsets = {
+            if (BuildConfig.FLAVOR == "dev") {
+                listView.updatePaddingRelative(top = listView.paddingTop + 112.dpToPx)
+            }
+        })
         return view
     }
 
