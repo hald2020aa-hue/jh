@@ -1,0 +1,262 @@
+{
+  "SettingsAdvancedController.kt": {
+    "key_lines": [
+      "\"dump_crash_logs\"",
+      "\"debug_info\"",
+      "\"disable_batt_opt\"",
+      "\"pref_dont_kill_my_app\"",
+      "CLEAR_CACHE_KEY",
+      "\"clean_cached_covers\"",
+      "\"clear_cached_not_library\"",
+      "\"clean_downloaded_chapters\"",
+      "\"pref_clear_webview_data\"",
+      "\"clear_database\"",
+      "\"clear_cookies\"",
+      "PreferenceKeys.dohProvider",
+      "\"refresh_lib_meta\"",
+      "\"refresh_teacking_meta\""
+    ],
+    "binding_lines": [
+      "preferences.checkForBetas())",
+      "preferences.defaultUserAgent())",
+      "preferences.extensionInstaller())"
+    ],
+    "navigation_lines": []
+  },
+  "SettingsAppearanceController.kt": {
+    "key_lines": [
+      "\"theme_preference\"",
+      "\"night_mode_switch\"",
+      "Keys.themeDarkAmoled",
+      "Keys.themeMangaDetails",
+      "Keys.renderDescriptionImages",
+      "Keys.showChapterMissingWarnings",
+      "Keys.hideBottomNavOnScroll",
+      "Keys.sideNavIconAlignment",
+      "Keys.sideNavMode"
+    ],
+    "binding_lines": [
+      "preferences.useLargeToolbar())"
+    ],
+    "navigation_lines": []
+  },
+  "SettingsBackupController.kt": {
+    "key_lines": [
+      "\"pref_create_backup\"",
+      "\"pref_restore_backup\""
+    ],
+    "binding_lines": [
+      "preferences.backupInterval())",
+      "preferences.backupsDirectory())",
+      "preferences.numberOfBackups())"
+    ],
+    "navigation_lines": []
+  },
+  "SettingsBrowseController.kt": {
+    "key_lines": [
+      "PreferenceKeys.automaticExtUpdates",
+      "\"pref_edit_extension_repos\"",
+      "PreferenceKeys.autoUpdateExtensions",
+      "\"notify_ext_updated\"",
+      "\"pref_clear_search_history\"",
+      "PreferenceKeys.skipPreMigration",
+      "\"match_pinned_sources\"",
+      "\"match_enabled_sources\"",
+      "PreferenceKeys.showNsfwSource"
+    ],
+    "binding_lines": [
+      "preferences.hideInLibraryItems())",
+      "preferences.showDuplicateInLibraryItems())",
+      "preferences.onlySearchPinned())",
+      "preferences.showBrowseSearchHistory())"
+    ],
+    "navigation_lines": []
+  },
+  "SettingsController.kt": {
+    "key_lines": [],
+    "binding_lines": [],
+    "navigation_lines": []
+  },
+  "SettingsDownloadController.kt": {
+    "key_lines": [
+      "Keys.downloadsDirectory",
+      "Keys.downloadOnlyOverWifi",
+      "Keys.removeAfterMarkedAsRead"
+    ],
+    "binding_lines": [
+      "preferences.saveChaptersAsCBZ())",
+      "preferences.splitTallImages())",
+      "preferences.numberOfConcurrentSourceDownloads())",
+      "preferences.numberOfConcurrentPageDownloads())",
+      "preferences.removeAfterReadSlots())",
+      "preferences.removeExcludeCategories())",
+      "preferences.removeBookmarkedChapters())",
+      "preferences.downloadNewChapters())",
+      "downloadNewChaptersInCategories(), excludeCategoriesInDownloadNew())",
+      "preferences.autoDownloadWhileReading())",
+      "preferences.deleteRemovedChapters())"
+    ],
+    "navigation_lines": []
+  },
+  "SettingsGeneralController.kt": {
+    "key_lines": [
+      "Keys.startingTab",
+      "Keys.backToStart",
+      "\"pref_manage_notifications\"",
+      "Keys.showSeriesInShortcuts",
+      "Keys.showSourcesInShortcuts",
+      "Keys.openChapterInShortcuts",
+      "Keys.shouldAutoUpdate",
+      "Keys.dateFormat",
+      "\"language\""
+    ],
+    "binding_lines": [],
+    "navigation_lines": []
+  },
+  "SettingsLibraryController.kt": {
+    "key_lines": [
+      "Keys.removeArticles",
+      "Keys.showLibrarySearchSuggestions",
+      "\"library_display_options\"",
+      "\"edit_categories\"",
+      "Keys.defaultCategory",
+      "Keys.libraryUpdateInterval",
+      "Keys.refreshCoversToo"
+    ],
+    "binding_lines": [
+      "preferences.markDuplicateReadChapterAsRead())",
+      "preferences.libraryUpdateDeviceRestriction())",
+      "preferences.libraryUpdateMangaRestriction())",
+      "libraryUpdateCategories(), libraryUpdateCategoriesExclude())"
+    ],
+    "navigation_lines": []
+  },
+  "SettingsMainController.kt": {
+    "key_lines": [],
+    "binding_lines": [],
+    "navigation_lines": [
+      "SettingsGeneralController()) }",
+      "SettingsAppearanceController()) }",
+      "SettingsLibraryController()) }",
+      "SettingsReaderController()) }",
+      "SettingsDownloadController()) }",
+      "SettingsBrowseController()) }",
+      "SettingsTrackingController()) }",
+      "SettingsBackupController()) }",
+      "SettingsSecurityController()) }",
+      "SettingsAdvancedController()) }",
+      "AboutController()) }",
+      "controller: Controller) {"
+    ]
+  },
+  "SettingsReaderController.kt": {
+    "key_lines": [
+      "Keys.defaultReadingMode",
+      "Keys.doubleTapAnimationSpeed",
+      "Keys.enableTransitions",
+      "Keys.readerBottomButtons",
+      "Keys.defaultOrientationType",
+      "Keys.readerTheme",
+      "Keys.fullscreen",
+      "Keys.keepScreenOn",
+      "Keys.showPageNumber",
+      "Keys.skipRead",
+      "Keys.skipFiltered",
+      "Keys.alwaysShowChapterTransition",
+      "Keys.navigationModePager",
+      "Keys.pagerNavInverted",
+      "Keys.imageScaleType",
+      "Keys.pagerCutoutBehavior",
+      "Keys.zoomStart",
+      "Keys.cropBorders",
+      "Keys.pageLayout",
+      "Keys.automaticSplitsPage",
+      "Keys.invertDoublePages",
+      "Keys.navigationModeWebtoon",
+      "Keys.webtoonNavInverted",
+      "Keys.cropBordersWebtoon",
+      "Keys.webtoonPageLayout",
+      "Keys.webtoonInvertDoublePages",
+      "Keys.webtoonEnableZoomOut",
+      "Keys.readWithVolumeKeys",
+      "Keys.readWithVolumeKeysInverted",
+      "Keys.readerVerticalSeekbarModes",
+      "Keys.readWithLongTap"
+    ],
+    "binding_lines": [
+      "preferences.landscapeCutoutBehavior())",
+      "preferences.flashOnPageChange())",
+      "preferences.flashDurationMillis())",
+      "preferences.flashPageInterval())",
+      "preferences.flashColor())",
+      "preferences.skipDupe())",
+      "preferences.landscapeZoom())",
+      "preferences.navigateToPan())",
+      "preferences.webtoonReaderHideThreshold())",
+      "preferences.webtoonSidePadding())",
+      "preferences.readerVerticalSeekbarHeightPercent())",
+      "preferences.readerVerticalSeekbarDockLeft())",
+      "preferences.preloadSize())",
+      "preferences.folderPerManga())"
+    ],
+    "navigation_lines": []
+  },
+  "SettingsSecurityController.kt": {
+    "key_lines": [
+      "PreferenceKeys.useBiometrics",
+      "PreferenceKeys.lockAfter",
+      "PreferenceKeys.hideNotificationContent",
+      "\"acra.enable\"",
+      "\"enable_analytics\""
+    ],
+    "binding_lines": [
+      "preferences.secureScreen())"
+    ],
+    "navigation_lines": []
+  },
+  "SettingsSourcesController.kt": {
+    "key_lines": [
+      "\"all_${sources.first().lang}\"",
+      "getSourceKey(source.id)"
+    ],
+    "binding_lines": [],
+    "navigation_lines": []
+  },
+  "SettingsTrackingController.kt": {
+    "key_lines": [
+      "Keys.autoUpdateTrack",
+      "Keys.trackMarkedAsRead",
+      "\"update_anilist_scoring\"",
+      "trackPreferences.trackUsername(service).key()"
+    ],
+    "binding_lines": [],
+    "navigation_lines": []
+  },
+  "ui/more/AboutController.kt": {
+    "key_lines": [
+      "\"pref_whats_new\"",
+      "\"pref_check_for_updates\"",
+      "\"pref_version\"",
+      "\"pref_build_time\"",
+      "\"pref_about_help_translate\"",
+      "\"pref_about_helpful_translation_links\"",
+      "\"pref_oss\""
+    ],
+    "binding_lines": [],
+    "navigation_lines": []
+  },
+  "ui/setting/debug/DebugController.kt": {
+    "key_lines": [
+      "\"pref_version\"",
+      "\"pref_build_time\"",
+      "\"pref_webview_version\""
+    ],
+    "binding_lines": [],
+    "navigation_lines": []
+  },
+  "ui/extension/ExtensionFilterController.kt": {
+    "key_lines": [],
+    "binding_lines": [],
+    "navigation_lines": []
+  }
+}

@@ -23,7 +23,6 @@ import eu.kanade.tachiyomi.data.backup.models.Backup
 import eu.kanade.tachiyomi.ui.main.MainActivity
 import eu.kanade.tachiyomi.util.system.DeviceUtil
 import eu.kanade.tachiyomi.util.system.disableItems
-import eu.kanade.tachiyomi.util.system.materialAlertDialog
 import eu.kanade.tachiyomi.util.system.openInBrowser
 import eu.kanade.tachiyomi.util.system.toast
 import eu.kanade.tachiyomi.util.view.requestFilePermissionsSafe
@@ -240,7 +239,7 @@ class SettingsBackupController : SettingsController() {
         val privateSettingsIndex = options.lastIndex
 
         activity
-            .materialAlertDialog()
+            .neonSettingsDialog()
             .setTitle(R.string.what_should_backup)
             .setMultiChoiceItems(
                 options.toTypedArray(),
@@ -300,7 +299,7 @@ class SettingsBackupController : SettingsController() {
             }
 
             activity
-                .materialAlertDialog()
+                .neonSettingsDialog()
                 .setTitle(R.string.restore_backup)
                 .setMessage(message)
                 .setPositiveButton(R.string.restore) { _, _ ->
@@ -309,7 +308,7 @@ class SettingsBackupController : SettingsController() {
                 .show()
         } catch (e: Exception) {
             activity
-                .materialAlertDialog()
+                .neonSettingsDialog()
                 .setTitle(R.string.invalid_backup_file)
                 .setMessage(e.message)
                 .setPositiveButton(android.R.string.cancel, null)
@@ -329,7 +328,7 @@ class SettingsBackupController : SettingsController() {
             ).map { activity.getString(it) }
 
         activity
-            .materialAlertDialog()
+            .neonSettingsDialog()
             .setTitle(R.string.what_should_restore)
             .setMultiChoiceItems(
                 options.toTypedArray(),

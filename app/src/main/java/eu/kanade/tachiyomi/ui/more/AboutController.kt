@@ -31,7 +31,7 @@ import eu.kanade.tachiyomi.util.CrashLogUtil
 import eu.kanade.tachiyomi.util.lang.toTimestampString
 import eu.kanade.tachiyomi.util.system.isOnline
 import eu.kanade.tachiyomi.util.system.localeContext
-import eu.kanade.tachiyomi.util.system.materialAlertDialog
+import eu.kanade.tachiyomi.ui.setting.neonSettingsDialog
 import eu.kanade.tachiyomi.util.system.toast
 import eu.kanade.tachiyomi.util.view.openInBrowser
 import eu.kanade.tachiyomi.util.view.snack
@@ -206,7 +206,7 @@ class AboutController : SettingsController() {
             val isOnA12 = Build.VERSION.SDK_INT >= Build.VERSION_CODES.S
             val isBeta = args.getBoolean(IS_BETA, false)
             return activity!!
-                .materialAlertDialog()
+                .neonSettingsDialog()
                 .setTitle(
                     if (isBeta) {
                         R.string.new_beta_version_available

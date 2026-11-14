@@ -1,5 +1,7 @@
 package eu.kanade.tachiyomi.ui.setting.database
 
+import eu.kanade.tachiyomi.ui.setting.neonSettingsDialog
+
 import android.annotation.SuppressLint
 import android.view.LayoutInflater
 import android.view.Menu
@@ -22,7 +24,6 @@ import eu.davidea.flexibleadapter.Payload
 import eu.kanade.tachiyomi.R
 import eu.kanade.tachiyomi.databinding.ClearDatabaseControllerBinding
 import eu.kanade.tachiyomi.ui.base.controller.BaseCoroutineController
-import eu.kanade.tachiyomi.util.system.materialAlertDialog
 import eu.kanade.tachiyomi.util.system.rootWindowInsetsCompat
 import eu.kanade.tachiyomi.util.system.setCustomTitleAndMessage
 import eu.kanade.tachiyomi.util.view.activityBinding
@@ -123,7 +124,7 @@ class ClearDatabaseController :
                 val item = arrayOf(activity!!.getString(R.string.clear_db_exclude_read))
                 val selected = booleanArrayOf(true)
                 activity!!
-                    .materialAlertDialog()
+                    .neonSettingsDialog()
                     .setCustomTitleAndMessage(0, activity!!.getString(R.string.clear_database_confirmation))
                     .setMultiChoiceItems(item, selected) { _, which, checked ->
                         selected[which] = checked

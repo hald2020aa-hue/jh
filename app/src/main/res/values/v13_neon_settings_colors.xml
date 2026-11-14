@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Settings-only visual tokens: no changes to user theme selection or preference values. -->
+    <color name="v13_settings_background">#071225</color>
+    <color name="v13_settings_surface">#0D1D33</color>
+    <color name="v13_settings_cyan">#0DDCF5</color>
+    <color name="v13_settings_blue">#386FFF</color>
+    <color name="v13_settings_purple">#9A4EF5</color>
+    <color name="v13_settings_pink">#EF2DD3</color>
+    <color name="v13_settings_secondary">#B1C2D9</color>
+</resources>

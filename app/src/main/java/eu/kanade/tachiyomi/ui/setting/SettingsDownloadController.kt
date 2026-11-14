@@ -10,6 +10,7 @@ import androidx.preference.PreferenceScreen
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.hippo.unifile.UniFile
 import eu.kanade.tachiyomi.R
+import eu.kanade.tachiyomi.BuildConfig
 import eu.kanade.tachiyomi.ui.download.center.DownloadCenterActivity
 import eu.kanade.tachiyomi.data.database.DatabaseHelper
 import eu.kanade.tachiyomi.data.database.models.Category
@@ -208,7 +209,8 @@ class SettingsDownloadController : SettingsController() {
 
     class DownloadDirectoriesDialog(
         val controller: SettingsDownloadController,
-    ) : MaterialAlertDialogBuilder(controller.activity!!.withOriginalWidth()) {
+    ) : MaterialAlertDialogBuilder(controller.activity!!.withOriginalWidth(),
+        if (BuildConfig.FLAVOR == "dev") R.style.ThemeOverlay_J2K_NeonSettingsDialog else 0) {
         private val preferences: PreferencesHelper = Injekt.get()
 
         val activity = controller.activity!!

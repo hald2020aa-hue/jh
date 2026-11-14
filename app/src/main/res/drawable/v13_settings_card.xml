@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layer-list xmlns:android="http://schemas.android.com/apk/res/android">
+    <!-- Gradient outlines with a cheap layer-list; no GPU blur or bitmap assets. -->
+    <item>
+        <shape android:shape="rectangle">
+            <gradient android:angle="0" android:startColor="@color/v13_settings_cyan"
+                android:centerColor="@color/v13_settings_purple"
+                android:endColor="@color/v13_settings_pink" />
+            <corners android:radius="18dp" />
+        </shape>
+    </item>
+    <item android:left="1dp" android:top="1dp" android:right="1dp" android:bottom="1dp">
+        <shape android:shape="rectangle">
+            <solid android:color="@color/v13_settings_surface" />
+            <corners android:radius="17dp" />
+        </shape>
+    </item>
+</layer-list>
