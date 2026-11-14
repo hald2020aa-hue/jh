@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <item
+        android:checked="true"
+        android:id="@+id/nav_library"
+        android:icon="@drawable/v14_icon_library"
+        android:title="@string/library" />
+    <item
+        android:id="@+id/nav_recents"
+        android:icon="@drawable/v14_icon_recent"
+        android:title="@string/recents" >
+    </item>
+    <item
+    android:id="@+id/nav_recents_group"
+    android:title="@string/recents" >
+    <menu
+        android:id="@+id/recents_menu_group"
+        android:visible="false">
+        <item
+            android:id="@+id/nav_summary"
+            android:icon="@drawable/v14_icon_recent"
+            android:title="@string/grouped" />
+        <item
+            android:id="@+id/nav_ungrouped"
+            android:icon="@drawable/v14_icon_category"
+            android:title="@string/all" />
+        <item
+            android:id="@+id/nav_history"
+            android:icon="@drawable/v14_icon_recent"
+            android:title="@string/history" />
+        <item
+            android:id="@+id/nav_updates"
+            android:icon="@drawable/v14_icon_display"
+            android:title="@string/updates" />
+    </menu>
+    </item>
+    <item
+        android:id="@+id/nav_browse"
+        android:icon="@drawable/v14_icon_browse"
+        android:title="@string/browse" />
+    <item
+        android:id="@+id/nav_settings"
+        android:icon="@drawable/v14_icon_settings"
+        android:title="@string/settings" />
+
+</menu>

@@ -34,14 +34,18 @@ class OverflowDialog(
     init {
         setContentView(binding.root)
 
-        binding.overflowCardView.backgroundTintList =
-            ColorStateList.valueOf(
-                ColorUtils.blendARGB(
-                    activity.getResourceColor(R.attr.background),
-                    activity.getResourceColor(R.attr.colorPrimary),
-                    0.075f,
-                ),
-            )
+        if (BuildConfig.FLAVOR != "dev") {
+            // The dev variant uses its own neon card background and border.
+            // Applying the runtime tint would turn that card into a flat gray panel.
+            binding.overflowCardView.backgroundTintList =
+                ColorStateList.valueOf(
+                    ColorUtils.blendARGB(
+                        activity.getResourceColor(R.attr.background),
+                        activity.getResourceColor(R.attr.colorPrimary),
+                        0.075f,
+                    ),
+                )
+        }
         binding.touchOutside.setOnClickListener {
             cancel()
         }

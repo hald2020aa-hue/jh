@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <item
+        android:id="@+id/action_shift_double_page"
+        android:icon="@drawable/v14_icon_next"
+        android:title="@string/shift_one_page_over"
+        app:showAsAction="ifRoom" />
+    <item
+        android:id="@+id/action_translate_chapter"
+        android:title="@string/v6_translate_chapter"
+        app:showAsAction="never" />
+    <item android:id="@+id/action_translation_auto"
+        android:title="ترجمة تلقائية عند فتح الفصل: تشغيل أو إيقاف"
+        app:showAsAction="never" />
+    <item android:id="@+id/action_translation_edit"
+        android:title="تصحيح العربية داخل الفقاعة"
+        app:showAsAction="never" />
+    <item android:id="@+id/action_translation_diagnostics"
+        android:title="تشخيص أخطاء الترجمة"
+        app:showAsAction="never" />
+    <item
+        android:id="@+id/action_translation_page"
+        android:title="@string/v6_translation_page"
+        app:showAsAction="never" />
+    <item android:id="@+id/action_translation_toggle"
+        android:title="@string/v7_translation_toggle"
+        app:showAsAction="never" />
+    <item android:id="@+id/action_translation_appearance"
+        android:title="@string/v7_translation_appearance"
+        app:showAsAction="never" />
+    <item android:id="@+id/action_translation_retry"
+        android:title="@string/v7_translation_retry"
+        app:showAsAction="never" />
+    <item
+        android:id="@+id/action_translation_stop"
+        android:title="@string/v6_translation_stop"
+        app:showAsAction="never" />
+</menu>

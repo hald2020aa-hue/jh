@@ -7,6 +7,6 @@
         <item name="popupMenuStyle">@style/Widget.J2K.NeonReaderPopup</item>
     </style>
     <style name="Widget.J2K.NeonReaderPopup" parent="Widget.AppCompat.PopupMenu">
-        <item name="android:popupBackground">@drawable/v4_neon_surface</item>
+        <item name="android:popupBackground">@drawable/v14_neon_popup</item>
     </style>
 </resources>

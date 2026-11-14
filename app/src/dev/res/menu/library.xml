@@ -1,0 +1,46 @@
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    app:tint="@android:color/black"
+    tools:context=".MainActivity">
+
+    <item
+        android:id="@+id/action_search"
+        android:icon="@drawable/v14_icon_search"
+        android:title="@string/search"
+        android:visible="false"
+        app:actionViewClass="eu.kanade.tachiyomi.ui.base.MiniSearchView"
+        app:showAsAction="collapseActionView|ifRoom" />
+
+
+    <item
+        android:id="@+id/action_library_insights"
+        android:icon="@drawable/v14_icon_insights"
+        android:title="@string/enhanced_library_insights"
+        app:showAsAction="ifRoom" />
+
+    <item
+        android:id="@+id/action_smart_filters"
+        android:icon="@drawable/v14_icon_filter"
+        android:title="@string/enhanced_smart_filters"
+        app:showAsAction="ifRoom">
+        <menu>
+            <item android:id="@+id/action_only_duplicates" android:title="@string/enhanced_quick_duplicates"/>
+            <item android:id="@+id/action_only_unread" android:title="@string/enhanced_quick_unread"/>
+            <item android:id="@+id/action_clear_smart_filters" android:title="@string/enhanced_quick_all"/>
+        </menu>
+    </item>
+
+    <item
+        android:id="@+id/action_filter"
+        android:icon="@drawable/v14_icon_filter"
+        android:title="@string/filter"
+        app:showAsAction="ifRoom" />
+
+    <item
+        android:id="@+id/action_more"
+        android:icon="@drawable/v14_icon_more"
+        android:title="@string/more"
+        app:showAsAction="ifRoom" />
+
+</menu>
