@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layer-list xmlns:android="http://schemas.android.com/apk/res/android">
+    <!-- Shared resource, used only when the enhanced/dev flavor flag is true. -->
+    <item>
+        <shape android:shape="rectangle">
+            <gradient android:angle="0" android:startColor="#FF05152A"
+                android:centerColor="#FF121636" android:endColor="#FF280B39"/>
+        </shape>
+    </item>
+    <item android:top="0dp">
+        <shape android:shape="rectangle">
+            <gradient android:angle="0" android:startColor="#1122E5FA"
+                android:centerColor="#112F72FF" android:endColor="#18EB26DC"/>
+        </shape>
+    </item>
+</layer-list>

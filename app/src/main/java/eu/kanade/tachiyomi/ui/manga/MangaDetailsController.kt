@@ -366,8 +366,14 @@ class MangaDetailsController :
             } else {
                 null
             }
-        themeColors = themeColors.copy(background = newBackgroundColor)
-        val newColor = newBackgroundColor ?: baseBackground
+        // Enhanced/dev has an explicitly approved fixed neon surface. Dynamic
+        // cover-color theming was overriding the XML and making the UI gray.
+        // Keep the original palette behavior unchanged for non-enhanced builds.
+        val neon = context.resources.getBoolean(R.bool.v4_neon_mode)
+        val newColor = if (neon) {
+            context.getColor(R.color.v12_neon_bg)
+        } else newBackgroundColor ?: baseBackground
+        themeColors = themeColors.copy(background = if (neon) newColor else newBackgroundColor)
         binding.root.setBackgroundColor(newColor)
         binding.swipeRefresh.setBackgroundColor(newColor)
         binding.recycler.setBackgroundColor(newColor)
@@ -589,6 +595,13 @@ class MangaDetailsController :
         colorAnimator?.cancel()
         activityBinding?.statusBar?.gradientBackgroundColor =
             if (toolbarIsColored) statusColor else Color.TRANSPARENT
+        if (activity.resources.getBoolean(R.bool.v4_neon_mode)) {
+            // Never replace the enhanced gradient with an opaque palette color
+            // as the details page scrolls or its cover finishes loading.
+            colorAnimator?.cancel()
+            activityBinding?.appBar?.setBackgroundResource(R.drawable.v12_neon_details_header)
+            return
+        }
         if (animate) {
             val cA =
                 ValueAnimator.ofFloat(
@@ -667,9 +680,13 @@ class MangaDetailsController :
         val statusColor = themeColors.background ?: activity!!.getResourceColor(R.attr.background)
         activityBinding?.statusBar?.gradientBackgroundColor =
             if (toolbarIsColored) statusColor else Color.TRANSPARENT
-        activityBinding?.appBar?.setBackgroundColor(
-            if (toolbarIsColored) scrollingColor else Color.TRANSPARENT,
-        )
+        if (activity!!.resources.getBoolean(R.bool.v4_neon_mode)) {
+            activityBinding?.appBar?.setBackgroundResource(R.drawable.v12_neon_details_header)
+        } else {
+            activityBinding?.appBar?.setBackgroundColor(
+                if (toolbarIsColored) scrollingColor else Color.TRANSPARENT,
+            )
+        }
     }
 
     //endregion

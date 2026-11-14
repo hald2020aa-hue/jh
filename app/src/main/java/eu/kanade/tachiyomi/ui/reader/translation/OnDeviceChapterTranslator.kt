@@ -3,6 +3,8 @@ package eu.kanade.tachiyomi.ui.reader.translation
 import android.content.Context
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
+import android.graphics.BitmapRegionDecoder
+import android.graphics.Rect
 import com.google.android.gms.tasks.Task
 import com.google.mlkit.common.model.DownloadConditions
 import com.google.mlkit.nl.translate.TranslateLanguage
@@ -115,12 +117,16 @@ class OnDeviceChapterTranslator(context: Context) {
         var intermediate: Translator? = null
         var toArabic: Translator? = null
         try {
+            // A chapter can begin with a cover, credits or a wordless panel. Do not
+            // mark auto-translation as broken just because the first page has no text.
             val source = if (language == SourceTextLanguage.AUTO) {
-                detectLanguage(pages[currentPageIndex.coerceIn(0, pages.lastIndex)])
+                detectLanguageFromVisiblePages(pages, currentPageIndex)
             } else language
             activeLanguage = source
-            val disk = cache.read(chapter, source)
-            val retained = previous?.translated?.filterValues { it.error == null }.orEmpty() + disk
+            val disk = cache.read(chapter, source).filterValues { hasReadableTranslation(it) }
+            // V9 could cache an empty OCR page as a successful translation. Do not
+            // reuse those entries: the user must be able to retry the actual text.
+            val retained = previous?.translated?.filterValues { hasReadableTranslation(it) }.orEmpty() + disk
             val ordered = if (retryFailedOnly) {
                 failedPageRetryOrder(pages.size, currentPageIndex, retryIndices)
             } else {
@@ -175,8 +181,9 @@ class OnDeviceChapterTranslator(context: Context) {
                     failedPages = results.values.count { it.error != null },
                     message = translated.error ?: "تمت ترجمة ${results.size} من ${pages.size} صفحة",
                 )
-                if (translated.error == null) {
-                    // Cache errors must not stop reading or translation.
+                if (hasReadableTranslation(translated)) {
+                    // Cache only real translated text; never cache a wordless/failed
+                    // OCR result as if the Arabic overlay were already complete.
                     try { cache.write(chapter, source, results) } catch (_: Exception) { }
                 }
             }
@@ -216,13 +223,32 @@ class OnDeviceChapterTranslator(context: Context) {
         TranslatorOptions.Builder().setSourceLanguage(from).setTargetLanguage(to).build(),
     )
 
-    /** Try each bundled OCR script once on a 2048px-bounded visible page; never scan the entire chapter. */
+    /** Probe a bounded set of nearby pages instead of treating a text-free cover
+     * as a permanent failure of the entire manhwa. Never scan the full chapter. */
+    private suspend fun detectLanguageFromVisiblePages(
+        pages: List<ReaderPage>, currentPageIndex: Int,
+    ): SourceTextLanguage {
+        var lastError: Throwable? = null
+        for (index in languageDetectionSampleOrder(pages.size, currentPageIndex)) {
+            coroutineContext.ensureActive()
+            try {
+                return detectLanguage(pages[index])
+            } catch (e: CancellationException) {
+                throw e
+            } catch (e: Throwable) {
+                lastError = e
+            }
+        }
+        val detail = lastError?.message?.take(100)?.let { " ($it)" }.orEmpty()
+        error("لم يُعثر على لغة واضحة في الصفحات القريبة$detail؛ اختر لغة النص يدويًا")
+    }
+
+    /** Detect text using a bounded number of OCR tiles, so extra-tall Webtoon
+     * pages are never reduced to unreadable thumbnail-width strips. */
     private suspend fun detectLanguage(page: ReaderPage): SourceTextLanguage {
-        awaitPage(page)
-        val bitmap = withContext(Dispatchers.IO) { decodeForOcr(page) }
-        try {
-            var best: SourceTextLanguage? = null
-            var bestScore = 0
+        var best: SourceTextLanguage? = null
+        var bestScore = 0
+        scanOcrFrames(page, maxFrames = 3) { bitmap, _ ->
             val input = InputImage.fromBitmap(bitmap, 0)
             for (candidate in SourceTextLanguage.entries.filter { it != SourceTextLanguage.AUTO }) {
                 coroutineContext.ensureActive()
@@ -237,15 +263,15 @@ class OnDeviceChapterTranslator(context: Context) {
                 } catch (e: CancellationException) {
                     throw e
                 } catch (_: Exception) {
-                    // If an OCR language fails, continue trying the other bundled models.
+                    // A missing OCR language model must not abort the other scripts.
                 } finally {
                     recognizer.close()
                 }
             }
-            return best ?: error("تعذر تحديد لغة الفقاعات تلقائيًا؛ اختر اللغة يدويًا من القائمة")
-        } finally {
-            bitmap.recycle()
+            // Enough readable text to choose a model; skip unnecessary OCR tiles.
+            bestScore < 120
         }
+        return best ?: error("تعذر تحديد لغة النص في هذه الصفحة")
     }
 
     private suspend fun translatePage(
@@ -254,16 +280,14 @@ class OnDeviceChapterTranslator(context: Context) {
         toEnglish: Translator?,
         toArabic: Translator,
     ): TranslatedReaderPage {
-        awaitPage(page)
-        val bitmap = withContext(Dispatchers.IO) { decodeForOcr(page) }
-        try {
+        val blocks = mutableListOf<TranslatedTextBlock>()
+        scanOcrFrames(page) { bitmap, slice ->
             val recognized = recognizer.process(InputImage.fromBitmap(bitmap, 0)).awaitTask()
             val valid = recognized.textBlocks.mapNotNull { b ->
                 val bounds = b.boundingBox ?: return@mapNotNull null
                 val verticalCjk = (activeLanguage == SourceTextLanguage.JAPANESE ||
                     activeLanguage == SourceTextLanguage.CHINESE) &&
                     bounds.height() >= bounds.width() * 1.45f && b.lines.size > 1
-                // Column order matters for Japanese vertical writing: right column first.
                 val raw = if (verticalCjk) {
                     b.lines.sortedWith(compareByDescending<com.google.mlkit.vision.text.Text.Line> {
                         it.boundingBox?.centerX() ?: Int.MIN_VALUE
@@ -272,7 +296,9 @@ class OnDeviceChapterTranslator(context: Context) {
                 if (raw.isEmpty()) return@mapNotNull null
                 Triple(b, bounds, raw)
             }
-            // A 640px thumbnail bounds the segmentation work, independent of huge Webtoon originals.
+            if (valid.isEmpty()) return@scanOcrFrames true
+            // Segmentation is bounded to a 640px thumbnail of THIS tile, not
+            // a severely downsampled full webtoon strip.
             val (sw, sh, pixels) = withContext(Dispatchers.Default) {
                 val longest = max(bitmap.width, bitmap.height)
                 val scale = min(1f, 640f / longest)
@@ -289,9 +315,13 @@ class OnDeviceChapterTranslator(context: Context) {
                 NormalizedBubbleRect(rect.left.toFloat() / bitmap.width, rect.top.toFloat() / bitmap.height,
                     rect.right.toFloat() / bitmap.width, rect.bottom.toFloat() / bitmap.height)
             }
-            val blocks = mutableListOf<TranslatedTextBlock>()
             for ((index, data) in valid.withIndex()) {
                 coroutineContext.ensureActive()
+                val rect = data.second
+                // Adjacent tiles overlap; each OCR block is owned by exactly
+                // one tile. Otherwise the Arabic overlay would duplicate it.
+                val blockCenterSourceY = slice.start + rect.centerY().toFloat() / bitmap.height * slice.height
+                if (blockCenterSourceY < slice.keepStart || blockCenterSourceY >= slice.keepEnd) continue
                 val raw = data.third
                 val english = if (toEnglish != null && recognizeTextScript(raw) != SourceTextLanguage.ENGLISH) {
                     toEnglish.translate(raw).awaitTask()
@@ -302,15 +332,84 @@ class OnDeviceChapterTranslator(context: Context) {
                     detectSpeechBalloonRegion(pixels, sw, sh, box,
                         glyphBoxes.filterIndexed { i, _ -> i != index })
                 }
-                val bounds = detected ?: box
-                blocks += TranslatedTextBlock(raw, arabic,
-                    bounds.left, bounds.top, bounds.right, bounds.bottom,
-                    bubbleDetected = detected != null)
+                val tileRect = detected ?: box
+                val fullRect = ocrTileToPageRect(
+                    tileRect.left, tileRect.top, tileRect.right, tileRect.bottom,
+                    slice,
+                )
+                blocks += TranslatedTextBlock(
+                    raw, arabic, fullRect.left, fullRect.top, fullRect.right, fullRect.bottom,
+                    bubbleDetected = detected != null,
+                )
             }
-            return TranslatedReaderPage(page.index, blocks)
-        } finally {
-            bitmap.recycle()
+            true
         }
+        return if (blocks.isEmpty()) {
+            TranslatedReaderPage(page.index, emptyList(),
+                "لم يتعرف OCR على نص واضح في الصفحة؛ جرّب اللغة يدويًا أو أعد المحاولة")
+        } else {
+            TranslatedReaderPage(page.index, blocks)
+        }
+    }
+
+    /** Stream at most one decoded tile at a time. All source files stay read-only.
+     * The callback returns false to finish after adequate language detection. */
+    @Suppress("DEPRECATION")
+    private suspend fun scanOcrFrames(
+        page: ReaderPage,
+        maxFrames: Int = Int.MAX_VALUE,
+        process: suspend (Bitmap, OcrTileSlice) -> Boolean,
+    ) {
+        awaitPage(page)
+        val open = page.stream ?: error("لا تتوفر صورة الصفحة ${page.number}")
+        val bounds = BitmapFactory.Options().apply { inJustDecodeBounds = true }
+        withContext(Dispatchers.IO) { open().use { BitmapFactory.decodeStream(it, null, bounds) } }
+        check(bounds.outWidth > 0 && bounds.outHeight > 0) { "صورة غير مدعومة" }
+        val wide = bounds.outWidth
+        val tall = bounds.outHeight
+        val isLongStrip = tall > max(3600, wide * 3)
+        if (isLongStrip) {
+            val decoderAndStream = withContext(Dispatchers.IO) {
+                val stream = open()
+                try {
+                    val decoder = requireNotNull(BitmapRegionDecoder.newInstance(stream, false)) {
+                        "صيغة الصورة لا تدعم القراءة الجزئية"
+                    }
+                    Pair(decoder, stream)
+                } catch (e: Throwable) {
+                    stream.close()
+                    // Unsupported image formats use the safe bitmap fallback below.
+                    null
+                }
+            }
+            if (decoderAndStream != null) {
+                val (decoder, stream) = decoderAndStream
+                val sampleSize = generateSequence(1) { it * 2 }.first { wide / it <= 1400 }
+                val slices = ocrTileSlices(wide, tall, sampleSize)
+                try {
+                    for (slice in slices.take(maxFrames)) {
+                        coroutineContext.ensureActive()
+                        val bitmap = withContext(Dispatchers.IO) {
+                            decoder.decodeRegion(Rect(0, slice.start, wide, slice.end),
+                                BitmapFactory.Options().apply { inSampleSize = sampleSize })
+                        } ?: error("تعذر قراءة جزء من صفحة المانهوا")
+                        try { if (!process(bitmap, slice)) break }
+                        finally { bitmap.recycle() }
+                    }
+                } finally {
+                    // Cleanup must run even after the user cancels translation;
+                    // withContext(IO) would immediately rethrow cancellation.
+                    decoder.recycle()
+                    stream.close()
+                }
+                return
+            }
+        }
+        // Normal pages and image formats without region decoding use V9's
+        // conservative, memory-bounded path.
+        val bitmap = withContext(Dispatchers.IO) { decodeForOcr(page) }
+        try { process(bitmap, OcrTileSlice(0, tall, 0, tall, wide, tall)) }
+        finally { bitmap.recycle() }
     }
 
     private fun classifyTranslationError(e: Throwable): String {

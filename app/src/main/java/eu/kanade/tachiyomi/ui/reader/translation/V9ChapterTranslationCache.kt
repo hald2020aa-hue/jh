@@ -60,7 +60,9 @@ class V9ChapterTranslationCache(context: Context) {
                             ))
                         }
                     }
-                    put(index, TranslatedReaderPage(index, values))
+                    // Older builds recorded empty OCR pages as completed. They
+                    // contain no Arabic text and must not prevent a fresh attempt.
+                    if (values.isNotEmpty()) put(index, TranslatedReaderPage(index, values))
                 }
             }
         }.getOrDefault(emptyMap())
@@ -71,7 +73,7 @@ class V9ChapterTranslationCache(context: Context) {
         root.mkdirs()
         val file = AtomicFile(File(root, "${key(chapter, source)}.json"))
         val pages = JSONArray()
-        saved.values.asSequence().filter { it.error == null }.sortedBy { it.pageIndex }.take(500).forEach { page ->
+        saved.values.asSequence().filter { hasReadableTranslation(it) }.sortedBy { it.pageIndex }.take(500).forEach { page ->
             val blocks = JSONArray()
             page.blocks.take(150).forEach { b ->
                 blocks.put(JSONObject().apply {
