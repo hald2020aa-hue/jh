@@ -23,6 +23,81 @@
         <TextView android:id="@+id/header_title" style="?textAppearanceTitleSmall" android:layout_width="wrap_content" android:layout_height="wrap_content" android:background="@drawable/list_item_selector" android:backgroundTint="?colorSurfaceContainer" android:clickable="true" android:ellipsize="end" android:focusable="true" android:inputType="none" android:maxLines="1" android:textAlignment="center" android:paddingStart="12dp" android:paddingEnd="12dp" android:paddingTop="4dp" android:paddingBottom="4dp" android:textColor="?actionBarTintColor" android:textSize="14sp" tools:text="Category"/>
     </com.google.android.material.card.MaterialCardView>
 
+
+    <!-- V14: persistent actions appear immediately beneath the shared search app bar.
+         The existing bottom sheet remains available for detailed filter selection. -->
+    <FrameLayout
+        android:id="@+id/library_top_actions"
+        android:layout_width="match_parent"
+        android:layout_height="56dp"
+        android:layout_gravity="top"
+        android:layout_marginStart="10dp"
+        android:layout_marginEnd="10dp"
+        android:background="@drawable/v14_library_actions_frame"
+        android:padding="3dp"
+        android:elevation="8dp">
+
+        <HorizontalScrollView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:fillViewport="true"
+            android:scrollbars="none">
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:gravity="center_vertical"
+                android:orientation="horizontal"
+                android:paddingStart="4dp"
+                android:paddingEnd="4dp">
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/library_top_categories"
+                    style="@style/Widget.Material3.Button.TextButton"
+                    android:layout_width="wrap_content"
+                    android:layout_height="44dp"
+                    android:text="@string/library"
+                    android:textColor="@color/v4_text"
+                    app:icon="@drawable/v14_icon_library"
+                    app:iconTint="@color/v10_neon_cyan" />
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/library_top_group"
+                    style="@style/Widget.Material3.Button.TextButton"
+                    android:layout_width="wrap_content"
+                    android:layout_height="44dp"
+                    android:text="@string/group_library_by"
+                    android:textColor="@color/v4_text"
+                    app:icon="@drawable/v14_icon_group"
+                    app:iconTint="@color/v10_neon_blue" />
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/library_top_display"
+                    style="@style/Widget.Material3.Button.TextButton"
+                    android:layout_width="wrap_content"
+                    android:layout_height="44dp"
+                    android:text="@string/display_options"
+                    android:textColor="@color/v4_text"
+                    app:icon="@drawable/v14_icon_display"
+                    app:iconTint="@color/v10_neon_pink" />
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/library_top_filter"
+                    style="@style/Widget.Material3.Button.TextButton"
+                    android:layout_width="wrap_content"
+                    android:layout_height="44dp"
+                    android:text="@string/filter"
+                    android:textColor="@color/v4_text"
+                    app:icon="@drawable/v14_icon_filter"
+                    app:iconTint="@color/v10_neon_cyan" />
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/library_top_expand"
+                    style="@style/Widget.Material3.Button.TextButton"
+                    android:layout_width="wrap_content"
+                    android:layout_height="44dp"
+                    android:text="@string/expand_all_categories"
+                    android:textColor="@color/v4_text"
+                    app:icon="@drawable/ic_expand_more_24dp"
+                    app:iconTint="@color/v10_neon_pink" />
+            </LinearLayout>
+        </HorizontalScrollView>
+    </FrameLayout>
+
     <eu.kanade.tachiyomi.widget.EmptyView android:id="@+id/empty_view" android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_gravity="center" android:visibility="gone" android:background="@drawable/v4_neon_surface" android:padding="16dp"/>
 
     <com.google.android.material.textview.MaterialTextView android:id="@+id/jumper_category_text" style="@style/FloatingTextView" android:layout_gravity="start|center" android:layout_marginBottom="8dp" android:alpha="0.0" android:gravity="center" app:layout_anchor="@id/category_hopper_frame" app:layout_anchorGravity="start|center" tools:alpha="1" tools:text="Category and a long one"/>

@@ -41,6 +41,8 @@ jobs:
         run: python3 qa/v12/validate_translation_recovery.py
       - name: Validate V13 unified neon settings without changing preference behavior
         run: python3 qa/v13/validate_settings_neon.py
+      - name: Validate V14 top library actions and unchanged navigation IDs
+        run: python3 qa/v14/validate_library_top_actions.py
       - name: Run unit tests and compile debug APKs
         run: ./gradlew -Pjh.arm64Only=true --no-daemon testDevDebugUnitTest verifySingleArm64DevApk --stacktrace
       - name: Verify single APK integrity and debug signature

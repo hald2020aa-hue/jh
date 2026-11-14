@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <item name="library_top_actions" type="id" />
+    <item name="library_top_categories" type="id" />
+    <item name="library_top_group" type="id" />
+    <item name="library_top_display" type="id" />
+    <item name="library_top_filter" type="id" />
+    <item name="library_top_expand" type="id" />
+    <bool name="v14_library_actions_top">false</bool>
+</resources>

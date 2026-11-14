@@ -1,0 +1,24 @@
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:context=".MainActivity">
+    <item
+        android:id="@+id/action_search"
+        android:icon="@drawable/v14_icon_search"
+        android:title="@string/search"
+        android:visible="false"
+        app:actionViewClass="eu.kanade.tachiyomi.ui.base.MiniSearchView"
+        app:showAsAction="ifRoom|collapseActionView" />
+
+    <item
+        android:id="@+id/display_options"
+        android:icon="@drawable/v14_icon_display"
+        android:title="@string/display_options"
+        app:showAsAction="ifRoom" />
+
+    <item
+        android:id="@+id/action_more"
+        android:icon="@drawable/v14_icon_more"
+        android:title="@string/more"
+        app:showAsAction="ifRoom" />
+</menu>

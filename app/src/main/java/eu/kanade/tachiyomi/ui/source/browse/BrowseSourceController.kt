@@ -332,6 +332,22 @@ open class BrowseSourceController(
                     bottom = insets.getInsets(systemBars()).bottom,
                 )
                 searchHistory.updatePadding()
+                // The neon search frame extends to the bottom of the expanded app bar.
+                // Keep the first cover fully clear of it in every grid/list mode.
+                recycler.updatePadding(top = recycler.paddingTop + 16.dpToPx)
+                recycler.post {
+                    val bar = activityBinding?.appBar ?: return@post
+                    if (!bar.isAttachedToWindow || !recycler.isAttachedToWindow) return@post
+                    val barPosition = IntArray(2)
+                    val listPosition = IntArray(2)
+                    bar.getLocationOnScreen(barPosition)
+                    recycler.getLocationOnScreen(listPosition)
+                    val clearTop = (barPosition[1] + bar.height - listPosition[1])
+                        .coerceAtLeast(0) + 16.dpToPx
+                    if (recycler.paddingTop < clearTop) {
+                        recycler.updatePadding(top = clearTop)
+                    }
+                }
             },
         )
         binding.floatingBrowseBar.applyBottomAnimatedInsets(8.dpToPx)

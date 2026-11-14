@@ -63,7 +63,13 @@ for rel,old in manifest['screen_bindings'].items():
   source=DEV/'res/layout'/source.name
  check(source.is_file(),f'Missing layout {source}')
  now=info(source)
- check(set(old)==set(now),f'Changed functional UI binding ID set in {source}')
+ # V14 adds independent top-action controls to the dev library layout only.
+ # Existing bound widgets must remain identical; only these six new IDs are allowed.
+ extra = ({'library_top_actions','library_top_categories','library_top_group',
+           'library_top_display','library_top_filter','library_top_expand'}
+          if rel == 'app/src/dev/res/layout/library_controller.xml' else set())
+ check(set(old).issubset(now) and set(now)-set(old)==extra,
+       f'Changed functional UI binding ID set in {source}')
  for id,entry in old.items():
   current=now[id]
   check(entry['tag']==current['tag'],f'Changed view class at {source}:{id}')

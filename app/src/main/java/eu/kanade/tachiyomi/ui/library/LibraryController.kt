@@ -691,6 +691,19 @@ open class LibraryController(
         }
         setupFilterSheet()
         setUpHopper()
+        // V14: top actions reuse the exact callbacks of the original filter sheet.
+        // No preference keys or filtering/selection algorithms are duplicated.
+        if (resources?.getBoolean(R.bool.v14_library_actions_top) == true) {
+            binding.root.findViewById<View>(R.id.library_top_categories)?.setOnClickListener {
+                binding.roundedCategoryHopper.categoryButton.performClick()
+            }
+            binding.root.findViewById<View>(R.id.library_top_group)?.setOnClickListener { showGroupOptions() }
+            binding.root.findViewById<View>(R.id.library_top_display)?.setOnClickListener { showDisplayOptions() }
+            binding.root.findViewById<View>(R.id.library_top_filter)?.setOnClickListener { showSheet() }
+            binding.root.findViewById<View>(R.id.library_top_expand)?.setOnClickListener {
+                presenter.toggleAllCategoryVisibility()
+            }
+        }
         setPreferenceFlows()
         // Debounce so a burst of updates (e.g. restoring a backup emits one per manga)
         // collapses into a single library refresh instead of one per manga.
@@ -710,6 +723,18 @@ open class LibraryController(
                         topMargin = systemInsets.top + (activityBinding?.searchToolbar?.height ?: 0) + 12.dpToPx
                     }
                     updateSmallerViewsTopMargins()
+                    if (resources?.getBoolean(R.bool.v14_library_actions_top) == true) {
+                        val topOffset = systemInsets.top + (fullAppBarHeight ?: 0)
+                        binding.root.findViewById<View>(R.id.library_top_actions)
+                            ?.updateLayoutParams<CoordinatorLayout.LayoutParams> {
+                                topMargin = topOffset + 6.dpToPx
+                            }
+                        // Recycler's top padding is set by scrollViewWith just before this
+                        // callback; reserve space so the first cover never sits under actions.
+                        binding.libraryGridRecycler.recycler.updatePaddingRelative(
+                            top = topOffset + 72.dpToPx,
+                        )
+                    }
                     binding.headerCard.updateLayoutParams<ViewGroup.MarginLayoutParams> {
                         topMargin = systemInsets.top + 4.dpToPx
                     }
