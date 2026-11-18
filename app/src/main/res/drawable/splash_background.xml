@@ -1,13 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <layer-list xmlns:android="http://schemas.android.com/apk/res/android">
-
-    <item android:drawable="@color/splashBackground" />
-
-
+    <item android:drawable="@color/manga_virus_icon_background" />
     <item
-        android:width="64dp"
-        android:height="64dp"
-        android:drawable="@drawable/ic_tachij2k"
+        android:width="260dp"
+        android:height="260dp"
+        android:drawable="@drawable/manga_virus_logo"
         android:gravity="center" />
-
 </layer-list>

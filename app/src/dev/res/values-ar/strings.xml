@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="app_name">J2K المطوّر - نسخة تجريبية</string>
-    <string name="app_short_name">J2K المطوّر</string>
+    <string name="app_name">فيروس مانجا</string>
+    <string name="app_short_name">فيروس مانجا</string>
     <string name="download_queue">قائمة التنزيل</string>
     <string name="downloads">التنزيل</string>
     <string name="downloading">جاري التنزيل</string>
