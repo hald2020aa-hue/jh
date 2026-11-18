@@ -1580,16 +1580,13 @@ open class MainActivity : BaseActivity<MainActivityBinding>() {
         if (oldMenuItem.hasSubMenu()) {
             val oldSubMenu = oldMenuItem.subMenu ?: return
             val newMenuIds = oldSubMenu.children.toList().map { it.itemId }
-            val currentItemsId =
-                menuItem.subMenu
-                    ?.children
-                    ?.toList()
-                    ?.map { it.itemId } ?: return
+            val newSubMenu = menuItem.subMenu ?: return
+            val currentItemsId = newSubMenu.children.toList().map { it.itemId }
             var isExclusiveCheckable = false
             var isCheckable = false
             oldSubMenu.children.toList().forEachIndexed { index, oldSubMenuItem ->
                 val isSubVisible = oldSubMenuItem.isVisible
-                addOrUpdateMenuItem(oldSubMenuItem, menuItem.subMenu!!, isSubVisible, currentItemsId, index)
+                addOrUpdateMenuItem(oldSubMenuItem, newSubMenu, isSubVisible, currentItemsId, index)
                 if (!isExclusiveCheckable) {
                     isExclusiveCheckable = (oldSubMenuItem as? MenuItemImpl)?.isExclusiveCheckable ?: false
                 }
@@ -1597,10 +1594,12 @@ open class MainActivity : BaseActivity<MainActivityBinding>() {
                     isCheckable = oldSubMenuItem.isCheckable
                 }
             }
-            menuItem.subMenu?.setGroupCheckable(oldSubMenu.children.first().groupId, isCheckable, isExclusiveCheckable)
-            menuItem.subMenu?.children?.toList()?.forEach {
+            oldSubMenu.children.firstOrNull()?.groupId?.let { groupId ->
+                newSubMenu.setGroupCheckable(groupId, isCheckable, isExclusiveCheckable)
+            }
+            newSubMenu.children.toList().forEach {
                 if (!newMenuIds.contains(it.itemId)) {
-                    menuItem.subMenu?.removeItem(it.itemId)
+                    newSubMenu.removeItem(it.itemId)
                 }
             }
         }

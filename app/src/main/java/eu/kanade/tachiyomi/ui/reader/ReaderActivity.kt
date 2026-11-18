@@ -400,8 +400,8 @@ class ReaderActivity : BaseActivity<ReaderActivityBinding>() {
         if (viewModel.needsInit()) {
             fromUrl = handleIntentAction(intent)
             if (!fromUrl) {
-                val manga = intent.extras!!.getLong("manga", -1)
-                val chapter = intent.extras!!.getLong("chapter", -1)
+                val manga = intent.getLongExtra("manga", -1L)
+                val chapter = intent.getLongExtra("chapter", -1L)
                 if (manga == -1L || chapter == -1L) {
                     finish()
                     return
@@ -955,8 +955,11 @@ class ReaderActivity : BaseActivity<ReaderActivityBinding>() {
     }
 
     private fun askChapterTranslationLanguage() {
-        val chapter = viewModel.state.value.viewerChapters?.currChapter
-        if (chapter?.pages.isNullOrEmpty()) {
+        val chapter = viewModel.state.value.viewerChapters?.currChapter ?: run {
+            toast("الفصل لم يجهز بعد")
+            return
+        }
+        if (chapter.pages.isNullOrEmpty()) {
             toast("الفصل لم يجهز بعد")
             return
         }
@@ -973,7 +976,7 @@ class ReaderActivity : BaseActivity<ReaderActivityBinding>() {
                 translationJob = scope.launch {
                     previous?.join()
                     try {
-                        chapterTranslator.translateChapter(chapter!!, languages[selected], translatedPage?.index ?: 0)
+                        chapterTranslator.translateChapter(chapter, languages[selected], translatedPage?.index ?: 0)
                     } catch (e: kotlinx.coroutines.CancellationException) {
                         throw e
                     } catch (e: Throwable) {
@@ -2037,9 +2040,10 @@ class ReaderActivity : BaseActivity<ReaderActivityBinding>() {
                 else -> R2LPagerViewer(this)
             }
 
+        val currentReadingMode = viewModel.manga?.readingModeType ?: 0
         if (noDefault &&
-            viewModel.manga?.readingModeType!! > 0 &&
-            viewModel.manga?.readingModeType!! != preferences.defaultReadingMode()
+            currentReadingMode > 0 &&
+            currentReadingMode != preferences.defaultReadingMode()
         ) {
             snackbar =
                 binding.readerLayout.snack(
@@ -2227,8 +2231,9 @@ class ReaderActivity : BaseActivity<ReaderActivityBinding>() {
         intentPageNumber?.let { moveToPageIndex(it) }
         intentPageNumber = null
         val chapter = viewerChapters.currChapter.chapter
-        binding.toolbar.subtitle =
-            chapter.preferredChapterName(this, viewModel.manga!!, preferences)
+        binding.toolbar.subtitle = viewModel.manga?.let { manga ->
+            chapter.preferredChapterName(this, manga, preferences)
+        }.orEmpty()
 
         listOfNotNull(getTitleTextView(), getSubtitleTextView()).forEach { textView ->
             textView.ellipsize = TextUtils.TruncateAt.MARQUEE
@@ -2700,7 +2705,7 @@ class ReaderActivity : BaseActivity<ReaderActivityBinding>() {
                                             createBitmap(
                                                 intrinsicWidth,
                                                 intrinsicHeight,
-                                                bitmap.config!!,
+                                                bitmap.config ?: Bitmap.Config.ARGB_8888,
                                             )
                                         val canvas = Canvas(newBitmap)
                                         val bgColor = ColorUtils.setAlphaComponent(service.getLogoColor(), 255)
@@ -2788,7 +2793,7 @@ class ReaderActivity : BaseActivity<ReaderActivityBinding>() {
     private fun handleIntentAction(intent: Intent): Boolean {
         val uri = intent.data ?: return false
         if (!viewModel.canLoadUrl(uri)) {
-            openInBrowser(intent.data!!.toString(), true)
+            openInBrowser(uri.toString(), true)
             finishAfterTransition()
             return true
         }
@@ -2809,13 +2814,14 @@ class ReaderActivity : BaseActivity<ReaderActivityBinding>() {
     private fun openMangaInBrowser() {
         val source = viewModel.getSource() ?: return
         val chapterUrl = viewModel.getChapterUrl() ?: return
+        val mangaTitle = viewModel.manga?.title ?: return
 
         val intent =
             WebViewActivity.newIntent(
                 applicationContext,
                 chapterUrl,
                 source.id,
-                viewModel.manga!!.title,
+                mangaTitle,
             )
         startActivity(intent)
     }

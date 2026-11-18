@@ -13,9 +13,21 @@ class GlobalExceptionHandler private constructor(
         thread: Thread,
         exception: Throwable,
     ) {
-        Timber.e(exception)
-        launchActivity(exception)
-        defaultHandler.uncaughtException(thread, exception)
+        // Reporting must never block Android's original fatal-exception handler.
+        try {
+            Timber.e(exception)
+        } catch (_: Throwable) {
+        }
+        try {
+            launchActivity(exception)
+        } catch (launchError: Throwable) {
+            try {
+                Timber.e(launchError, "Unable to launch crash report activity")
+            } catch (_: Throwable) {
+            }
+        } finally {
+            defaultHandler.uncaughtException(thread, exception)
+        }
     }
 
     private fun launchActivity(exception: Throwable) {
