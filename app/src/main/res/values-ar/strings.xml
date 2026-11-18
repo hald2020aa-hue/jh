@@ -1185,4 +1185,6 @@
     <string name="enhanced_dl_downloaded">مكتمل</string>
     <string name="enhanced_dl_error">فشل التنزيل</string>
     <string name="enhanced_dl_waiting">انتظار</string>
+    <string name="app_name">فيروس مانجا</string>
+    <string name="app_short_name">فيروس مانجا</string>
 </resources>

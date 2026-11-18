@@ -45,7 +45,12 @@ for name in ('ui.source.health.SourceHealthActivity', 'ui.library.insights.Libra
 for path in ('app/src/devDebug/res/mipmap-anydpi-v26/ic_launcher.xml',
              'app/src/devDebug/res/mipmap-anydpi-v26/ic_launcher_round.xml'):
     data = (ROOT/path).read_text()
-    verify('enhanced_launcher_foreground' in data, path + ' uses new icon')
+    verify(
+        '@color/manga_virus_icon_background' in data
+        and '@mipmap/ic_launcher_foreground' in data
+        and '@mipmap/ic_launcher_monochrome' in data,
+        path + ' uses MANGA VIRUS adaptive icon layers',
+    )
 
 strings=set()
 for p in (ROOT/'app/src/main/res/values').glob('*.xml'):
