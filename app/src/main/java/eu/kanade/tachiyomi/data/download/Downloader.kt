@@ -501,7 +501,7 @@ class Downloader(
             // Delete all temporary (unfinished) files
             tmpDir
                 .listFiles()
-                ?.filter { it.name!!.endsWith(".tmp") }
+                ?.filter { it.name?.endsWith(".tmp") == true }
                 ?.forEach { it.delete() }
 
             download.status = Download.State.DOWNLOADING
@@ -563,10 +563,8 @@ class Downloader(
         download: Download,
         tmpDir: UniFile,
     ) {
-        // If the image URL is empty, do nothing
-        if (page.imageUrl == null) {
-            return
-        }
+        // Capture the URL once; page state may be updated by the loader.
+        val imageUrl = page.imageUrl ?: return
 
         val digitCount = (download.pages?.size ?: 0).toString().length.coerceAtLeast(3)
         val filename = String.format("%0${digitCount}d", page.number)
@@ -576,7 +574,10 @@ class Downloader(
         tmpFile?.delete()
 
         // Try to find the image file
-        val imageFile = tmpDir.listFiles()?.find { it.name!!.startsWith("$filename.") || it.name!!.startsWith("${filename}__001") }
+        val imageFile = tmpDir.listFiles()?.find { file ->
+            val name = file.name ?: return@find false
+            name.startsWith("$filename.") || name.startsWith("${filename}__001")
+        }
 
         val chapName = download.chapter.preferredChapterName(context, download.manga, preferences)
         try {
@@ -584,10 +585,10 @@ class Downloader(
             val file =
                 when {
                     imageFile != null -> imageFile
-                    chapterCache.isImageInCache(page.imageUrl!!) ->
+                    chapterCache.isImageInCache(imageUrl) ->
                         moveImageFromCache(
                             chapterCache.getImageFile(
-                                page.imageUrl!!,
+                                imageUrl,
                             ),
                             tmpDir,
                             filename,
@@ -720,14 +721,15 @@ class Downloader(
 
         val filename = String.format("%03d", page.number)
         val imageFile =
-            tmpDir.listFiles()?.find { it.name!!.startsWith(filename) }
-                ?: throw Error(context.getString(R.string.download_notifier_split_page_not_found, page.number))
+            tmpDir.listFiles()?.firstNotNullOfOrNull { file ->
+                file.takeIf { it.name?.startsWith(filename) == true }
+            } ?: throw IOException(context.getString(R.string.download_notifier_split_page_not_found, page.number))
         val imageFilePath =
             imageFile.filePath
-                ?: throw Error(context.getString(R.string.download_notifier_split_page_not_found, page.number))
+                ?: throw IOException(context.getString(R.string.download_notifier_split_page_not_found, page.number))
 
-        // check if the original page was previously split before then skip.
-        if (imageFile.name!!.contains("__")) return true
+        // Check if the original page was previously split before then skip.
+        if (imageFile.name?.contains("__") == true) return true
 
         return try {
             ImageUtil.splitTallImage(imageFile, imageFilePath)
