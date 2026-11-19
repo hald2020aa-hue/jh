@@ -7,6 +7,17 @@ allprojects {
     repositories {
         google()
         mavenCentral()
+        // Fallback mirrors for the published FlexibleAdapter artifacts.
+        maven {
+            name = "GoogleMavenCentralFlexibleAdapterMirror"
+            url = uri("https://maven-central.storage-download.googleapis.com/maven2/")
+            content { includeGroup("eu.davidea") }
+        }
+        maven {
+            name = "MavenCentralRepo1FlexibleAdapterFallback"
+            url = uri("https://repo1.maven.org/maven2/")
+            content { includeGroup("eu.davidea") }
+        }
         maven { setUrl("https://jitpack.io") }
         maven { setUrl("https://plugins.gradle.org/m2/") }
     }
