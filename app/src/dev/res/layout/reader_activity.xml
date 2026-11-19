@@ -6,13 +6,13 @@
 
     <com.google.android.material.loadingindicator.LoadingIndicator android:id="@+id/please_wait" android:layout_width="56dp" android:layout_height="56dp" android:layout_gravity="center" android:visibility="gone" tools:visibility="visible"/>
 
-    <eu.kanade.tachiyomi.ui.reader.PageIndicatorTextView android:id="@+id/page_number" style="?textAppearanceBodySmall" android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_gravity="bottom|center_horizontal" android:paddingStart="14dp" android:paddingEnd="14dp" android:paddingTop="5dp" android:paddingBottom="5dp" android:layout_marginBottom="12dp" android:background="@drawable/v11_neon_progress_chip" android:textColor="@android:color/white" android:elevation="4dp" android:textStyle="bold"/>
+    <eu.kanade.tachiyomi.ui.reader.PageIndicatorTextView android:id="@+id/page_number" style="?textAppearanceBodySmall" android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_gravity="bottom|center_horizontal" android:paddingStart="14dp" android:paddingEnd="14dp" android:paddingTop="5dp" android:paddingBottom="5dp" android:layout_marginBottom="12dp" android:background="@drawable/v18_chip" android:textColor="@color/v18_text" android:elevation="4dp" android:textStyle="bold"/>
 
     <eu.kanade.tachiyomi.ui.reader.ReaderColorFilterView android:id="@+id/color_overlay" android:layout_width="match_parent" android:layout_height="match_parent" android:visibility="gone"/>
 
     <eu.kanade.tachiyomi.ui.reader.ReaderNavigationOverlayView android:id="@+id/navigation_overlay" android:layout_width="match_parent" android:layout_height="match_parent" android:visibility="gone"/>
 
-    <FrameLayout android:id="@+id/app_bar" tools:background="?attr/colorSurface" android:layout_width="match_parent" android:visibility="gone" tools:visibility="visible" android:layout_height="wrap_content" android:background="@drawable/v11_neon_reader_toolbar">
+    <FrameLayout android:id="@+id/app_bar" tools:background="?attr/colorSurface" android:layout_width="match_parent" android:visibility="gone" tools:visibility="visible" android:layout_height="wrap_content" android:background="@drawable/v18_reader_frame">
 
         <androidx.appcompat.widget.Toolbar android:id="@+id/toolbar" android:layout_width="match_parent" app:navigationContentDescription="@string/close" android:layout_height="?attr/actionBarSize" tools:title="Chapter 3" tools:subtitle="Chapter name" app:titleTextColor="?actionBarTintColor" app:subtitleTextColor="@color/action_bar_tint_alpha" android:background="@android:color/transparent" app:popupTheme="@style/ThemeOverlay.J2K.NeonReaderPopup"/>
     </FrameLayout>

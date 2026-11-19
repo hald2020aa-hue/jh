@@ -3,6 +3,9 @@ name: Quality gate (independent fork)
 on:
   workflow_dispatch:
   pull_request:
+  push:
+    branches:
+      - "feature/**"
 
 permissions:
   contents: read
@@ -21,12 +24,22 @@ jobs:
           java-version: 21
       - name: Configure Gradle
         uses: gradle/actions/setup-gradle@v4
+      - name: Configure Kotlin CLI for standalone regression suites
+        uses: fwilhe2/setup-kotlin@ee9692514da313706b193d808526812102a344e4 # v2.0
+        with:
+          version: 2.3.10
+      - name: Run standalone Kotlin regression suites
+        run: |
+          bash qa/run_local_tests.sh
+          bash qa/enhanced/run_enhanced_tests.sh
       - name: Check XML resources and reading activity SQL
         run: python3 qa/static_integration_checks.py
       - name: Verify enhanced UI resources and screen wiring
         run: python3 qa/enhanced/validate_ui.py
       - name: Validate J2K Enhanced visual resources and bindings
         run: python3 qa/neon/validate_neon.py
+      - name: Validate V5 UI geometry and visual invariants
+        run: python3 qa/neon/validate_v5.py
       - name: Validate V6 translation and reader prefetch integration
         run: python3 qa/v6/validate_v6.py
       - name: Validate V7 bubble overlay, safe download reordering and adaptive library
@@ -49,8 +62,10 @@ jobs:
         run: python3 qa/v16/validate_crash_hardening.py
       - name: Validate V17 MANGA VIRUS branding
         run: python3 qa/v17/validate_manga_virus_branding.py
+      - name: Validate V18 unified neon UI across all sources and reading screens
+        run: python3 qa/v18/validate_unified_neon.py
       - name: Run unit tests and compile debug APKs
-        run: ./gradlew -Pjh.arm64Only=true --no-daemon testDevDebugUnitTest verifySingleArm64DevApk --stacktrace
+        run: ./gradlew -Pjh.arm64Only=true --no-daemon :app:testDevDebugUnitTest :app:lintDevDebug :app:verifySingleArm64DevApk --stacktrace
       - name: Verify single APK integrity and debug signature
         run: |
           set -euo pipefail
@@ -61,6 +76,16 @@ jobs:
           test -d "$SDK/build-tools"
           BUILD_TOOLS="$(find "$SDK/build-tools" -mindepth 1 -maxdepth 1 -type d | sort -V | tail -1)"
           "$BUILD_TOOLS/apksigner" verify --verbose --print-certs "$APK"
+          BADGING="$("$BUILD_TOOLS/aapt" dump badging "$APK")"
+          printf '%s\n' "$BADGING" | grep -m1 '^package:'
+          grep -Fq "name='eu.kanade.tachiyomi.enhanced.debugJ2K'" <<< "$BADGING"
+          NATIVE_CODE_LINE="$(printf '%s\n' "$BADGING" | grep -m1 '^native-code:' || true)"
+          if [[ -n "$NATIVE_CODE_LINE" ]]; then
+            grep -Fq "'arm64-v8a'" <<< "$NATIVE_CODE_LINE" || { echo "ARM64 native ABI missing: $NATIVE_CODE_LINE" >&2; exit 1; }
+            echo "ARM64 native ABI: $NATIVE_CODE_LINE"
+          else
+            echo "No native-code metadata; APK has no native libraries to classify."
+          fi
           echo "NOTE: CI debug certificates are ephemeral unless an identical persistent signing key is provided."
           echo "Do not install this as an in-place update over a differently signed APK."
           sha256sum "$APK"
@@ -89,7 +114,7 @@ jobs:
       - name: Configure Gradle
         uses: gradle/actions/setup-gradle@v4
       - name: Build universal Android APK
-        run: ./gradlew -Pjh.arm64Only=false --no-daemon assembleDevDebug --stacktrace
+        run: ./gradlew -Pjh.arm64Only=false --no-daemon :app:assembleDevDebug --stacktrace
       - name: Verify universal APK, architecture coverage and signature
         shell: bash
         run: |
@@ -106,9 +131,23 @@ jobs:
           test -d "$SDK/build-tools"
           BUILD_TOOLS="$(find "$SDK/build-tools" -mindepth 1 -maxdepth 1 -type d | sort -V | tail -1)"
           "$BUILD_TOOLS/apksigner" verify --verbose --print-certs "$APK"
-          "$BUILD_TOOLS/aapt" dump badging "$APK" | grep -m1 '^package:'
-          # The native libraries differ by dependency. Verify all ABI packages are included
-          # in the universal output metadata, not by requiring every library in every ABI.
+          BADGING="$("$BUILD_TOOLS/aapt" dump badging "$APK")"
+          printf '%s\n' "$BADGING" | grep -m1 '^package:'
+          grep -Fq "name='eu.kanade.tachiyomi.enhanced.debugJ2K'" <<< "$BADGING"
+          # The universal build includes all four configured ABIs when native
+          # dependencies provide native code. A pure Java/Kotlin APK is ABI-neutral.
+          NATIVE_CODE_LINE="$(printf '%s\n' "$BADGING" | grep -m1 '^native-code:' || true)"
+          if [[ -n "$NATIVE_CODE_LINE" ]]; then
+            for ABI in armeabi-v7a arm64-v8a x86 x86_64; do
+              grep -Fq "'$ABI'" <<< "$NATIVE_CODE_LINE" || {
+                echo "Universal APK is missing native ABI $ABI: $NATIVE_CODE_LINE" >&2
+                exit 1
+              }
+            done
+            echo "Universal native ABI coverage: $NATIVE_CODE_LINE"
+          else
+            echo "No native-code metadata; APK is ABI-neutral."
+          fi
           test "$(stat -c %s "$APK")" -gt 1048576
           sha256sum "$APK"
           echo 'Universal dev APK checked. Debug CI key may be ephemeral.'

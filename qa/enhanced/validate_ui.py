@@ -64,7 +64,7 @@ for path in (
     refs=set(re.findall(r'R\.string\.([A-Za-z0-9_]+)',(ROOT/path).read_text()))
     verify(not refs-strings, path + ' string references resolved')
 verify('verifySingleArm64DevApk' in (ROOT/'app/build.gradle.kts').read_text(), 'single APK verification task')
-verify('app-dev-arm64-v8a-debug.apk' in (ROOT/'.github/workflows/quality_gate.yml').read_text(), 'CI uploads only arm64 APK')
+verify('app-dev-arm64-v8a-debug.apk' in (ROOT/'.github/workflows/quality_gate.yml').read_text(), 'CI retains exact ARM64 APK target')
 verify('getPopularManga(1)' in (ROOT/'app/src/main/java/eu/kanade/tachiyomi/ui/source/health/SourceHealthActivity.kt').read_text(), 'deep source browsing is wired')
 verify('getChapterList(details)' in (ROOT/'app/src/main/java/eu/kanade/tachiyomi/ui/source/health/SourceHealthActivity.kt').read_text(), 'deep chapter check is wired')
 verify('enhanced_retry_failed' in (ROOT/'app/src/main/java/eu/kanade/tachiyomi/ui/download/DownloadBottomSheet.kt').read_text(), 'download retry command wired')
@@ -85,7 +85,7 @@ newrefs = set(re.findall(r'R\.string\.([A-Za-z0-9_]+)', (ROOT/'app/src/main/java
 verify(not newrefs-strings, 'Download center strings are defined')
 
 ci = (ROOT/'.github/workflows/quality_gate.yml').read_text()
-verify('path: app/build/outputs/apk/dev/debug/app-dev-arm64-v8a-debug.apk' in ci and 'path: app/build/outputs/apk/dev/debug/*.apk' not in ci, 'one exact APK upload path')
+verify('path: app/build/outputs/apk/dev/debug/app-dev-arm64-v8a-debug.apk' in ci and 'path: app/build/outputs/apk/dev/debug/*.apk' not in ci, 'exact ARM64 APK upload path')
 verify('verifySingleArm64DevApk' in ci and '-Pjh.arm64Only=true' in ci, 'Gradle task verifies exact arm64 output')
 verify('apksigner' in ci and 'unzip -tqq' in ci, 'CI checks APK archive and signature')
 

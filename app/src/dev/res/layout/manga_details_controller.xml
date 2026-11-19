@@ -1,7 +1,7 @@
 <?xml version='1.0' encoding='UTF-8'?>
-<androidx.coordinatorlayout.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android" xmlns:app="http://schemas.android.com/apk/res-auto" xmlns:tools="http://schemas.android.com/tools" android:id="@+id/manga_frame_layout" android:layout_width="match_parent" android:layout_height="match_parent" android:background="@color/v4_bg">
+<androidx.coordinatorlayout.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android" xmlns:app="http://schemas.android.com/apk/res-auto" xmlns:tools="http://schemas.android.com/tools" android:id="@+id/manga_frame_layout" android:layout_width="match_parent" android:layout_height="match_parent" android:background="@color/v18_bg">
 
-    <androidx.swiperefreshlayout.widget.SwipeRefreshLayout android:id="@+id/swipe_refresh" android:layout_width="match_parent" android:layout_height="match_parent" android:background="@color/v4_bg">
+    <androidx.swiperefreshlayout.widget.SwipeRefreshLayout android:id="@+id/swipe_refresh" android:layout_width="match_parent" android:layout_height="match_parent" android:background="@color/v18_bg">
 
         <androidx.constraintlayout.widget.ConstraintLayout android:id="@+id/linear_recycler_layout" android:layout_width="match_parent" android:layout_height="match_parent" android:orientation="horizontal">
 

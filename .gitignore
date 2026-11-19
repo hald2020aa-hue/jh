@@ -8,3 +8,19 @@
 *.iml
 */build
 .kotlin
+
+# Android local machine configuration
+/local.properties
+**/local.properties
+
+# Private signing material: never commit these files
+*.jks
+*.keystore
+*.p12
+*.pfx
+*.key
+
+# Generated Android packages and local crash dumps
+*.apk
+*.aab
+*.hprof

@@ -1,17 +1,17 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="v4_bg">#080F20</color>
-    <color name="v4_card">#121C30</color>
-    <color name="v4_card_raised">#18253C</color>
-    <color name="v4_card_top">#1C1B34</color>
-    <color name="v4_primary">#F21C82</color>
-    <color name="v4_primary_dim">#632347</color>
-    <color name="v4_cyan">#35CEDB</color>
-    <color name="v4_text">#F3F6FF</color>
-    <color name="v4_muted">#AAB9CB</color>
-    <color name="v4_outline">#36516F</color>
-    <color name="v4_track">#30405A</color>
-    <color name="v4_warning">#FF6477</color>
-    <color name="v4_success">#33C6AE</color>
-    <color name="v4_text_dark">#0B1121</color>
+    <color name="v4_bg">#070B16</color>
+    <color name="v4_card">#101A2C</color>
+    <color name="v4_card_raised">#17263D</color>
+    <color name="v4_card_top">#1A2038</color>
+    <color name="v4_primary">#FF4FA3</color>
+    <color name="v4_primary_dim">#44203C</color>
+    <color name="v4_cyan">#48DDF2</color>
+    <color name="v4_text">#F4F7FF</color>
+    <color name="v4_muted">#A7B4C8</color>
+    <color name="v4_outline">#304861</color>
+    <color name="v4_track">#24374D</color>
+    <color name="v4_warning">#FFB86B</color>
+    <color name="v4_success">#3AD6B1</color>
+    <color name="v4_text_dark">#080D18</color>
 </resources>

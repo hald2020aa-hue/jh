@@ -3,11 +3,11 @@ import java.text.SimpleDateFormat
 import java.util.TimeZone
 import java.util.Date
 
-// Git is needed in your system PATH for these commands to work.
-// If it's not installed, you can return a random value as a workaround
+// Git metadata is available in a normal checkout, but source ZIPs may not
+// contain the original worktree metadata. Treat missing Git data as an
+// archive build instead of failing Gradle configuration.
 fun Project.getCommitCount(): String {
-    return runCommand("git rev-list --count HEAD")
-    // return "1"
+    return runCommand("git rev-list --count HEAD").ifBlank { "0" }
 }
 
 fun Project.getBetaCount(): String {
@@ -18,13 +18,10 @@ fun Project.getBetaCount(): String {
     } else {
         1
     })
-    // return "1"
 }
 
-
 fun Project.getGitSha(): String {
-    return runCommand("git rev-parse --short HEAD")
-    // return "1"
+    return runCommand("git rev-parse --short HEAD").ifBlank { "archive" }
 }
 
 fun Project.getBuildTime(): String {
@@ -34,10 +31,17 @@ fun Project.getBuildTime(): String {
 }
 
 fun Project.runCommand(command: String): String {
-    return providers
-        .exec {
+    return try {
+        val output = providers.exec {
             commandLine = command.split(" ")
-        }.standardOutput.asText
-        .get()
-        .trim()
+            isIgnoreExitValue = true
+        }
+        if (output.result.get().exitValue == 0) {
+            output.standardOutput.asText.get().trim()
+        } else {
+            ""
+        }
+    } catch (_: Exception) {
+        ""
+    }
 }

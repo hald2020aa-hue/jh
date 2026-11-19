@@ -1,18 +1,18 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="primaryTachiyomi">#F21C82</color>
-    <color name="primaryContainerTachiyomi">#57213D</color>
-    <color name="secondaryContainerTachiyomi">#26374E</color>
-    <color name="primaryInverseTachiyomi">#FF83BC</color>
-    <color name="splashBackground">#080F20</color>
-    <color name="enhanced_icon_background">#080F20</color>
-    <color name="background">#080F20</color>
-    <color name="colorOnBackground">#F3F6FF</color>
-    <color name="colorOnSurface">#F3F6FF</color>
+    <color name="primaryTachiyomi">#FF4FA3</color>
+    <color name="primaryContainerTachiyomi">#55213D</color>
+    <color name="secondaryContainerTachiyomi">#1A2E46</color>
+    <color name="primaryInverseTachiyomi">#FFA1C9</color>
+    <color name="splashBackground">#070B16</color>
+    <color name="enhanced_icon_background">#070B16</color>
+    <color name="background">#070B16</color>
+    <color name="colorOnBackground">#F4F7FF</color>
+    <color name="colorOnSurface">#F4F7FF</color>
     <color name="onPrimaryTachiyomi">#FFFFFF</color>
-    <color name="tachiyomi_surfaceContainerLow">#0E192B</color>
-    <color name="tachiyomi_surfaceContainer">#121E32</color>
-    <color name="tachiyomi_surfaceContainerHigh">#1C2840</color>
-    <color name="tachiyomi_surfaceContainerHighest">#25324C</color>
-    <color name="tachiyomi_surfaceContainerLowest">#10182B</color>
+    <color name="tachiyomi_surfaceContainerLow">#0D1728</color>
+    <color name="tachiyomi_surfaceContainer">#101A2C</color>
+    <color name="tachiyomi_surfaceContainerHigh">#17263D</color>
+    <color name="tachiyomi_surfaceContainerHighest">#20324D</color>
+    <color name="tachiyomi_surfaceContainerLowest">#0B1322</color>
 </resources>

@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="v10_neon_cyan">#48DDF2</color>
+    <color name="v10_neon_blue">#587CFF</color>
+    <color name="v10_neon_purple">#9B69FF</color>
+    <color name="v10_neon_pink">#FF4FA3</color>
+    <color name="v10_neon_border_soft">#8C42DFF2</color>
+</resources>

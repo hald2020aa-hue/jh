@@ -1,5 +1,5 @@
 <?xml version='1.0' encoding='UTF-8'?>
-<eu.kanade.tachiyomi.ui.reader.ReaderNavView xmlns:android="http://schemas.android.com/apk/res/android" xmlns:app="http://schemas.android.com/apk/res-auto" xmlns:tools="http://schemas.android.com/tools" android:id="@+id/reader_nav" android:background="@drawable/v11_neon_reader_frame" android:layout_width="match_parent" android:layout_height="wrap_content" android:paddingStart="10dp" android:paddingEnd="10dp" android:elevation="4dp" android:layout_gravity="top" android:paddingBottom="10dp" android:paddingTop="10dp" android:clickable="true" android:focusable="false" android:descendantFocusability="afterDescendants" android:gravity="center" android:layoutDirection="ltr" android:orientation="horizontal">
+<eu.kanade.tachiyomi.ui.reader.ReaderNavView xmlns:android="http://schemas.android.com/apk/res/android" xmlns:app="http://schemas.android.com/apk/res-auto" xmlns:tools="http://schemas.android.com/tools" android:id="@+id/reader_nav" android:background="@drawable/v18_reader_frame" android:layout_width="match_parent" android:layout_height="wrap_content" android:paddingStart="10dp" android:paddingEnd="10dp" android:elevation="4dp" android:layout_gravity="top" android:paddingBottom="10dp" android:paddingTop="10dp" android:clickable="true" android:focusable="false" android:descendantFocusability="afterDescendants" android:gravity="center" android:layoutDirection="ltr" android:orientation="horizontal">
 
     <FrameLayout android:id="@+id/start_cell" android:layout_width="40dp" android:layout_height="40dp" android:layout_gravity="center">
 
@@ -11,11 +11,11 @@
 
     <LinearLayout android:id="@+id/reader_seekbar" android:layout_width="0dp" android:layout_height="wrap_content" android:layout_weight="1" android:gravity="center" android:orientation="horizontal">
 
-        <TextView android:id="@+id/left_page_text" android:layout_width="32sp" android:layout_height="wrap_content" android:layout_gravity="center" android:gravity="center" android:textColor="@color/v4_text" android:textSize="14sp" tools:text="1-2" android:textStyle="bold"/>
+        <TextView android:id="@+id/left_page_text" android:layout_width="32sp" android:layout_height="wrap_content" android:layout_gravity="center" android:gravity="center" android:textColor="@color/v18_text" android:textSize="14sp" tools:text="1-2" android:textStyle="bold"/>
 
         <eu.kanade.tachiyomi.ui.reader.ReaderSlider android:id="@+id/page_seekbar" android:layout_width="0dp" android:layout_height="40dp" android:layout_weight="1" android:maxHeight="?attr/actionBarSize" android:minHeight="?attr/actionBarSize" android:stepSize="1" tools:value="4" tools:valueTo="10" tools:ignore="SpeakableTextPresentCheck"/>
 
-        <TextView android:id="@+id/right_page_text" android:layout_width="32sp" android:layout_height="wrap_content" android:layout_gravity="center" android:gravity="center" android:textColor="@color/v4_text" android:textSize="14sp" tools:text="15" android:textStyle="bold"/>
+        <TextView android:id="@+id/right_page_text" android:layout_width="32sp" android:layout_height="wrap_content" android:layout_gravity="center" android:gravity="center" android:textColor="@color/v18_text" android:textSize="14sp" tools:text="15" android:textStyle="bold"/>
 
     </LinearLayout>
 
